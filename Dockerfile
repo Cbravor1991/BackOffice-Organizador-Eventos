@@ -1,4 +1,5 @@
-FROM node:12-alpine
+FROM node:16
+
 RUN apk add --no-cache python2 g++ make
 
 COPY package*.json .
