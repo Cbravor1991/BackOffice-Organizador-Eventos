@@ -4,6 +4,7 @@ import './App.css';
 import LoginPage from './routes/LoginPage';
 import HomePage from './routes/HomePage';
 import DashBoardPage from './routes/DashboardPage';
+import { Text, Image, View, Page, Document, PDFDownloadLink } from '@react-pdf/renderer';
 
 import { Routes, Route } from 'react-router-dom'
 import NavBar from './components/NavBar';
