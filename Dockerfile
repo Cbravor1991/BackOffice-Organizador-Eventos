@@ -1,7 +1,7 @@
 FROM node:12-alpine
 RUN apk add --no-cache python2 g++ make
 
-COPY . /app
+WORKDIR /app
 
 COPY package*.json .
 
