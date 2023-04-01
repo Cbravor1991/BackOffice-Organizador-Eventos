@@ -2,10 +2,10 @@
   "name": "ticketapporganizador",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/TicketAppFiuba/Web-organizacionr",
+  "homepage": "https://github.com/TicketAppFiuba/Web-organizacion",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TicketAppFiuba/Web-organizacionr.git"
+    "url": "git+https://github.com/TicketAppFiuba/Web-organizacion.git"
   },
   "dependencies": {
     "@emailjs/browser": "^3.10.0",
