@@ -1,6 +1,6 @@
 import axios from 'axios';
 
 export default axios.create({
-    //baseURL: 'https://backend-hospedate-ahora.herokuapp.com/'
-    baseURL: 'http://localhost:5000/'
+    baseURL: 'https://ticketapporganizacionweb.onrender.com/'
+    // baseURL: 'http://localhost:3000/'
 });
