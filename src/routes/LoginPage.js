@@ -63,7 +63,7 @@ const LoginPage = () => {
                     headers: { 'Content-Type': 'application/json', 
                                'Access-Control-Allow-Origin': '*',
                                'Access-Control-Allow-Credentials': true,
-                               'Access-Control-Allow-Headers': 'Authorization'},
+                               'Access-Control-Allow-Headers': 'Authorization, Origin, X-Requested-With, Content-Type, Accept'},
                 }
             );
             console.log(JSON.stringify(response));
