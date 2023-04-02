@@ -1,4 +1,4 @@
-# Deployado en render
+# Deployado en Vercel
 
-https://ticketapporganizacionweb.onrender.com/home
+https://web-organizacion.vercel.app/home
 
