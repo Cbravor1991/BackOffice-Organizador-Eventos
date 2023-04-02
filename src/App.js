@@ -10,11 +10,9 @@ import NavBar from './components/NavBar';
 import Layout from './components/Layout';
 import { Dashboard } from '@mui/icons-material';
 
-function App() {
+export default function App() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [registrationSuccessful, setRegistrationSuccessful] = useState(false)
-  
-  render() {
   
    return (
     <>
@@ -51,7 +49,7 @@ function App() {
         </Route>
       </Routes>
     </>
-  )};
+  );
 }
 
-export default App;
+
