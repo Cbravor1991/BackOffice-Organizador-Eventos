@@ -13,7 +13,10 @@ import { Dashboard } from '@mui/icons-material';
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [registrationSuccessful, setRegistrationSuccessful] = useState(false)
-  return (
+  
+  render() {
+  
+   return (
     <>
       
       <Routes>
@@ -48,7 +51,7 @@ function App() {
         </Route>
       </Routes>
     </>
-  );
+  )};
 }
 
 export default App;
