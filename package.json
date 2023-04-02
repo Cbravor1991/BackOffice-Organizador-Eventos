@@ -2,7 +2,7 @@
   "name": "ticketapporganizador",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://github.com/TicketAppFiuba/Web-organizacion.git",
+  "homepage": ".",
   "repository": {
     "type": "git",
     "url": "git+http://github.com/TicketAppFiuba/Web-organizacion.git"
