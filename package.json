@@ -2,7 +2,7 @@
   "name": "ticketapporganizador",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://github.com/TicketAppFiuba/Web-organizacion",
+  "homepage": "https://ticketapporganizacionweb.onrender.com/home",
   "repository": {
     "type": "git",
     "url": "git+http://github.com/TicketAppFiuba/Web-organizacion.git"
@@ -22,9 +22,9 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.9.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^2.1.3",
     "react-spring": "^9.7.1",
-    "sweetalert2": "^11.7.3",
+    "sweetalert2": "^11.4.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -52,6 +52,6 @@
     ]
   },
   "devDependencies": {
-    "node-sass": "^7.0.3"
+    "node-sass": "^8.0.0"
   }
 }
