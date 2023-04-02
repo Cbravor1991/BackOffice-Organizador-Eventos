@@ -60,7 +60,10 @@ const LoginPage = () => {
             const response = await axios.post(LOGIN_URL,
                 JSON.stringify({ 'email': user, 'password': pwd }),
                 {
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json', 
+                               'Access-Control-Allow-Origin': '*',
+                               'Access-Control-Allow-Credentials': true,
+                               'Access-Control-Allow-Headers': 'Authorization'},
                 }
             );
             console.log(JSON.stringify(response));

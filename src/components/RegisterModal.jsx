@@ -59,7 +59,10 @@ export default function BasicModal(props) {
         axios.post(REGISTER_URL,
             JSON.stringify({ 'email':user, 'password':pwd }),
             {
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json', 
+                               'Access-Control-Allow-Origin': '*',
+                               'Access-Control-Allow-Credentials': true,
+                               'Access-Control-Allow-Headers': 'Authorization'},
             }
         ).then(() => {
             props.setOpen(false);
