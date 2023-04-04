@@ -4,6 +4,7 @@ import './App.css';
 import LoginPage from './routes/LoginPage';
 import HomePage from './routes/HomePage';
 import DashBoardPage from './routes/DashboardPage';
+import LoadEventPage from './routes/LoadEventPage';
 
 import { Routes, Route } from 'react-router-dom'
 import NavBar from './components/NavBar';
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="home" element={<HomePage />} />
           <Route path="dashboard" element={<DashBoardPage />} />
+          <Route path="loadEvent" element={<LoadEventPage />} />
          
          
 
