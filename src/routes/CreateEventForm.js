@@ -46,7 +46,7 @@ const CreateEventForm = () => {
       window.location.href = "/home";
       return;
   } else {
-    token_user = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYnJhdm9yQGZpLnViYS5hciIsImV4cCI6MTY4MDY3NTcyMn0.jcjO5SqhlqfkJN2-_ETUR4Q6PC7vL3-CKC3cQE80X1I'
+    token_user = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MDcxOTc1OX0.KR5Edp-B_A0UzlZAawzTzPeQ-IYY9Y2e8tBDk0kGYJM'
   }
  
   try{  
@@ -56,8 +56,8 @@ const CreateEventForm = () => {
               "category": "string",
               "date": "2023-04-05",
               "description": "string",
-              "capacity": 0,
-              "vacancies": 0,
+              "tickets": 0,
+              "price": 0,
               "ubication": {
                 "direction": "string",
                 "latitude": 0,
@@ -66,7 +66,8 @@ const CreateEventForm = () => {
             }),
             {
                 headers: { 'Content-Type': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwNjgzOTkyfQ.Q_uYqfAoMtSPThpb2F0pEFG8LouBg5ZZvvmBZFjZMnM',
+                'Access-Control-Allow-Origin': '*',
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MDcxOTc1OX0.KR5Edp-B_A0UzlZAawzTzPeQ-IYY9Y2e8tBDk0kGYJM',
                  }
             },
 
