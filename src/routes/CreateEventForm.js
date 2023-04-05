@@ -66,7 +66,7 @@ const CreateEventForm = () => {
             }),
             {
                 headers: { 'Content-Type': 'application/json',
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwNjgzOTkyfQ.Q_uYqfAoMtSPThpb2F0pEFG8LouBg5ZZvvmBZFjZMnM',
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwNjgzOTkyfQ.Q_uYqfAoMtSPThpb2F0pEFG8LouBg5ZZvvmBZFjZMnM',
                  }
             },
 
