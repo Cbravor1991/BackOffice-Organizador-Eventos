@@ -57,13 +57,25 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(LOGIN_URL,
-                JSON.stringify({ 'email': user, 'password': pwd }),
+            const response = await axios.post('event/create',
+                JSON.stringify({
+                    "title": "evento prueba",
+                    "category": "string",
+                    "date": "2023-04-05",
+                    "description": "string",
+                    "capacity": 0,
+                    "vacancies": 0,
+                    "ubication": {
+                      "direction": "string",
+                      "latitude": 0,
+                      "length": 0
+                    }
+                  }),
                 {
-                    headers: { 'Content-Type': 'application/json', 
-                               'Access-Control-Allow-Origin': '*',
-                               'Access-Control-Allow-Credentials': true,
-                               'Access-Control-Allow-Headers': 'Authorization, Origin, X-Requested-With, Content-Type, Accept'},
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwNzY1MzcyfQ.0N4a9keXPD9ITp9X0nkt1GuxgoWDuRqEWyQEeT-PFpU'
+                      }
                 }
             );
             console.log(JSON.stringify(response));

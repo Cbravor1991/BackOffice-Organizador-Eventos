@@ -2,10 +2,14 @@ import React from 'react';
 import { useRef, useState } from "react";
 import './CreateEventForm.scss';
 import axios from '../api/axios';
+import swal from "sweetalert2";
+import './swal.css';
+
 
 const CreateEventForm = () => {
   const userRef = useRef();
   const errRef = useRef();
+  const [error, setError] = useState(false);
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState('');
@@ -37,7 +41,7 @@ const CreateEventForm = () => {
     // if button enabled with JS hack floors
 
     let token_user;
-    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYnJhdm9yQGZpLnViYS5hciIsImV4cCI6MTY4MDY3NDU5N30.3pBK_k-ySKDrsw85MbdJO5g5tvn0XTBsPZ2NQiWuB5U' )
+    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwNzc2MTcxfQ.Zycw4sj4gWddXjPH98_ndL5aC2rdqcv55EpQrJpmHaE' )
 
     
     
@@ -46,81 +50,79 @@ const CreateEventForm = () => {
       window.location.href = "/home";
       return;
   } else {
-    token_user = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYnJhdm9yQGZpLnViYS5hciIsImV4cCI6MTY4MDY3NTcyMn0.jcjO5SqhlqfkJN2-_ETUR4Q6PC7vL3-CKC3cQE80X1I'
+    token_user = window.localStorage.getItem("token");
   }
  
-  try{  
-    const response = await axios.post('/event/create',
-            JSON.stringify({
-              "title": "evento tres",
-              "category": "string",
-              "date": "2023-04-05",
-              "description": "string",
-              "capacity": 0,
-              "vacancies": 0,
-              "ubication": {
-                "direction": "string",
-                "latitude": 0,
-                "length": 0
+
+ 
+
+  try {
+    const response = await axios.post('event/create',
+        JSON.stringify({
+            "title": title,
+            "category": category,
+            "date": date,
+            "description": description,
+            "capacity": capacity,
+            "vacancies": 0,
+            "ubication": {
+              "direction": direction,
+              "latitude": latitude,
+              "length": length
+            }
+          }),
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token_user}`
               }
-            }),
-            {
-                headers: { 'Content-Type': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwNjgzOTkyfQ.Q_uYqfAoMtSPThpb2F0pEFG8LouBg5ZZvvmBZFjZMnM',
-                 }
-            },
-
-        );} catch (err) {
-  if (!err?.response) {
-      setErrMsg('No hay respuesta del servidor');
-  } else if (err.response?.status === 400) {
-      setErrMsg('error del tipo 400');
-  } else {
-      setErrMsg('el registro fallo')
-  }
-  errRef.current.focus();
-
-  setErrMsg(null)  
-}
-
-
-   /* 
-
-
-    try {
-    
-         const response = await axios.post('/createProperty',
-            JSON.stringify({
-                'direction': direccion, 'province': provincia,  'location': localidad,
-                'country': pais, 'toilets': banios, 'rooms': habitaciones, 'people': personas, 'description': descripcion,
-                "images":  links, 'email_user': username
-            }),
-            {
-                headers: { 'Content-Type': 'application/json' }
-            },
-
-        );
-        setSuccess(true);
-       
-        //console.log(JSON.stringify(response?.data));
-        //console.log(JSON.stringify(response))
-            
-          
-
-        //clear state and controlled inputs
-
-    } catch (err) {
-        if (!err?.response) {
-            setErrMsg('No hay respuesta del servidor');
-        } else if (err.response?.status === 400) {
-            setErrMsg('error del tipo 400');
-        } else {
-            setErrMsg('el registro fallo')
         }
-        errRef.current.focus();
-
-        setErrMsg(null)  
-    }*/
+       
+    );
+    console.log(response.status);
+    swal.fire({
+      title: "Has creado tu evento correctamente, ¿qué deseas hacer?",
+      icon: "success",
+      customClass: {
+        container: 'spotify-modal-container',
+        popup: 'spotify-modal-popup',
+        title: 'spotify-modal-title',
+        content: 'spotify-modal-content',
+        confirmButton: 'spotify-modal-button',
+        cancelButton: 'spotify-modal-button'
+      },
+      showCancelButton: true,
+      showCloseButton: true,
+      cancelButtonText: "Agregar fotos a mi evento",
+      confirmButtonText: "Ir a mis eventos"
+    }).then(function(result) {
+      if (result.isConfirmed) {
+        window.location.href = "http://localhost:3000/showEvents";
+      } else if (result.isDismissed) {
+        window.location.href = "http://localhost:3000/home";
+      }
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+} catch (err) {
+    setError(true)
+    if (!err?.response) {
+        setErrMsg('El servidor no responde');
+    } else if (err.response?.status === 401) {
+        setErrMsg('Contraseña o usuario incorrecto');
+    } else if (err.response?.status === 402) {
+        setErrMsg('No tiene autorización');
+    } else {
+        setErrMsg('El ingreso ha fallado');
+    }
+   
+}
 }
 
 
@@ -128,7 +130,7 @@ const CreateEventForm = () => {
   /*------------------------------------------------------------------------------------------------------------------------*/
   return (
     <form className="create-event-form"  onSubmit={handleSubmit}>
-      <h2 className="form-title">Crear evento</h2>
+       <h2 className="form-title">Crear evento</h2>
       <div className="form-group">
         <label htmlFor="title">Nombre del evento</label>
         <input type="text" id="title" name="event-name" onChange={(e) => setTitle(e.target.value)}
@@ -168,23 +170,23 @@ const CreateEventForm = () => {
       </div>
       <div className="form-group">
         <label htmlFor="latitude">Latitud</label>
-        <input type="number" id="latitude" name="latitude" min="0" step="0.01" onChange={(e) => setLatitude(e.target.value)}
+        <input type="number" id="latitude" name="latitude" min="0" step="1" onChange={(e) => setLatitude(e.target.value)}
                             value={latitude}
                             required />
       </div>
       <div className="form-group">
         <label htmlFor="length">Longitud</label>
-        <input type="number" id="length" name="length" min="0" step="0.01" onChange={(e) => setLength(e.target.value)}
+        <input type="number" id="length" name="length" min="0" step="1" onChange={(e) => setLength(e.target.value)}
                             value={length}
                             required />
       </div>
-      {/* <div className="form-group">
+      {/*<div className="form-group">
         <label htmlFor="location">Ubicación</label>
         <div className="location-map">
           <p>Mapa de ubicación aquí</p>
         </div>
-        </div>*/}
-      <div className="form-actions">
+  </div>*/}
+  <div className="form-actions">
         <button type="submit" >Crear evento</button>
       </div>
     </form>
