@@ -7,6 +7,7 @@ import DashBoardPage from './routes/DashboardPage';
 import CreateEventForm from './routes/CreateEventForm';
 import EventList from './routes/EventList';
 import ShowsEvents from './routes/ShowsEvents';
+import EditEvent from './routes/EditEvents';
 
 import { Routes, Route } from 'react-router-dom'
 import NavBar from './components/NavBar';
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="loadEvent" element={<CreateEventForm />} />
           <Route path="eventList" element={<EventList />} />
           <Route path="showEvents" element={<ShowsEvents />} />
+          <Route path="editEvent" element={<EditEvent />} />
          
 
           {/*

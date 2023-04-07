@@ -6,7 +6,7 @@ import swal from "sweetalert2";
 import './swal.css';
 
 
-const CreateEventForm = () => {
+const EditEvent = () => {
   const userRef = useRef();
   const errRef = useRef();
   const [error, setError] = useState(false);
@@ -41,7 +41,7 @@ const CreateEventForm = () => {
     // if button enabled with JS hack floors
 
     let token_user;
-    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwODUyMzc5fQ.6quoj5K6ndYsjd_MveaK4C5tRFYBmrsXfgapsLbI98U' )
+    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwODYwNDU5fQ.VDJnw5626xeXa5Ax2CTgQUlOWhDHEDUavVUtJ1g8k-w' )
 
     
     
@@ -193,4 +193,4 @@ const CreateEventForm = () => {
   );
 }
 
-export default CreateEventForm;
+export default EditEvent;

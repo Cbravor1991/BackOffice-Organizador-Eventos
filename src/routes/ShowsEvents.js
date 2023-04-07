@@ -1,18 +1,52 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+
 import data from '../data/dataPropiedad';
 import Card from "../components/Card"
 import CardEvent from "../components/CardEvent"
-
-
-
-
-
-
-
+import { useEffect, useState } from "react";
+import axios from '../api/axios';
 
 const ShowsEvents = () => {
-    const cards = data.map(item => {
+
+
+
+  const [publications, setPublications] = useState([]);
+
+  const loadPublications = () => {
+    
+    let token_user;
+    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwODUyMzc5fQ.6quoj5K6ndYsjd_MveaK4C5tRFYBmrsXfgapsLbI98U');
+
+    if (!window.localStorage.getItem("token")){
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+      console.log("aca entro")
+    }
+
+    console.log("antes de axios")
+    axios.get('/organizer/events', {
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token_user}`
+        }
+    })
+    .then((response) => {
+      setPublications(response.data);
+     
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  
+  useEffect(() => {
+    loadPublications();
+  }, []);
+
+    const cards = publications.map(item => {
 
         return (
         
@@ -24,8 +58,9 @@ const ShowsEvents = () => {
       })
 
       return (
-       
-        (data && data.length > 0) ?
+        
+     
+        (publications && publications.length > 0) ?
         <div>
            <CardEvent />
             {cards}

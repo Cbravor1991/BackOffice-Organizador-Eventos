@@ -28,7 +28,7 @@ export default function Cards(props) {
           </Typography>
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: 'space-between', pt: 0 }}>
-          <Button href={''} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#1DB954', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1ed760' } }}>
+          <Button href={'/editEvent'} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#1DB954', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1ed760' } }}>
             Editar Evento
           </Button>
           <Button onClick={() => {}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#191414', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' } }}>
