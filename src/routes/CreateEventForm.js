@@ -99,7 +99,7 @@ const CreateEventForm = () => {
       if (result.isConfirmed) {
         window.location.href = "http://localhost:3000/showEvents";
       } else if (result.isDismissed) {
-        window.location.href = "http://localhost:3000/home";
+        window.location.href = "http://localhost:3000/imageLoader";
       }
     });
     
