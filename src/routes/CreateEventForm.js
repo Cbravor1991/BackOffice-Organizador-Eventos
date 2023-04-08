@@ -41,7 +41,7 @@ const CreateEventForm = () => {
     // if button enabled with JS hack floors
 
     let token_user;
-    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwODUyMzc5fQ.6quoj5K6ndYsjd_MveaK4C5tRFYBmrsXfgapsLbI98U' )
+    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MDk3OTIyM30.yh5XPmqTSEO-kjiBRqZyNFt-_cFw91_qbVm-RG6qyiY' )
 
     
     
@@ -80,6 +80,7 @@ const CreateEventForm = () => {
        
     );
     console.log(response.status);
+    sessionStorage.setItem("event_id", response.data.id);
     swal.fire({
       title: "Has creado tu evento correctamente, ¿qué deseas hacer?",
       icon: "success",

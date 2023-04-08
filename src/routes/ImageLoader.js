@@ -27,9 +27,9 @@ const ImageLoader = () => {
   const userRef = useRef();
   const [success, setSuccess] = useState(false);
   
-  let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MDk2NjI2OH0.oSdBRRouxUa-YZPDvVg-5x0ssjeBjXazUvFu5P9smbc';
+  let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MDk3OTIyM30.yh5XPmqTSEO-kjiBRqZyNFt-_cFw91_qbVm-RG6qyiY';
   
-  const id = 3;
+  const id = sessionStorage.getItem("event_id");
   
   useEffect(() => {
     if (!sessionStorage.getItem("urls") === null){
