@@ -13,6 +13,8 @@ import { Routes, Route } from 'react-router-dom'
 import NavBar from './components/NavBar';
 import Layout from './components/Layout';
 import { Dashboard } from '@mui/icons-material';
+import ImageLoader from './routes/ImageLoader';
+import { FileLoaderGallery } from './components/FileLoaderGallery';
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -31,6 +33,8 @@ export default function App() {
           <Route path="eventList" element={<EventList />} />
           <Route path="showEvents" element={<ShowsEvents />} />
           <Route path="editEvent" element={<EditEvent />} />
+          <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
+          <Route path="imageLoader" element={<ImageLoader />} />   
          
 
           {/*
