@@ -1,7 +1,7 @@
 import React from 'react';
 //import './App.css'
 import ImageUploading from 'react-images-uploading';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRef, useState, useEffect} from "react";
 import axios from '../api/axios';
 

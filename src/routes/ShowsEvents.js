@@ -15,7 +15,7 @@ const ShowsEvents = () => {
   const loadPublications = () => {
     
     let token_user;
-    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgwODUyMzc5fQ.6quoj5K6ndYsjd_MveaK4C5tRFYBmrsXfgapsLbI98U');
+    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYnJhdm9yQGZpLnViYS5hciIsImV4cCI6MTY4MTAzODU0MX0.vQkTEWdZAkcVQ-SycfJFyG_-sGXZSn04CkEaEcaLxEs');
 
     if (!window.localStorage.getItem("token")){
       console.log("no autorizado")
