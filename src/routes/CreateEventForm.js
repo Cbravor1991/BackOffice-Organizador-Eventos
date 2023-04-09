@@ -95,12 +95,13 @@ const CreateEventForm = () => {
       },
       showCancelButton: true,
       showCloseButton: true,
-      
+      cancelButtonText: "Agregar fotos a mi evento",
       confirmButtonText: "Ir a mis eventos"
     }).then(function(result) {
       if (result.isConfirmed) {
         window.location.href = "http://localhost:3000/showEvents";
       } else if (result.isDismissed) {
+        window.location.href = "http://localhost:3000/imageLoader";
       }
     });
     
