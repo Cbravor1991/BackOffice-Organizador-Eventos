@@ -58,7 +58,7 @@ const EditEvent = () => {
 
     var options = {
       method: 'PUT',
-      url: '/event/update',
+      url: '/organizer/event',
       params: {'': ''},
       headers: {
         'Content-Type': 'application/json',

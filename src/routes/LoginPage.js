@@ -26,7 +26,7 @@ const theme = createTheme({
 
 
 
-const LOGIN_URL = '/user/login';
+const LOGIN_URL = '/oeganizer/login';
 
 const LoginPage = () => {
     const { setAuth } = useAuth();

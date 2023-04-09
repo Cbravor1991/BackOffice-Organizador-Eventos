@@ -1,5 +1,6 @@
 import React from 'react';
 //import './App.css'
+import './EditGallery.scss';
 import ImageUploading from 'react-images-uploading';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRef, useState, useEffect} from "react";
@@ -9,14 +10,15 @@ import axios from '../api/axios';
 export function EditGallery() {
   
   const [images, setImages] = useState([]);
+  const [list, setList] = useState([]);
   const maxNumber = 100;
   
   //const id = sessionStorage.getItem("event_id");
-  const id = 12;
+  const id = 14;
   
   const loadImages = () => {
     
-    let token_user='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA1MTQ5MX0.OjoTMluUFve5RurHcDyrzSPWS7n2RKcz9oVI-gUffIU';
+    let token_user='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk';
     //window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTAxMjY3OX0.jfY9a_lN2xARrOEerd4cZgxkxDiw4dkHCPrQUhCOCf0');
 
    /* if (!window.localStorage.getItem("token")){
@@ -28,26 +30,38 @@ export function EditGallery() {
     }*/
 
      const params = new URLSearchParams([['event_id', id]]);
-       
-      const headers = {headers: { 'accept': 'application/json',
-                               //'Access-Control-Allow-Origin': '*',
-                               //'Access-Control-Allow-Credentials': true,
-                               //'Access-Control-Allow-Headers': '*',
-                               'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA1MTQ5MX0.OjoTMluUFve5RurHcDyrzSPWS7n2RKcz9oVI-gUffIUeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA1MTQ5MX0.OjoTMluUFve5RurHcDyrzSPWS7n2RKcz9oVI-gUffIU eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA1MTQ5MX0.OjoTMluUFve5RurHcDyrzSPWS7n2RKcz9oVI-gUffIU'
-                             }}  
-       
-     axios({method: 'get', url: '/event/images', params: params, headers: headers})
+                             
+     const headers = {'accept': 'application/json',
+                               'Access-Control-Allow-Origin': '*',
+                               'Access-Control-Allow-Credentials': true,
+                               'Access-Control-Allow-Headers': '*',
+                               'Authorization': 'Bearer ' + token_user
+                             }  
+                            
+     axios({method: 'get', url: '/organizer/event/images', params: params, headers: headers})
        .then((response) => {
-        setImages(response.data);
+        setList(response.data);
     })
     .catch((error) => {
       console.log(error);
     });
   }
   
+  const passImages = () => {
+     console.log("lista");   
+     console.log(list);   
+     for (let i = 0; i < list.length; i++) {
+        setImages(images => [...images, list[i].link]);
+     console.log("imágenes");   
+     console.log(images);   
+     }
+  
+  }
+  
   
   useEffect(() => {
     loadImages();
+    passImages();
   }, []); 
   
   
@@ -60,15 +74,14 @@ export function EditGallery() {
  
  
   return (
-    <div className="App">
+    <div className="create-event-form">
      
-      <h1>Therichpost.com</h1>
-     
+      <h1 className="form-title">Editar galería de imágenes</h1>
    
       <div className="container">
       <ImageUploading
         multiple
-        value={images}
+        value={list}
         onChange={onChange}
         maxNumber={maxNumber}
         dataURLKey="data_url"
@@ -84,25 +97,27 @@ export function EditGallery() {
         }) => (
 
           <div className="upload__image-wrapper">
-            <div className="mainbtndiv">
-              <button className="btn btn-primary"
+            <div className="form-actions">
+              <button
                 style={isDragging ? { color: 'red' } : undefined}
                 onClick={onImageUpload}
                 {...dragProps}
               >
                 Haga click o arrastre aquí
-              </button>
-              
-              <button className="btn btn-danger" onClick={onImageRemoveAll}>Eliminar todas las imágenes</button>
+              </button>              
+              <button onClick={onImageRemoveAll}>Eliminar todas las imágenes</button>
             </div>
+            <br/>
             {imageList.map((image, index) => (
-              <div key={index} className="image-item mt-5 mb-5 mr-5">
-                <img src={image['data_url']} />
-                <div className="image-item__btn-wrapper">
-                  <button className="btn btn-primary" onClick={() => onImageUpdate(index)}>Actualizar</button>
-                  <button className="btn btn-danger" onClick={() => onImageRemove(index)}>Eliminar</button>
+              <div key={index} className="form-group">
+                <img src={image.link} height="160"/>
+                <div className="form-actions">
+                  <button onClick={() => onImageUpdate(index)}>Actualizar</button>
+                  <button onClick={() => onImageRemove(index)}>Eliminar</button>
+                  <br/>
                 </div>
               </div>
+              
             ))}
           </div>
         )}

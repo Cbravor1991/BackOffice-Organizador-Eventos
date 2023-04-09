@@ -41,7 +41,7 @@ const CreateEventForm = () => {
     // if button enabled with JS hack floors
 
     let token_user;
-    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYnJhdm9yQGZpLnViYS5hciIsImV4cCI6MTY4MTAzODU0MX0.vQkTEWdZAkcVQ-SycfJFyG_-sGXZSn04CkEaEcaLxEs' )
+    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk' )
 
     
     
@@ -57,7 +57,7 @@ const CreateEventForm = () => {
  
 
   try {
-    const response = await axios.post('event/create',
+    const response = await axios.post('organizer/event',
         JSON.stringify({
             "title": title,
             "category": category,
