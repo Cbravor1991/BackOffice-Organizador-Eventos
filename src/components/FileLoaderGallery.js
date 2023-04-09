@@ -81,24 +81,24 @@ export class FileLoaderGallery extends Component {
    
     render() { 
         return (
-                <section style={{ backgroundColor: 'grey' }}>
-                  
-                  <div className="form-group multi-preview">
-                      {(this.fileArray || []).map(url => (
-                          <img src={url} alt='preview' height="100"/>
-                      ))}
-                  </div>
-                  
-                  <div className="form-group">
-                        <input type="file" className="form-control" onChange={this.uploadMultipleFiles} multiple />
-                  </div>
-                  
-                  <button onClick={this.uploadFiles}>Cargar fotos</button>
-                  
-                  <GoBack/>
-                    
-                </section>
-        )
+            <section style={{ backgroundColor: 'black' }}>
+              <div className="form-group multi-preview">
+                {(this.fileArray || []).map((url) => (
+                  <img src={url} alt="preview" height="100" />
+                ))}
+              </div>
+      
+              <div className="form-group">
+                <input type="file" className="form-control" onChange={this.uploadMultipleFiles} multiple />
+              </div>
+      
+              <button style={{ backgroundColor: '#1286f7', color: 'white', border: 'none', padding: '10px', borderRadius: '30px', cursor: 'pointer' }} onClick={this.uploadFiles}>
+                Cargar fotos
+              </button>
+      
+              <GoBack />
+            </section>
+          )
     }
 }
 

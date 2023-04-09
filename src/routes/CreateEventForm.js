@@ -41,7 +41,7 @@ const CreateEventForm = () => {
     // if button enabled with JS hack floors
 
     let token_user;
-    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYnJhdm9yQGZpLnViYS5hciIsImV4cCI6MTY4MTAzODU0MX0.vQkTEWdZAkcVQ-SycfJFyG_-sGXZSn04CkEaEcaLxEs' )
+    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
 
     
     
@@ -67,8 +67,8 @@ const CreateEventForm = () => {
             "vacancies": 0,
             "ubication": {
               "direction": direction,
-              "latitude": latitude,
-              "length": length
+              "latitude": 0,
+              "length": 0
             }
           }),
         {
@@ -170,7 +170,7 @@ const CreateEventForm = () => {
                             value={direction}
                             required />
       </div>
-      <div className="form-group">
+      {/*<div className="form-group">
         <label htmlFor="latitude">Latitud</label>
         <input type="number" id="latitude" name="latitude" min="0" step="1" onChange={(e) => setLatitude(e.target.value)}
                             value={latitude}
@@ -182,7 +182,7 @@ const CreateEventForm = () => {
                             value={length}
                             required />
       </div>
-      {/*<div className="form-group">
+      <div className="form-group">
         <label htmlFor="location">Ubicación</label>
         <div className="location-map">
           <p>Mapa de ubicación aquí</p>
