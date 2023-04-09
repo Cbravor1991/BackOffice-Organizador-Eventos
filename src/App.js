@@ -15,6 +15,8 @@ import Layout from './components/Layout';
 import { Dashboard } from '@mui/icons-material';
 import ImageLoader from './routes/ImageLoader';
 import { FileLoaderGallery } from './components/FileLoaderGallery';
+import EditGallery from './routes/EditGallery';
+
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -35,7 +37,7 @@ export default function App() {
           <Route path="editEvent" element={<EditEvent />} />
           <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
           <Route path="imageLoader" element={<ImageLoader />} />   
-         
+          <Route path="editGallery" element={<EditGallery />} />
 
           {/*
         <Route element={<RequireAuth allowedRoles={[ROLES.Inquilino]} />}>
