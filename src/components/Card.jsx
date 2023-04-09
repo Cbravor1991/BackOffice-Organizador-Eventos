@@ -5,10 +5,86 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import swal from 'sweetalert2';
+import axios from '../api/axios';
+import { WindowSharp } from '@mui/icons-material';
 
-const DELETE_PROPERTY_URL = '/deleteProperty/';
+const DELETE_PROPERTY_URL = '/event/delete';
+
+
+const update = async (props) => {
+  console.log("probar")
+  sessionStorage.setItem("publication_data", JSON.stringify(props));
+  window.location.href="/editEvent/"
+
+
+}
+
+const deleteEvent = async (props) => {
+
+  let token_user;
+  window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYnJhdm9yQGZpLnViYS5hciIsImV4cCI6MTY4MTAzODU0MX0.vQkTEWdZAkcVQ-SycfJFyG_-sGXZSn04CkEaEcaLxEs' )
+
+    
+
+    
+    if (!window.localStorage.getItem("token")){
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+  } else {
+    token_user = window.localStorage.getItem("token");
+  }
+
+ 
+  const params = {event_id: props.id};
+  swal.fire({
+    title: "Confirmar",
+    text: "¿Confirmas que deseas borrar la propiedad?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: 'Si, borrar!',
+    cancelButtonText: 'No',
+    dangerMode: true}).then(function(result) {
+
+      if (result['isConfirmed']) {
+       
+       
+        var options = {
+          method: 'DELETE',
+          url: '/event/delete',
+          params: {event_id: props.id},
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token_user}`
+          }
+        };
+        
+        axios.request(options).then(function (response) {
+          console.log(response.data);
+          window.location.href="/showEvents"
+        }).catch(function (error) {
+          console.error(error);
+        });
+      
+      
+      
+      }
+      
+    
+    }
+    )
+
+}
+
+
 
 export default function Cards(props) {
+
+
+  
+
+
   const stringDate = new Date(props.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   return (
     <Box sx={{ mb: 4 }}>
@@ -28,10 +104,10 @@ export default function Cards(props) {
           </Typography>
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: 'space-between', pt: 0 }}>
-          <Button href={'/editEvent'} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#1DB954', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1ed760' } }}>
+          <Button onClick={()=>{update(props)}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#1DB954', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1ed760' } }}>
             Editar Evento
           </Button>
-          <Button onClick={() => {}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#191414', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' } }}>
+          <Button onClick={() => {deleteEvent(props)}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#191414', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' } }}>
             Eliminar Evento
           </Button>
         </CardActions>
