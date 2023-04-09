@@ -16,7 +16,7 @@ export function EditGallery() {
   
   const loadImages = () => {
     
-    let token_user='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTAxMjY3OX0.jfY9a_lN2xARrOEerd4cZgxkxDiw4dkHCPrQUhCOCf0';
+    let token_user='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA1MTQ5MX0.OjoTMluUFve5RurHcDyrzSPWS7n2RKcz9oVI-gUffIU';
     //window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTAxMjY3OX0.jfY9a_lN2xARrOEerd4cZgxkxDiw4dkHCPrQUhCOCf0');
 
    /* if (!window.localStorage.getItem("token")){
@@ -27,20 +27,18 @@ export function EditGallery() {
       token_user = window.localStorage.getItem("token");
     }*/
 
-    axios.get('/event/images', 
-         JSON.stringify({
-                    'event_id': id
-                  }),
-                  {
-                    headers: { 'Content-Type': 'application/json',
-                               'Access-Control-Allow-Origin': '*',
-                               'Access-Control-Allow-Credentials': true,
-                               'Access-Control-Allow-Headers': '*',
-                               'Authorization': 'Bearer ' + token_user,
-                             }
-                 },)
-    .then((response) => {
-      setImages(response.data);
+     const params = new URLSearchParams([['event_id', id]]);
+       
+      const headers = {headers: { 'accept': 'application/json',
+                               //'Access-Control-Allow-Origin': '*',
+                               //'Access-Control-Allow-Credentials': true,
+                               //'Access-Control-Allow-Headers': '*',
+                               'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA1MTQ5MX0.OjoTMluUFve5RurHcDyrzSPWS7n2RKcz9oVI-gUffIUeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA1MTQ5MX0.OjoTMluUFve5RurHcDyrzSPWS7n2RKcz9oVI-gUffIU eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA1MTQ5MX0.OjoTMluUFve5RurHcDyrzSPWS7n2RKcz9oVI-gUffIU'
+                             }}  
+       
+     axios({method: 'get', url: '/event/images', params: params, headers: headers})
+       .then((response) => {
+        setImages(response.data);
     })
     .catch((error) => {
       console.log(error);
