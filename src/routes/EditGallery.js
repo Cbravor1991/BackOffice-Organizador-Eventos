@@ -5,6 +5,7 @@ import ImageUploading from 'react-images-uploading';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRef, useState, useEffect} from "react";
 import axios from '../api/axios';
+import swal from "sweetalert2";
 
  
 export function EditGallery() {
@@ -66,10 +67,10 @@ export function EditGallery() {
   
   
   const onChange = (imageList, addUpdateIndex) => {
-     
-    
+         
     console.log(imageList, addUpdateIndex);
-    setImages(imageList);
+    //setImages(imageList);
+    //loadImages();
   };
   
   
@@ -104,15 +105,45 @@ export function EditGallery() {
   };
  
  
-  const onImageRemove = (image) => {
+  const onImageRemove = (image) => {   
+  
+    console.log("Prepara para borrar");
+    swal.fire({
+      title: "Deseas eliminar la imagen?",
+      icon: "success",
+      customClass: {
+        container: 'spotify-modal-container',
+        popup: 'spotify-modal-popup',
+        title: 'spotify-modal-title',
+        content: 'spotify-modal-content',
+        confirmButton: 'spotify-modal-button',
+        cancelButton: 'spotify-modal-button'
+      },
+      showCancelButton: true,
+      showCloseButton: true,
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Eliminar imagen"
+    }).then(function(result) {
+      if (result.isConfirmed) {
+        deleteImage(image);
+      } else if (result.isDismissed) {
+        window.location.href = "http://localhost:3000/editGallery";
+      }
+    });
+    
+  };
+  
+  
+  
+  const deleteImage = (image) => {
     try{    
       const response= axios.delete('/organizer/event/images',
                 JSON.stringify({ 
-                    'event_id': image.event_id,
-                    'id': image.id,
-                    'link': JSON.parse(image.link)
+                    'id': image.id,               
+                    'event_id': image.event_id
                 }),
                 {
+                
                     headers: { 'Content-Type': 'application/json',
                                'Access-Control-Allow-Origin': '*',
                                'Access-Control-Allow-Credentials': true,
@@ -127,12 +158,13 @@ export function EditGallery() {
       setSuccess(true);
     })
     }catch (err) {console.log(err)}
-  };
-  
-  const onReturn = () => {
+          
+   }
+   
+   
+   const onReturn = () => {
     window.location.href = "/editEvent";
-  
-  }
+  } 
  
  
   return (
@@ -144,7 +176,7 @@ export function EditGallery() {
       <ImageUploading
         multiple
         value={list}
-        onChange={onChange}
+        //onChange={onChange}
         maxNumber={maxNumber}
         dataURLKey="data_url"
       >
