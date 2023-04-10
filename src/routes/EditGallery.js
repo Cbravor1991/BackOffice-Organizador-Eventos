@@ -14,13 +14,24 @@ export function EditGallery() {
   const [list, setList] = useState([]);
   const userRef = useRef();
   const [success, setSuccess] = useState(false);
+  const [updated, setUpdated] = useState(false);
+  const [image, setImage] = useState([]);
   const maxNumber = 100;
   
   const id = sessionStorage.getItem("event_id");
   
+  useEffect(()=>{
+     setUpdated(window.localStorage.getItem("foto_actualizada"));
+  }, [])   
+  
   let token_user;
   
+  console.log("updated");
+  console.log(updated);
+  
+  
   const loadImages = () => {
+    setUpdated(window.localStorage.getItem("foto_actualizada"))
     
     if (!window.localStorage.getItem("token")){
       console.log("no autorizado")
@@ -46,6 +57,15 @@ export function EditGallery() {
     .catch((error) => {
       console.log(error);
     });
+    
+     
+  if (updated===true) {
+     console.log("Hay foto actualizada");
+     console.log(image); 
+     imageUpdate();
+     window.localStorage.setItem("foto_actualizada", false);
+     setUpdated(false);
+   }
   }
   
   const passImages = () => {
@@ -73,10 +93,14 @@ export function EditGallery() {
     //loadImages();
   };
   
-  
   const onImageUpdate = (image) => {
+     window.localStorage.setItem("foto_actualizada", false)
+     setImage(image);
+      window.location.href ='/fileLoaderGallery';
+  }
+  
+  const imageUpdate = () => {
      
-     window.location.href ='/fileLoaderGallery';
      token_user=window.localStorage.getItem("token"); 
      const url = sessionStorage.getItem("urls");  
      console.log("Nueva url");
@@ -146,7 +170,20 @@ export function EditGallery() {
     console.log(image.event_id);
    
     try{    
-      const response = axios.delete('/organizer/event/images',
+    
+      const data=JSON.stringify({ 
+                    'id': image.id,               
+                    'event_id': image.event_id,
+                })
+      const headers =  {
+                     'Content-Type': 'application/json',
+                               'Access-Control-Allow-Origin': '*',
+                               'Access-Control-Allow-Credentials': true,
+                               'Access-Control-Allow-Headers': '*',
+                               'Authorization': 'Bearer ' + token_user,
+                             
+                 }        
+    /*  const response = axios.delete('/organizer/event/images',
                 JSON.stringify({ 
                     'id': image.id,               
                     'event_id': image.event_id,
@@ -160,7 +197,15 @@ export function EditGallery() {
                              }
                  },
 
-            )
+            )*/
+      const response = axios({method: 'delete', url: '/organizer/event/images',
+                data: data,
+                
+               headers: headers,
+                 
+
+            })      
+            
       .then((response) => {
       console.log("Imágen eliminada");
       setSuccess(true);
@@ -173,8 +218,10 @@ export function EditGallery() {
       
    const onReturn = () => {
     window.location.href = "/editEvent";
-  } 
- 
+  }
+  
+  
+  
  
   return (
     <div className="create-event-form">

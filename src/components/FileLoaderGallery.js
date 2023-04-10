@@ -54,9 +54,9 @@ export class FileLoaderGallery extends Component {
              
         sessionStorage.setItem("urls",  JSON.stringify(this.state.array));
         window.localStorage.setItem("urls",  JSON.stringify(this.state.array));
-        console.log(this.state.array)
+        window.localStorage.setItem("foto_actualizada", true);
+        console.log(this.state.array);
 
-       
     }
     
     uploadMultipleFiles(e) {

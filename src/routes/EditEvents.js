@@ -41,9 +41,7 @@ const EditEvent = () => {
     let token_user;
    // window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
 
-    
-
-    
+        
     if (!window.localStorage.getItem("token")){
       console.log("no autorizado")
       window.location.href = "/home";
@@ -88,9 +86,10 @@ const EditEvent = () => {
     }); 
 
 
-sessionStorage.setItem("event_id", id_event);
+  sessionStorage.setItem("event_id", id_event);
+  window.localStorage.setItem("foto_actualizada", false)
 
-swal.fire({
+ swal.fire({
   title: "Has modificado tu evento correctamente",
   icon: "success",
   customClass: {
