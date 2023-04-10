@@ -154,11 +154,25 @@ swal.fire({
       <div className="form-group">
         <label htmlFor="category">Categoría</label>
         <select id="category" name="category" value = {category} onChange={(e) => setCategory(e.target.value)} required  >
-          <option value="">Seleccionar categoría</option>
-          <option value="musica">Música</option>
-          <option value="arte">Arte</option>
-          <option value="teatro">Teatro</option>
-          <option value="deporte">Deporte</option>
+        <option value="">Seleccionar categoría</option>
+            <option value="Evento deportivo" style={{ color: 'black' }}>Evento deportivo</option>
+            <option value="Cena o gala" style={{ color: 'black' }}>Cena o gala</option>
+            <option value="Clase, curso o talle" style={{ color: 'black' }}>Clase, curso o talle</option>
+            <option value="Performance" style={{ color: 'black' }}>Performance</option>
+            <option value="Conferencia" style={{ color: 'black' }}>Conferencia</option>
+            <option value="Encuentro" style={{ color: 'black' }}>Encuentro</option>
+            <option value="Networking" style={{ color: 'black' }}>Networking</option>
+            <option value="Feria" style={{ color: 'black' }}>Feria</option>
+            <option value="Festival" style={{ color: 'black' }}>Festival</option>
+            <option value="Fiesta" style={{ color: 'black' }}>Fiesta</option>
+            <option value="Competencia" style={{ color: 'black' }}>Competencia</option>
+            <option value="Promoción" style={{ color: 'black' }}>Promoción</option>
+            <option value="Seminario" style={{ color: 'black' }}>Seminario</option>
+            <option value="Show" style={{ color: 'black' }}>Show</option>
+            <option value="Torneo" style={{ color: 'black' }}>Torneo</option>
+            <option value="Visita" style={{ color: 'black' }}>Visita</option>
+            <option value="Otro" style={{ color: 'black' }}>Otro</option>
+
         </select>
       </div>
       <div className="form-group">
