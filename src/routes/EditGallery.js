@@ -74,12 +74,17 @@ export function EditGallery() {
   
   
   const onImageUpdate = (image) => {
+     
+     window.location.href ='/fileLoaderGallery';
+     let token_user; 
+     const url = sessionStorage.getItem("urls");  
+     
      try{    
       const response= axios.put('/organizer/event/images',
                 JSON.stringify({ 
                     'event_id': image.event_id,
                     'id': image.id,
-                    'link': JSON.parse(image.link)
+                    'link': url
                 }),
                 {
                     headers: { 'Content-Type': 'application/json',

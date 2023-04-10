@@ -14,6 +14,7 @@ export default function LoginButton() {
 
     const handleLoginSuccess = (response) => {
         setUser(jwtDecode(response.credential));
+        console.log(jwtDecode(response.credential));
         
         const params = new URLSearchParams([['token', response.credential]]);
                              
@@ -25,17 +26,19 @@ export default function LoginButton() {
                             
         axios({method: 'get', url: '/organizer/login', params: params, headers: headers})
           .then((response) => {
+          
+          console.log(response);
           console.log(response.data);
-          let data=JSON.parse(response.data);
-          window.localStorage.setItem("token", response.data);
+          console.log(response.data.access_token);
+          window.localStorage.setItem("token", response.data.access_token);
           })
        .catch((error) => {
        console.log(error);
       });
-     
-      window.location.href = "/eventList";
-      console.log("token")
-      console.log(JSON.stringify(response.access_token))
+      
+      //window.location.href = "/eventList";
+      console.log("token");
+      console.log(window.localStorage.getItem("token"));
     };
 
     const logOut = () => {

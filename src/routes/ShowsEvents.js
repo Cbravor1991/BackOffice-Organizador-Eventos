@@ -23,7 +23,7 @@ const ShowsEvents = () => {
     }*/
     //console.log(window.localStorage.getItem("token"));
     
-    token_user = window.localStorage.getItem("token");
+    token_user = (window.localStorage.getItem("token"));
     console.log(token_user);
     axios.get('/organizer/events', {
       headers: {
