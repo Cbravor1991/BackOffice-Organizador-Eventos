@@ -30,6 +30,7 @@ const EditEvent = () => {
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
 
+  sessionStorage.setItem("event_id", id_event);
  
   console.log (length);
   
