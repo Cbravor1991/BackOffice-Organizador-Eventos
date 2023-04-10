@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 import { Button, ThemeProvider } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import axios from '../api/axios';
-import './ImageLoader.scss'
+//import './ImageLoader.scss'
 import { useRef, useState, useEffect} from "react";
 
 

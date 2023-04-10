@@ -4,7 +4,7 @@ import './App.css';
 import HomePage from './routes/HomePage';
 import DashBoardPage from './routes/DashboardPage';
 import CreateEventForm from './routes/CreateEventForm';
-import EventList from './routes/EventList';
+//import EventList from './routes/EventList';
 import ShowsEvents from './routes/ShowsEvents';
 import EditEvent from './routes/EditEvents';
 
@@ -31,7 +31,7 @@ export default function App() {
               <Route path="home" element={<HomePage />} />
               <Route path="dashboard" element={<DashBoardPage />} />
               <Route path="loadEvent" element={<CreateEventForm />} />
-              <Route path="eventList" element={<EventList />} />
+              <Route path="eventList" element={<ShowsEvents />} />
               <Route path="showEvents" element={<ShowsEvents />} />
               <Route path="editEvent" element={<EditEvent />} />
               <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
