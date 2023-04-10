@@ -110,9 +110,6 @@ export default function Cards(props) {
           <Button onClick={() => {deleteEvent(props)}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#191414', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' } }}>
             Eliminar Evento
           </Button>
-          <Button onClick={() => {}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#191414', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' } }}>
-            Ver evento
-          </Button>
         </CardActions>
       </Card>
     </Box>
