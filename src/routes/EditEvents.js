@@ -102,13 +102,13 @@ swal.fire({
   },
   showCancelButton: true,
   showCloseButton: true,
-  cancelButtonText: "Agregar fotos a mi evento",
+  cancelButtonText: "Agregar o quitar fotos de mi evento",
   confirmButtonText: "Ir a mis eventos"
 }).then(function(result) {
   if (result.isConfirmed) {
     window.location.href = "http://localhost:3000/showEvents";
   } else if (result.isDismissed) {
-    window.location.href = "http://localhost:3000/imageLoader";
+    window.location.href = "http://localhost:3000/editGallery";
   }
 });
 
