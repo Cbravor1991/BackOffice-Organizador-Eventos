@@ -19,7 +19,7 @@ const CreateEventForm = () => {
   const [vacancies, setVacancies] = useState('');
   const [direction, setDirection] = useState('');
   const [latitude, setLatitude] = useState('');
-  const [length, setLength] = useState('');
+  const [longitude, setLongitude] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
 
@@ -37,7 +37,7 @@ const CreateEventForm = () => {
     //console.log (vacancies);
     console.log(direction);
     console.log(latitude);
-    console.log(length);
+    console.log(longitude);
 
     // if button enabled with JS hack floors
   let token_user;
@@ -66,7 +66,7 @@ const CreateEventForm = () => {
             "ubication": {
               "direction": direction,
               "latitude": 0,
-              "length": 0
+              "longitude": 0
             }
           }),
         {
