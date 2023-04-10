@@ -215,6 +215,7 @@ const EditEvent = () => {
         <label htmlFor="location">Edita las fotos de tu evento</label>
         <div className="location-map">
         <button type="button" onClick={(e) => {loadImages()}}>Editar galería</button>
+        <button type="button" onClick={(e) => {onReturn()}}>Volver</button>
         </div>
   </div>
   <div className="form-actions">
