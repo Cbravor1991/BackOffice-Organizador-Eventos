@@ -102,14 +102,6 @@ const CreateEventForm = () => {
         window.location.href = "http://localhost:3000/imageLoader";
       }
     });
-    
-    
-    
-    
-    
-    
-    
-    
 } catch (err) {
     setError(true)
     if (!err?.response) {
@@ -122,80 +114,8 @@ const CreateEventForm = () => {
       token_user = window.localStorage.getItem("token");
     }
 
-
-
-
-    try {
-      const response = await axios.post('event/create',
-        JSON.stringify({
-          "title": title,
-          "category": category,
-          "date": date,
-          "description": description,
-          "capacity": capacity,
-          "vacancies": 0,
-          "ubication": {
-            "direction": direction,
-            "latitude": 0,
-            "length": 0
-          }
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token_user}`
-          }
-        }
-
-      );
-      console.log(response.status);
-      sessionStorage.setItem("event_id", response.data.id);
-
-      swal.fire({
-        title: "Has creado tu evento correctamente, ¿qué deseas hacer?",
-        icon: "success",
-        customClass: {
-          container: 'spotify-modal-container',
-          popup: 'spotify-modal-popup',
-          title: 'spotify-modal-title',
-          content: 'spotify-modal-content',
-          confirmButton: 'spotify-modal-button',
-          cancelButton: 'spotify-modal-button'
-        },
-        showCancelButton: true,
-        showCloseButton: true,
-        cancelButtonText: "Agregar fotos a mi evento",
-        confirmButtonText: "Ir a mis eventos"
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          window.location.href = "http://localhost:3000/showEvents";
-        } else if (result.isDismissed) {
-          window.location.href = "http://localhost:3000/imageLoader";
-        }
-      });
-
-
-
-
-
-
-
-
-    } catch (err) {
-      setError(true)
-      if (!err?.response) {
-        setErrMsg('El servidor no responde');
-      } else if (err.response?.status === 401) {
-        setErrMsg('Contraseña o usuario incorrecto');
-      } else if (err.response?.status === 402) {
-        setErrMsg('No tiene autorización');
-      } else {
-        setErrMsg('El ingreso ha fallado');
-      }
-
-    }
   }
-
+  }
 
 
   /*------------------------------------------------------------------------------------------------------------------------*/

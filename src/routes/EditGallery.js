@@ -1,6 +1,6 @@
 import React from 'react';
 //import './App.css'
-import './EditGallery.scss';
+//import './EditGallery.scss';
 import ImageUploading from 'react-images-uploading';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRef, useState, useEffect} from "react";
