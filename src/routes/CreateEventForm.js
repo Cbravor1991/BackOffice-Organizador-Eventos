@@ -40,16 +40,84 @@ const CreateEventForm = () => {
     console.log(length);
 
     // if button enabled with JS hack floors
-
-    let token_user;
-    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE')
-
-
-
-    if (!window.localStorage.getItem("token")) {
+  let token_user;
+    window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk' )
+    
+    if (!window.localStorage.getItem("token")){
       console.log("no autorizado")
       window.location.href = "/home";
       return;
+  } else {
+    token_user = window.localStorage.getItem("token");
+  }
+ 
+
+ 
+
+  try {
+    const response = await axios.post('organizer/event',
+        JSON.stringify({
+            "title": title,
+            "category": category,
+            "date": date,
+            "description": description,
+            "capacity": capacity,
+            "vacancies": 0,
+            "ubication": {
+              "direction": direction,
+              "latitude": 0,
+              "length": 0
+            }
+          }),
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token_user}`
+              }
+        }
+       
+    );
+    console.log(response.status);
+    sessionStorage.setItem("event_id", response.data.id);
+    
+    swal.fire({
+      title: "Has creado tu evento correctamente, ¿qué deseas hacer?",
+      icon: "success",
+      customClass: {
+        container: 'spotify-modal-container',
+        popup: 'spotify-modal-popup',
+        title: 'spotify-modal-title',
+        content: 'spotify-modal-content',
+        confirmButton: 'spotify-modal-button',
+        cancelButton: 'spotify-modal-button'
+      },
+      showCancelButton: true,
+      showCloseButton: true,
+      cancelButtonText: "Agregar fotos a mi evento",
+      confirmButtonText: "Ir a mis eventos"
+    }).then(function(result) {
+      if (result.isConfirmed) {
+        window.location.href = "http://localhost:3000/showEvents";
+      } else if (result.isDismissed) {
+        window.location.href = "http://localhost:3000/imageLoader";
+      }
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+} catch (err) {
+    setError(true)
+    if (!err?.response) {
+        setErrMsg('El servidor no responde');
+    } else if (err.response?.status === 401) {
+        setErrMsg('Contraseña o usuario incorrecto');
+    } else if (err.response?.status === 402) {
+        setErrMsg('No tiene autorización');
     } else {
       token_user = window.localStorage.getItem("token");
     }

@@ -28,7 +28,7 @@ const ImageLoader = () => {
   const userRef = useRef();
   const [success, setSuccess] = useState(false);
   
-  let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MDk3OTIyM30.yh5XPmqTSEO-kjiBRqZyNFt-_cFw91_qbVm-RG6qyiY';
+  let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk';
   
   const id = sessionStorage.getItem("event_id");
   
@@ -46,7 +46,7 @@ const ImageLoader = () => {
     //setLink(urls[i])    
           
     try{    
-      const response=await axios.post('/event/images/add',
+      const response=await axios.post('/organizer/event/images',
                 JSON.stringify({
                     'event_id': id,
                     'link': JSON.parse(sessionStorage.getItem("urls"))[i]
