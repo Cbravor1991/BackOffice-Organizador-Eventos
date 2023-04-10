@@ -13,6 +13,7 @@ $accent-color: #fff;
   font-family: Arial, sans-serif;
   font-size: 1rem;
   background-color: $background-color;
+  border: 8px solid $primary-color; /* Add border */
   
   .form-title {
     width: 100%;
