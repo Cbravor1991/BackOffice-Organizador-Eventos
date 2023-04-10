@@ -126,6 +126,11 @@ const CreateEventForm = () => {
     window.location.href = "/imageLoader";
   }
 
+  const back = () => {
+    window.location.href = "/showEvents"   
+  
+  }
+
 
   /*------------------------------------------------------------------------------------------------------------------------*/
   return (
@@ -207,6 +212,7 @@ const CreateEventForm = () => {
         </div>
         <div className="form-actions">
           <button type="submit" >Crear evento</button>
+          <button type="button" onClick={(e) => { back() }}>Volver</button>
         </div>
       </form>
       <Footer />
