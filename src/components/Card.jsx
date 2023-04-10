@@ -40,7 +40,7 @@ const deleteEvent = async (props) => {
   const params = {event_id: props.id};
   swal.fire({
     title: "Confirmar",
-    text: "¿Confirmas que deseas borrar la propiedad?",
+    text: "¿Confirmas que deseas borrar el evento",
     icon: "warning",
     showCancelButton: true,
     confirmButtonText: 'Si, borrar!',
