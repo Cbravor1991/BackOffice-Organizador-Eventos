@@ -7,8 +7,8 @@ const Footer = () => {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 500,
-    slidesToShow: 4,
+    speed: 1500,
+    slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
@@ -41,27 +41,27 @@ const Footer = () => {
   };
 
   return (
-    <footer>
+    <footer style={{ width: "100%", backgroundColor: '#000' , color: "#fff", textAlign: "center", padding: "50px 0" }}>
       <div className="container">
-        <h3>Galería de imágenes</h3>
+        <h3 style={{ marginBottom: "30px" }}>Crea los mejores eventos, ¡tú puedes!</h3>
         <Slider {...settings}>
           <div>
-            <img src="https://picsum.photos/200/300" alt="imagen 1" />
+          <img src= {require('../images/imagen_6.jpeg')} alt="imagen 1" />
           </div>
           <div>
-            <img src="https://picsum.photos/200/301" alt="imagen 2" />
+            <img src= {require('../images/imagen_1.jpeg')} alt="imagen 2" />
           </div>
           <div>
-            <img src="https://picsum.photos/200/302" alt="imagen 3" />
+            <img src= {require('../images/imagen_2.jpeg')}  alt="imagen 3" />
           </div>
           <div>
-            <img src="https://picsum.photos/200/303" alt="imagen 4" />
+            <img src={require('../images/imagen_3.jpeg')} alt="imagen 4" />
           </div>
           <div>
-            <img src="https://picsum.photos/200/304" alt="imagen 5" />
+            <img src={require('../images/imagen_4.jpeg')}alt="imagen 5" />
           </div>
           <div>
-            <img src="https://picsum.photos/200/305" alt="imagen 6" />
+            <img src={require('../images/imagen_5.jpeg')} alt="imagen 6" />
           </div>
         </Slider>
       </div>
