@@ -30,6 +30,10 @@ const EditEvent = () => {
   const [length, setLength] = useState(props.length);
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
+  const today = new Date();
+  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+  const minDate = tomorrow.toISOString().split('T')[0];
+
 
   sessionStorage.setItem("event_id", id_event);
  
@@ -177,7 +181,7 @@ swal.fire({
       </div>
       <div className="form-group">
   <label htmlFor="date">Fecha</label>
-  <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} value={date || ''} />
+  <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} value={date || ''} min={minDate} />
   </div>
       <div className="form-group">
         <label htmlFor="description">Descripción</label>
