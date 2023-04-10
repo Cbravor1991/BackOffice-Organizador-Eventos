@@ -3,17 +3,15 @@ import { googleLogout, GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
 import axios from '../api/axios';
 
-
 export default function LoginButton() {
-    const [ user, setUser ] = useState('');
-
     const handleLoginError = (error) => {
+        localStorage.clear();
+        window.location.href = "/home";
         console.log(error);
-        window.location.href = "/";
     };
 
     const handleLoginSuccess = (response) => {
-        setUser(jwtDecode(response.credential));
+        localStorage.setItem('user', jwtDecode(response.credential));
         console.log(jwtDecode(response.credential));
         
         const params = new URLSearchParams([['token', response.credential]]);
@@ -25,35 +23,24 @@ export default function LoginButton() {
                              }  
                             
         axios({method: 'get', url: '/organizer/login', params: params, headers: headers})
-          .then((response) => {
-          
-          console.log(response);
-          console.log(response.data);
-          console.log(response.data.access_token);
-          window.localStorage.setItem("token", response.data.access_token);
-          console.log("token");
-          console.log(window.localStorage.getItem("token"));
-          //window.location.href = "/eventList";          
-          })
-       .catch((error) => {
-       console.log(error);
-      });
-      
-      //window.location.href = "/eventList";
-      console.log("token");
-      console.log(window.localStorage.getItem("token"));
+            .then((response) => {            
+                window.localStorage.setItem("token", response.data.access_token);
+                window.location.href = "/eventList";          
+            })
+       .catch((error) => handleLoginError(error));
     };
 
     const logOut = () => {
         googleLogout();
-        setUser(null);
+        localStorage.clear();
+        window.location.href = "/home";
     };    
 
     return (
         <div>
-            {user ? (
+            {localStorage.getItem('user') ? (
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                    <p>{user.name}</p>
+                    <p>{localStorage.getItem('user').name}</p>
                     <span style={{width: '20px'}}></span>
                     <button className="header__btn" onClick={logOut}>Sign out</button>
                 </div>
