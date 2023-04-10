@@ -128,6 +128,11 @@ export function EditGallery() {
     })
     }catch (err) {console.log(err)}
   };
+  
+  const onReturn = () => {
+    window.location.href = "/editEvent";
+  
+  }
  
  
   return (
@@ -160,9 +165,9 @@ export function EditGallery() {
                 onClick={onImageUpload}
                 {...dragProps}
               >
-                Haga click o arrastre aquí
+                Agregar fotos
               </button>              
-              <button onClick={onImageRemoveAll}>Eliminar todas las imágenes</button>
+              <button onClick={onImageRemoveAll}>Eliminar todas las fotos</button>
             </div>
             <br/>
             {imageList.map((image, index) => (
@@ -176,6 +181,9 @@ export function EditGallery() {
               </div>
               
             ))}
+           <div className="form-actions"> 
+            <button onClick={onReturn}>Volver</button>
+          </div>  
           </div>
         )}
       </ImageUploading>

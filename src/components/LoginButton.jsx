@@ -31,12 +31,15 @@ export default function LoginButton() {
           console.log(response.data);
           console.log(response.data.access_token);
           window.localStorage.setItem("token", response.data.access_token);
+          console.log("token");
+          console.log(window.localStorage.getItem("token"));
+          window.location.href = "/eventList";          
           })
        .catch((error) => {
        console.log(error);
       });
       
-      //window.location.href = "/eventList";
+      window.location.href = "/eventList";
       console.log("token");
       console.log(window.localStorage.getItem("token"));
     };

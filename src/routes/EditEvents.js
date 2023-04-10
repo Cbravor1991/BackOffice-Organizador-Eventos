@@ -129,6 +129,11 @@ swal.fire({
 }
 }
 
+  
+  const loadImages = () => {
+      window.location.href = "/editGallery";
+  }
+
 
 
   /*------------------------------------------------------------------------------------------------------------------------*/
@@ -191,7 +196,8 @@ swal.fire({
         </div>
   </div>*/}
   <div className="form-actions">
-        <button type="submit" >Crear evento</button>
+         <button type="button" onClick={(e) => {loadImages()}}>Editar galería</button>
+        <button type="submit" >Guardar cambios</button>
       </div>
     </form>
   );
