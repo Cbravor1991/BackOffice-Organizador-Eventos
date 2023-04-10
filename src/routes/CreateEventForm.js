@@ -23,6 +23,10 @@ const CreateEventForm = () => {
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
 
+  const today = new Date();
+  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+  const minDate = tomorrow.toISOString().split('T')[0];
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,86 +44,86 @@ const CreateEventForm = () => {
     console.log(longitude);
 
     // if button enabled with JS hack floors
-  let token_user;
+    let token_user;
     //window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk' )
-    
-    if (!window.localStorage.getItem("token")){
+
+    if (!window.localStorage.getItem("token")) {
       console.log("no autorizado")
       window.location.href = "/home";
       return;
-  } else {
-    token_user = window.localStorage.getItem("token");
-  }
- 
-
- 
-
-  try {
-    const response = await axios.post('organizer/event',
-        JSON.stringify({
-            "title": title,
-            "category": category,
-            "date": date,
-            "description": description,
-            "capacity": capacity,
-            "vacancies": 0,
-            "ubication": {
-              "direction": direction,
-              "latitude": 0,
-              "longitude": 0
-            }
-          }),
-        {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token_user}`
-              }
-        }
-       
-    );
-    console.log(response.status);
-    sessionStorage.setItem("event_id", response.data.id);
-    
-    swal.fire({
-      title: "Has creado tu evento correctamente, ¿qué deseas hacer?",
-      icon: "success",
-      customClass: {
-        container: 'spotify-modal-container',
-        popup: 'spotify-modal-popup',
-        title: 'spotify-modal-title',
-        content: 'spotify-modal-content',
-        confirmButton: 'spotify-modal-button',
-        cancelButton: 'spotify-modal-button'
-      },
-      showCancelButton: true,
-      showCloseButton: true,
-      cancelButtonText: "Agregar fotos a mi evento",
-      confirmButtonText: "Ir a mis eventos"
-    }).then(function(result) {
-      if (result.isConfirmed) {
-        window.location.href = "http://localhost:3000/showEvents";
-      } else if (result.isDismissed) {
-        window.location.href = "http://localhost:3000/imageLoader";
-      }
-    });
-} catch (err) {
-    setError(true)
-    if (!err?.response) {
-        setErrMsg('El servidor no responde');
-    } else if (err.response?.status === 401) {
-        setErrMsg('Contraseña o usuario incorrecto');
-    } else if (err.response?.status === 402) {
-        setErrMsg('No tiene autorización');
     } else {
       token_user = window.localStorage.getItem("token");
     }
 
+
+
+
+    try {
+      const response = await axios.post('organizer/event',
+        JSON.stringify({
+          "title": title,
+          "category": category,
+          "date": date,
+          "description": description,
+          "capacity": capacity,
+          "vacancies": 0,
+          "ubication": {
+            "direction": direction,
+            "latitude": 0,
+            "longitude": 0
+          }
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token_user}`
+          }
+        }
+
+      );
+      console.log(response.status);
+      sessionStorage.setItem("event_id", response.data.id);
+
+      swal.fire({
+        title: "Has creado tu evento correctamente, ¿qué deseas hacer?",
+        icon: "success",
+        customClass: {
+          container: 'spotify-modal-container',
+          popup: 'spotify-modal-popup',
+          title: 'spotify-modal-title',
+          content: 'spotify-modal-content',
+          confirmButton: 'spotify-modal-button',
+          cancelButton: 'spotify-modal-button'
+        },
+        showCancelButton: true,
+        showCloseButton: true,
+        cancelButtonText: "Agregar fotos a mi evento",
+        confirmButtonText: "Ir a mis eventos"
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          window.location.href = "http://localhost:3000/showEvents";
+        } else if (result.isDismissed) {
+          window.location.href = "http://localhost:3000/imageLoader";
+        }
+      });
+    } catch (err) {
+      setError(true)
+      if (!err?.response) {
+        setErrMsg('El servidor no responde');
+      } else if (err.response?.status === 401) {
+        setErrMsg('Contraseña o usuario incorrecto');
+      } else if (err.response?.status === 402) {
+        setErrMsg('No tiene autorización');
+      } else {
+        token_user = window.localStorage.getItem("token");
+      }
+
+    }
   }
-  }
-  
-  
+
+
   const loadImages = () => {
-      window.location.href = "/imageLoader";
+    window.location.href = "/imageLoader";
   }
 
 
@@ -138,15 +142,29 @@ const CreateEventForm = () => {
           <label htmlFor="category">Categoría</label>
           <select id="category" name="category" value={category} onChange={(e) => setCategory(e.target.value)} required  >
             <option value="">Seleccionar categoría</option>
-            <option value="musica" style={{ color: 'black' }}>Música</option>
-            <option value="arte" style={{ color: 'black' }}>Arte</option>
-            <option value="teatro" style={{ color: 'black' }}>Teatro</option>
-            <option value="deporte" style={{ color: 'black' }}>Deporte</option>
+            <option value="Evento deportivo" style={{ color: 'black' }}>Evento deportivo</option>
+            <option value="Cena o gala" style={{ color: 'black' }}>Cena o gala</option>
+            <option value="Clase, curso o talle" style={{ color: 'black' }}>Clase, curso o talle</option>
+            <option value="Performance" style={{ color: 'black' }}>Performance</option>
+            <option value="Conferencia" style={{ color: 'black' }}>Conferencia</option>
+            <option value="Encuentro" style={{ color: 'black' }}>Encuentro</option>
+            <option value="Networking" style={{ color: 'black' }}>Networking</option>
+            <option value="Feria" style={{ color: 'black' }}>Feria</option>
+            <option value="Festival" style={{ color: 'black' }}>Festival</option>
+            <option value="Fiesta" style={{ color: 'black' }}>Fiesta</option>
+            <option value="Competencia" style={{ color: 'black' }}>Competencia</option>
+            <option value="Promoción" style={{ color: 'black' }}>Promoción</option>
+            <option value="Seminario" style={{ color: 'black' }}>Seminario</option>
+            <option value="Show" style={{ color: 'black' }}>Show</option>
+            <option value="Torneo" style={{ color: 'black' }}>Torneo</option>
+            <option value="Visita" style={{ color: 'black' }}>Visita</option>
+            <option value="Otro" style={{ color: 'black' }}>Otro</option>
+
           </select>
         </div>
         <div className="form-group">
           <label htmlFor="date">Fecha</label>
-          <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} value={date || ''} />
+          <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} value={date || ''} min={minDate} />
         </div>
         <div className="form-group">
           <label htmlFor="description">Descripción</label>
@@ -165,7 +183,7 @@ const CreateEventForm = () => {
             value={direction}
             required />
         </div>
-        
+
         {/*<div className="form-group">
         <label htmlFor="latitude">Latitud</label>
         <input type="number" id="latitude" name="latitude" min="0" step="1" onChange={(e) => setLatitude(e.target.value)}
@@ -178,15 +196,15 @@ const CreateEventForm = () => {
                             value={length}
                             required />
       </div>*/}
-      <div className = "form-group form-group-images">
-        <label htmlFor="location">Elegui las fotos de tu evento</label>
-        <div className="location-map">
-        <div className="form-group" >
-  <button type="button" className="btn-style btn-upload-images" onClick={(e) => {loadImages()}} >Subir imagenes</button>
-</div>
+        <div className="form-group form-group-images">
+          <label htmlFor="location">Elegui las fotos de tu evento</label>
+          <div className="location-map">
+            <div className="form-group" >
+              <button type="button" className="btn-style btn-upload-images" onClick={(e) => { loadImages() }} >Subir imagenes</button>
+            </div>
 
+          </div>
         </div>
-  </div>
         <div className="form-actions">
           <button type="submit" >Crear evento</button>
         </div>

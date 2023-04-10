@@ -19,8 +19,6 @@ import EditGallery from './routes/EditGallery';
 
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  
    return (
     <>
       <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>

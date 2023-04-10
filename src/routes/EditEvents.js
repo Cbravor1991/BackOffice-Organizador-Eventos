@@ -4,6 +4,7 @@ import './CreateEventForm.scss';
 import axios from '../api/axios';
 import swal from "sweetalert2";
 import './swal.css';
+import Footer from '../components/Foter.jsx'
 
 
 const EditEvent = () => {
@@ -29,6 +30,10 @@ const EditEvent = () => {
   const [length, setLength] = useState(props.length);
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
+  const today = new Date();
+  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+  const minDate = tomorrow.toISOString().split('T')[0];
+
 
   sessionStorage.setItem("event_id", id_event);
  
@@ -69,13 +74,11 @@ const EditEvent = () => {
         "category": category,
         "date": date,
         "description": description,
+        "direction": direction,
+        "latitude": 0,
         "capacity": capacity,
-        "vacancies": 0,
-        "ubication": {
-          "direction": direction,
-          "latitude": latitude,
-          "length": length
-        }
+        "length": 0,
+        "vacancies": 0
       }
     };
     
@@ -142,6 +145,7 @@ const EditEvent = () => {
 
   /*------------------------------------------------------------------------------------------------------------------------*/
   return (
+    <div>
     <form className="create-event-form"  onSubmit={handleSubmit}>
        <h2 className="form-title">Editar evento</h2>
       <div className="form-group">
@@ -153,17 +157,31 @@ const EditEvent = () => {
       <div className="form-group">
         <label htmlFor="category">Categoría</label>
         <select id="category" name="category" value = {category} onChange={(e) => setCategory(e.target.value)} required  >
-          <option value="">Seleccionar categoría</option>
-          <option value="musica">Música</option>
-          <option value="arte">Arte</option>
-          <option value="teatro">Teatro</option>
-          <option value="deporte">Deporte</option>
+        <option value="">Seleccionar categoría</option>
+            <option value="Evento deportivo" style={{ color: 'black' }}>Evento deportivo</option>
+            <option value="Cena o gala" style={{ color: 'black' }}>Cena o gala</option>
+            <option value="Clase, curso o talle" style={{ color: 'black' }}>Clase, curso o talle</option>
+            <option value="Performance" style={{ color: 'black' }}>Performance</option>
+            <option value="Conferencia" style={{ color: 'black' }}>Conferencia</option>
+            <option value="Encuentro" style={{ color: 'black' }}>Encuentro</option>
+            <option value="Networking" style={{ color: 'black' }}>Networking</option>
+            <option value="Feria" style={{ color: 'black' }}>Feria</option>
+            <option value="Festival" style={{ color: 'black' }}>Festival</option>
+            <option value="Fiesta" style={{ color: 'black' }}>Fiesta</option>
+            <option value="Competencia" style={{ color: 'black' }}>Competencia</option>
+            <option value="Promoción" style={{ color: 'black' }}>Promoción</option>
+            <option value="Seminario" style={{ color: 'black' }}>Seminario</option>
+            <option value="Show" style={{ color: 'black' }}>Show</option>
+            <option value="Torneo" style={{ color: 'black' }}>Torneo</option>
+            <option value="Visita" style={{ color: 'black' }}>Visita</option>
+            <option value="Otro" style={{ color: 'black' }}>Otro</option>
+
         </select>
       </div>
       <div className="form-group">
   <label htmlFor="date">Fecha</label>
-  <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} value={date || ''} />
-</div>
+  <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} value={date || ''} min={minDate} />
+  </div>
       <div className="form-group">
         <label htmlFor="description">Descripción</label>
         <textarea id="description" name="description" onChange={(e) => setDescription(e.target.value)}
@@ -181,7 +199,7 @@ const EditEvent = () => {
                             value={direction}
                             required />
       </div>
-      <div className="form-group">
+      {/*<div className="form-group">
         <label htmlFor="latitude">Latitud</label>
         <input type="number" id="latitude" name="latitude" min="0" step="1" onChange={(e) => setLatitude(e.target.value)}
                             value={latitude}
@@ -192,19 +210,20 @@ const EditEvent = () => {
         <input type="number" id="length" name="length" min="0" step="1" onChange={(e) => setLength(e.target.value)}
                             value={length}
                             required />
-      </div>
-      {/*<div className="form-group">
-        <label htmlFor="location">Ubicación</label>
-        <div className="location-map">
-          <p>Mapa de ubicación aquí</p>
-        </div>
   </div>*/}
+      <div className="form-group">
+        <label htmlFor="location">Edita las fotos de tu evento</label>
+        <div className="location-map">
+        <button type="button" onClick={(e) => {loadImages()}}>Editar galería</button>
+        </div>
+  </div>
   <div className="form-actions">
-         <button type="button" onClick={(e) => {loadImages()}}>Editar galería</button>
+        
         <button type="submit" >Guardar cambios</button>
-        <button type="button" onClick={(e) => {onReturn()}}>Volver</button>
       </div>
     </form>
+    <Footer />
+    </div>
   );
 }
 
