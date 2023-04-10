@@ -8,8 +8,10 @@ const HomePage = () => {
   // Animación del botón de llamado a la acción
   const [ctaSpring, setCTASpring] = useSpring(() => ({
     transform: 'scale(1)',
-    from: { transform: 'scale(0)' },
-    config: { mass: 1, tension: 500, friction: 30 }
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+    from: { y: 1000 },
+    to: { y: 0 },
   }));
 
   return (
@@ -22,10 +24,12 @@ const HomePage = () => {
       </header>
 
       <section className="hero-section">
+        <animated.div style={ctaSpring}>
         <div className="hero-section__content">
           <h1 className="hero-section__title">¡Organizá los mejores eventos de tu ciudad, de la manera más fácil posible!</h1>
           <p className="hero-section__subtitle">Accedé a todo lo que tenemos para ofrecerte.</p>
         </div>
+        </animated.div>
       </section>
 
     
