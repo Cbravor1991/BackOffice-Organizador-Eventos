@@ -136,6 +136,10 @@ swal.fire({
   }
 
 
+  const onReturn = () => {
+    window.location.href = "/showEvents";
+  } 
+
 
   /*------------------------------------------------------------------------------------------------------------------------*/
   return (
@@ -199,6 +203,7 @@ swal.fire({
   <div className="form-actions">
          <button type="button" onClick={(e) => {loadImages()}}>Editar galería</button>
         <button type="submit" >Guardar cambios</button>
+        <button type="button" onClick={(e) => {onReturn()}}>Volver</button>
       </div>
     </form>
   );

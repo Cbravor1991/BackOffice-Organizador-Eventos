@@ -41,7 +41,7 @@ export function EditGallery() {
                             
      axios({method: 'get', url: '/organizer/event/images', params: params, headers: headers})
        .then((response) => {
-        setList(response.data);
+        setList(response.data);        
     })
     .catch((error) => {
       console.log(error);
@@ -77,8 +77,10 @@ export function EditGallery() {
   const onImageUpdate = (image) => {
      
      window.location.href ='/fileLoaderGallery';
-     let token_user; 
+     token_user=window.localStorage.getItem("token"); 
      const url = sessionStorage.getItem("urls");  
+     console.log("Nueva url");
+     console.log(url);
      
      try{    
       const response= axios.put('/organizer/event/images',
@@ -100,6 +102,7 @@ export function EditGallery() {
       .then((response) => {
       console.log("Imágen actualizada");
       setSuccess(true);
+      loadImages();
     })
     }catch (err) {console.log(err)}
   };
@@ -136,14 +139,19 @@ export function EditGallery() {
   
   
   const deleteImage = (image) => {
+  
+    token_user = window.localStorage.getItem("token");
+    console.log(token_user);
+    console.log(image.id);
+    console.log(image.event_id);
+   
     try{    
-      const response= axios.delete('/organizer/event/images',
+      const response = axios.delete('/organizer/event/images',
                 JSON.stringify({ 
                     'id': image.id,               
-                    'event_id': image.event_id
+                    'event_id': image.event_id,
                 }),
                 {
-                
                     headers: { 'Content-Type': 'application/json',
                                'Access-Control-Allow-Origin': '*',
                                'Access-Control-Allow-Credentials': true,
@@ -156,12 +164,13 @@ export function EditGallery() {
       .then((response) => {
       console.log("Imágen eliminada");
       setSuccess(true);
+      loadImages();
     })
     }catch (err) {console.log(err)}
           
    }
    
-   
+      
    const onReturn = () => {
     window.location.href = "/editEvent";
   } 
@@ -184,8 +193,8 @@ export function EditGallery() {
           imageList,
           onImageUpload,
           onImageRemoveAll,
-          onImageUpdate,
-          onImageRemove,
+          //onImageUpdate,
+          //onImageRemove,
           isDragging,
           dragProps,
         }) => (
