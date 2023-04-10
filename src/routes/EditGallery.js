@@ -18,13 +18,27 @@ export function EditGallery() {
   const [image, setImage] = useState([]);
   const maxNumber = 100;
   
+  
+  const [link, setLink] = useState('');
+  const [urls, setUrls] = useState(['']);
+  
   const id = sessionStorage.getItem("event_id");
   
   useEffect(()=>{
      setUpdated(window.localStorage.getItem("foto_actualizada"));
   }, [])   
   
-  let token_user;
+  let token_user = window.localStorage.getItem("token");
+  
+  
+  /*if (!window.localStorage.getItem("token")){
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }*/
+
   
   console.log("updated");
   console.log(updated);
@@ -92,6 +106,7 @@ export function EditGallery() {
     //setImages(imageList);
     //loadImages();
   };
+  
   
   const onImageUpdate = (image) => {
      window.localStorage.setItem("foto_actualizada", false)
@@ -220,7 +235,10 @@ export function EditGallery() {
     window.location.href = "/editEvent";
   }
   
-  
+  const onImageUpload = () => {
+     window.location.href = "/ImageLoader";
+     
+  }
   
  
   return (
@@ -238,7 +256,7 @@ export function EditGallery() {
       >
         {({
           imageList,
-          onImageUpload,
+          //onImageUpload,
           onImageRemoveAll,
           //onImageUpdate,
           //onImageRemove,
@@ -250,19 +268,20 @@ export function EditGallery() {
             <div className="form-actions">
               <button
                 style={isDragging ? { color: 'red' } : undefined}
-                onClick={onImageUpload}
+                 onClick={() => {onImageUpload()}}
                 {...dragProps}
               >
                 Agregar fotos
               </button>              
-              <button onClick={onImageRemoveAll}>Eliminar todas las fotos</button>
+             
             </div>
             <br/>
             {imageList.map((image, index) => (
               <div key={index} className="form-group">
                 <img src={image.link} height="160"/>
                 <div className="form-actions">
-                  <button onClick={() => onImageUpdate(image)}>Actualizar</button>
+
+
                   <button onClick={() => onImageRemove(image)}>Eliminar</button>
                   <br/>
                 </div>
