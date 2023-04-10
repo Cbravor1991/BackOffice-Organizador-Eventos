@@ -23,7 +23,7 @@ const update = async (props) => {
 const deleteEvent = async (props) => {
 
   let token_user;
-  window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYnJhdm9yQGZpLnViYS5hciIsImV4cCI6MTY4MTAzODU0MX0.vQkTEWdZAkcVQ-SycfJFyG_-sGXZSn04CkEaEcaLxEs' )
+  window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
 
     
 
@@ -96,7 +96,7 @@ export default function Cards(props) {
           <Typography variant="h5" component="div" sx={{ fontSize: 20, fontWeight: 700, mb: 1 }}>
             {props.category}
           </Typography>
-          <Typography color="textSecondary" sx={{ fontSize: 14, fontWeight: 400, color: '#1DB954', mb: 1 }}>
+          <Typography color="textSecondary" sx={{ fontSize: 14, fontWeight: 400, color: '##1286f7', mb: 1 }}>
             {stringDate}
           </Typography>
           <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1 }}>
@@ -104,7 +104,7 @@ export default function Cards(props) {
           </Typography>
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: 'space-between', pt: 0 }}>
-          <Button onClick={()=>{update(props)}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#1DB954', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1ed760' } }}>
+          <Button onClick={()=>{update(props)}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '##1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
             Editar Evento
           </Button>
           <Button onClick={() => {deleteEvent(props)}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#191414', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' } }}>

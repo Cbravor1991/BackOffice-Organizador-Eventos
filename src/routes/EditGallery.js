@@ -71,6 +71,18 @@ export function EditGallery() {
     console.log(imageList, addUpdateIndex);
     setImages(imageList);
   };
+  
+  
+  const onImageUpdate = (index) => {
+  
+     console.log("Imagen actualizada");
+  };
+ 
+ 
+  const onImageRemove = (index) => {
+  
+    console.log("Imagen borrada");
+  };
  
  
   return (
@@ -112,8 +124,8 @@ export function EditGallery() {
               <div key={index} className="form-group">
                 <img src={image.link} height="160"/>
                 <div className="form-actions">
-                  <button onClick={() => onImageUpdate(index)}>Actualizar</button>
-                  <button onClick={() => onImageRemove(index)}>Eliminar</button>
+                  <button onClick={() => onImageUpdate(image.id)}>Actualizar</button>
+                  <button onClick={() => onImageRemove(image.id)}>Eliminar</button>
                   <br/>
                 </div>
               </div>
