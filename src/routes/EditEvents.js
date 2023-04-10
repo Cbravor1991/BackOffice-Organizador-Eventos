@@ -4,6 +4,7 @@ import './CreateEventForm.scss';
 import axios from '../api/axios';
 import swal from "sweetalert2";
 import './swal.css';
+import Footer from '../components/Foter.jsx'
 
 
 const EditEvent = () => {
@@ -71,13 +72,11 @@ const EditEvent = () => {
         "category": category,
         "date": date,
         "description": description,
+        "direction": direction,
+        "latitude": 0,
         "capacity": capacity,
-        "vacancies": 0,
-        "ubication": {
-          "direction": direction,
-          "latitude": latitude,
-          "length": length
-        }
+        "length": 0,
+        "vacancies": 0
       }
     };
     
@@ -143,6 +142,7 @@ swal.fire({
 
   /*------------------------------------------------------------------------------------------------------------------------*/
   return (
+    <div>
     <form className="create-event-form"  onSubmit={handleSubmit}>
        <h2 className="form-title">Editar evento</h2>
       <div className="form-group">
@@ -164,7 +164,7 @@ swal.fire({
       <div className="form-group">
   <label htmlFor="date">Fecha</label>
   <input type="date" id="date" name="date" onChange={(e) => setDate(e.target.value)} value={date || ''} />
-</div>
+  </div>
       <div className="form-group">
         <label htmlFor="description">Descripción</label>
         <textarea id="description" name="description" onChange={(e) => setDescription(e.target.value)}
@@ -182,7 +182,7 @@ swal.fire({
                             value={direction}
                             required />
       </div>
-      <div className="form-group">
+      {/*<div className="form-group">
         <label htmlFor="latitude">Latitud</label>
         <input type="number" id="latitude" name="latitude" min="0" step="1" onChange={(e) => setLatitude(e.target.value)}
                             value={latitude}
@@ -193,19 +193,20 @@ swal.fire({
         <input type="number" id="length" name="length" min="0" step="1" onChange={(e) => setLength(e.target.value)}
                             value={length}
                             required />
-      </div>
-      {/*<div className="form-group">
-        <label htmlFor="location">Ubicación</label>
-        <div className="location-map">
-          <p>Mapa de ubicación aquí</p>
-        </div>
   </div>*/}
+      <div className="form-group">
+        <label htmlFor="location">Edita las fotos de tu evento</label>
+        <div className="location-map">
+        <button type="button" onClick={(e) => {loadImages()}}>Editar galería</button>
+        </div>
+  </div>
   <div className="form-actions">
-         <button type="button" onClick={(e) => {loadImages()}}>Editar galería</button>
+        
         <button type="submit" >Guardar cambios</button>
-        <button type="button" onClick={(e) => {onReturn()}}>Volver</button>
       </div>
     </form>
+    <Footer />
+    </div>
   );
 }
 
