@@ -116,6 +116,11 @@ const CreateEventForm = () => {
 
   }
   }
+  
+  
+  const loadImages = () => {
+      window.location.href = "/imageLoader";
+  }
 
 
   /*------------------------------------------------------------------------------------------------------------------------*/
@@ -177,7 +182,7 @@ const CreateEventForm = () => {
         <label htmlFor="location">Elegui las fotos de tu evento</label>
         <div className="location-map">
         <div className="form-group" >
-  <button type="button" className="btn-style btn-upload-images">Subir imagenes</button>
+  <button type="button" className="btn-style btn-upload-images" onClick={(e) => {loadImages()}} >Subir imagenes</button>
 </div>
 
         </div>

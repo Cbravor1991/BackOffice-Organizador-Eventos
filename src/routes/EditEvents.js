@@ -87,7 +87,7 @@ const EditEvent = () => {
     }); 
 
 
-
+sessionStorage.setItem("event_id", id_event);
 
 swal.fire({
   title: "Has modificado tu evento correctamente",
@@ -134,7 +134,7 @@ swal.fire({
   /*------------------------------------------------------------------------------------------------------------------------*/
   return (
     <form className="create-event-form"  onSubmit={handleSubmit}>
-       <h2 className="form-title">Crear evento</h2>
+       <h2 className="form-title">Editar evento</h2>
       <div className="form-group">
         <label htmlFor="title">Nombre del evento</label>
         <input type="text" id="title" name="event-name" onChange={(e) => setTitle(e.target.value)}

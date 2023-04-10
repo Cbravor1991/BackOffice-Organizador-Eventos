@@ -15,16 +15,12 @@ export function EditGallery() {
   const [success, setSuccess] = useState(false);
   const maxNumber = 100;
   
-  //const id = sessionStorage.getItem("event_id");
   const id = sessionStorage.getItem("event_id");
   
   let token_user;
   
   const loadImages = () => {
     
-    //='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk';
-    //window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTAxMjY3OX0.jfY9a_lN2xARrOEerd4cZgxkxDiw4dkHCPrQUhCOCf0');
-
     if (!window.localStorage.getItem("token")){
       console.log("no autorizado")
       window.location.href = "/home";
