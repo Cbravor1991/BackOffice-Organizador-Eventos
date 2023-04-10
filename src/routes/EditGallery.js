@@ -18,16 +18,16 @@ export function EditGallery() {
   
   const loadImages = () => {
     
-    let token_user='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk';
+    let token_user;//='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk';
     //window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTAxMjY3OX0.jfY9a_lN2xARrOEerd4cZgxkxDiw4dkHCPrQUhCOCf0');
 
-   /* if (!window.localStorage.getItem("token")){
+    if (!window.localStorage.getItem("token")){
       console.log("no autorizado")
       window.location.href = "/home";
       return;
     } else {
       token_user = window.localStorage.getItem("token");
-    }*/
+    }
 
      const params = new URLSearchParams([['event_id', id]]);
                              

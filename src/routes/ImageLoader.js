@@ -28,15 +28,24 @@ const ImageLoader = () => {
   const userRef = useRef();
   const [success, setSuccess] = useState(false);
   
-  let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk';
+ // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk';
   
+  let token_user; 
   const id = sessionStorage.getItem("event_id");
   
-  useEffect(() => {
+  if (!window.localStorage.getItem("token")){
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }
+  
+  /*useEffect(() => {
     if (!sessionStorage.getItem("urls") === null){
       (JSON.parse(sessionStorage.getItem("urls"))).map(url => setUrls(prevUrls => [...prevUrls, url]));
      } 
-     }, [])
+     }, [])*/
      
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,7 +65,7 @@ const ImageLoader = () => {
                                'Access-Control-Allow-Origin': '*',
                                'Access-Control-Allow-Credentials': true,
                                'Access-Control-Allow-Headers': '*',
-                               'Authorization': 'Bearer ' + token,
+                               'Authorization': 'Bearer ' + token_user,
                              }
                  },
 
