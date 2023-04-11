@@ -4,7 +4,7 @@ import './CreateEventForm.scss';
 import axios from '../api/axios';
 import swal from "sweetalert2";
 import './swal.css';
-import Footer from '../components/Foter.jsx'
+
 
 
 const CreateEventForm = () => {
@@ -215,7 +215,6 @@ const CreateEventForm = () => {
           <button type="button" onClick={(e) => { back() }}>Volver</button>
         </div>
       </form>
-      <Footer />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import './CreateEventForm.scss';
 import axios from '../api/axios';
 import swal from "sweetalert2";
 import './swal.css';
-import Footer from '../components/Foter.jsx'
+
 
 
 const EditEvent = () => {
@@ -223,7 +223,6 @@ const EditEvent = () => {
         <button type="submit" >Guardar cambios</button>
       </div>
     </form>
-    <Footer />
     </div>
   );
 }
