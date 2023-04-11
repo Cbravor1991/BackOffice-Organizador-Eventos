@@ -16,10 +16,11 @@ import ImageLoader from './routes/ImageLoader';
 import { FileLoaderGallery } from './components/FileLoaderGallery';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import EditGallery from './routes/EditGallery';
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 export default function App() {
-   return (
+  return (
     <>
       <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
         <React.StrictMode>
@@ -27,14 +28,18 @@ export default function App() {
             <Route path="/" element={<Layout />}>
               {/* public routes */}
               <Route path="home" element={<HomePage />} />
-              <Route path="dashboard" element={<DashBoardPage />} />
-              <Route path="loadEvent" element={<CreateEventForm />} />
-              <Route path="eventList" element={<ShowsEvents />} />
-              <Route path="showEvents" element={<ShowsEvents />} />
-              <Route path="editEvent" element={<EditEvent />} />
-              <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
-              <Route path="imageLoader" element={<ImageLoader />} />   
-              <Route path="editGallery" element={<EditGallery />} />
+              
+              {/* private routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="dashboard" element={<DashBoardPage />} />
+                <Route path="loadEvent" element={<CreateEventForm />} />
+                <Route path="eventList" element={<ShowsEvents />} />
+                <Route path="showEvents" element={<ShowsEvents />} />
+                <Route path="editEvent" element={<EditEvent />} />
+                <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
+                <Route path="imageLoader" element={<ImageLoader />} />   
+                <Route path="editGallery" element={<EditGallery />} />
+              </Route>
             </Route>
          </Routes>
         </React.StrictMode>

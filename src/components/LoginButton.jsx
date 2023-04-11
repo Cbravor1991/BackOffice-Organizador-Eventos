@@ -11,7 +11,7 @@ export default function LoginButton() {
     };
 
     const handleLoginSuccess = (response) => {
-        localStorage.setItem('user', jwtDecode(response.credential));
+        localStorage.setItem('user', jwtDecode(response.credential).name);
         console.log(jwtDecode(response.credential));
         
         const params = new URLSearchParams([['token', response.credential]]);
@@ -40,7 +40,7 @@ export default function LoginButton() {
         <div>
             {localStorage.getItem('user') ? (
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                    <p>{localStorage.getItem('user').name}</p>
+                    <p>{localStorage.getItem('user')}</p>
                     <span style={{width: '20px'}}></span>
                     <button className="header__btn" onClick={logOut}>Sign out</button>
                 </div>
