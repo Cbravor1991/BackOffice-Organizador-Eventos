@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from '../api/axios';
 import './ImageLoader.scss'
 import { useRef, useState, useEffect} from "react";
+import swal from "sweetalert2";
 
 
 const theme = createTheme({
@@ -50,7 +51,7 @@ const ImageLoader = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   for(let i=0; i<(JSON.parse(sessionStorage.getItem("urls"))).length; i++) {  
+    for(let i=0; i<(JSON.parse(sessionStorage.getItem("urls"))).length; i++) {  
     
     //setLink(urls[i])    
           
@@ -73,6 +74,9 @@ const ImageLoader = () => {
       .then((response) => {
       console.log("Imágen cargada");
       setSuccess(true);
+      navigate('/editGallery')
+      
+      
     })
     }catch (err) {console.log(err)}
    
@@ -86,12 +90,15 @@ const ImageLoader = () => {
     <>
 
      {success ? (
-                <section style={{ backgroundColor: 'grey' }}>
+                /*<section style={{ backgroundColor: 'grey' }}>
                     <h1>Fotos cargadas con exito!</h1>
                     <p>
-                        <a href="/loadEvent">Volver</a>
+                        <a href="/editGallery">Volver</a>
                     </p>
-                </section>
+                    
+                    
+                </section>*/
+                window.location.href = "http://localhost:3000/imageLoader"
             ) : (
  
       <ThemeProvider theme={theme}>
@@ -104,7 +111,7 @@ const ImageLoader = () => {
         <br/>
         <br/>
       
-        <Button variant="outlined" onClick={() => navigate('/fileLoaderGallery')}> Seleccionar fotos </Button>
+        <Button variant="outlined" onClick={() => navigate('/fileLoaderGallery')}> Cargar </Button>
         
         <br/>
         <br/>
@@ -114,6 +121,12 @@ const ImageLoader = () => {
                     fontSize: 30,
                     fontStyle: 'italic',
                   }}>Aceptar</button>
+
+       <button type="submit" titleStyle={{
+                    color: '#00BAD4',
+                    fontSize: 30,
+                    fontStyle: 'italic',
+                  }}>Cancelar</button>
 
        </form> 
       </ThemeProvider>

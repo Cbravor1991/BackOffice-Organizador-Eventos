@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import GoBack from '../components/GoBack';
+import { useState } from "react";
+import swal from "sweetalert2";
 
 
 export class FileLoaderGallery extends Component {
-   
+    
     static contextTypes = {
-       router: () => true,
+       router: () => true,       
        }
        
     fileObj = [];
@@ -18,7 +20,8 @@ export class FileLoaderGallery extends Component {
             
         this.state = {
             file: [null],
-            array: []
+            array: [],
+            loaded: false
         }
         
         this.uploadMultipleFiles = this.uploadMultipleFiles.bind(this)
@@ -48,7 +51,6 @@ export class FileLoaderGallery extends Component {
                    body: data})
                .then(async result => result.json())
                .then(async result => {this.state.array.push(result.secure_url)})
-               
                .catch(err => console.log(err))
              }
              
@@ -56,6 +58,24 @@ export class FileLoaderGallery extends Component {
         window.localStorage.setItem("urls",  JSON.stringify(this.state.array));
         window.localStorage.setItem("foto_actualizada", true);
         console.log(this.state.array);
+        this.state.loaded = true;
+   
+        swal.fire({
+        title: "Has cargado las imágenes correctamente",
+        icon: "success",
+        customClass: {
+          container: 'spotify-modal-container',
+          popup: 'spotify-modal-popup',
+          title: 'spotify-modal-title',
+          content: 'spotify-modal-content',
+          confirmButton: 'spotify-modal-button',
+          cancelButton: 'spotify-modal-button'
+        },
+        showCloseButton: true,
+        confirmButtonText: "Aceptar"
+        }).then(function (result) {  
+          window.location.href = "http://localhost:3000/imageLoader";
+        });
 
     }
     
@@ -84,19 +104,21 @@ export class FileLoaderGallery extends Component {
             <section style={{ backgroundColor: 'black' }}>
               <div className="form-group multi-preview">
                 {(this.fileArray || []).map((url) => (
-                  <img src={url} alt="preview" height="100" />
+                  <img src={url} alt="preview" height="150" />
                 ))}
               </div>
-      
+              <br/>
               <div className="form-group">
-                <input type="file" className="form-control" onChange={this.uploadMultipleFiles} multiple />
+                <input type="file" className="form-control" onChange={this.uploadMultipleFiles}
+                  style={{ backgroundColor: 'rgba(52, 52, 52, 0.8)', color: "white" }}
+                  multiple />
               </div>
-      
-              <button style={{ backgroundColor: '#1286f7', color: 'white', border: 'none', padding: '10px', borderRadius: '30px', cursor: 'pointer' }} onClick={this.uploadFiles}>
+              <br/>
+              <button disabled={this.state.loaded} style={{ backgroundColor: '#1286f7', color: 'white', border: 'none', padding: '10px', borderRadius: '30px', cursor: 'pointer' }} onClick={this.uploadFiles}>
                 Cargar fotos
               </button>
-      
               <GoBack />
+              <br/>
             </section>
           )
     }
