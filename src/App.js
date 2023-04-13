@@ -18,6 +18,7 @@ import EditGallery from './routes/EditGallery';
 import ProtectedRoute from './components/ProtectedRoute';
 
 
+
 export default function App() {
   return (
     <>
