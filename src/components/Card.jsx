@@ -8,26 +8,61 @@ import Typography from '@mui/material/Typography';
 import swal from 'sweetalert2';
 import axios from '../api/axios';
 import { WindowSharp } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
 
 const DELETE_PROPERTY_URL = '/event/delete';
 
 
-const update = async (props) => {
+export function Cards(props) {
+
+
+ const [image, setImage] = useState([]); 
+
+
+ const update = async (props) => {
   console.log("probar")
   sessionStorage.setItem("publication_data", JSON.stringify(props));
   window.location.href="/editEvent/"
 
 
-}
+ }
 
-const deleteEvent = async (props) => {
+ const loadImages = () => {
+  
+    let token_user;  
+    if (!window.localStorage.getItem("token")){
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }
+
+     const params = new URLSearchParams([['event_id', props.id]]);
+                             
+     const headers = {'accept': 'application/json',
+                               'Access-Control-Allow-Origin': '*',
+                               'Access-Control-Allow-Credentials': true,
+                               'Access-Control-Allow-Headers': '*',
+                               'Authorization': 'Bearer ' + token_user
+                             }  
+                            
+    axios({method: 'get', url: '/organizer/event/images', params: params, headers: headers})
+       .then((response) => {
+        setImage((response.data)[0]); 
+        console.log("image");   
+        console.log((response.data)[0]);    
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+   };
+
+
+ const deleteEvent = async (props) => {
 
   let token_user;
-  window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
-
-    
-
-    
+      
     if (!window.localStorage.getItem("token")){
       console.log("no autorizado")
       window.location.href = "/home";
@@ -36,9 +71,9 @@ const deleteEvent = async (props) => {
     token_user = window.localStorage.getItem("token");
   }
 
- 
   const params = {event_id: props.id};
-  swal.fire({
+
+   swal.fire({
     title: "Confirmar",
     text: "¿Confirmas que deseas borrar el evento",
     icon: "warning",
@@ -48,8 +83,7 @@ const deleteEvent = async (props) => {
     dangerMode: true}).then(function(result) {
 
       if (result['isConfirmed']) {
-       
-       
+              
         var options = {
           method: 'DELETE',
           url: '/event/delete',
@@ -65,31 +99,23 @@ const deleteEvent = async (props) => {
           window.location.href="/showEvents"
         }).catch(function (error) {
           console.error(error);
-        });
-      
-      
-      
-      }
-      
-    
-    }
-    )
-
-}
-
-
-
-export default function Cards(props) {
-
-
-  
-
+        });      
+      }    
+    })
+   } 
 
   const stringDate = new Date(props.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+  
+  
+  useEffect(() => {
+    loadImages();
+  }, []);
+  
   return (
     <Box sx={{ mb: 4 }}>
       <Card variant="outlined" sx={{ borderRadius: 2, backgroundColor: '#282828', color: '#fff' }}>
         <CardContent sx={{ pb: 2 }}>
+          <img src={image.link} alt="preview" height="150" />
           <Typography variant="h6" component="div" sx={{ fontSize: 16, fontWeight: 700, mb: 1 }}>
             {props.title}
           </Typography>
@@ -114,4 +140,4 @@ export default function Cards(props) {
       </Card>
     </Box>
   );
-}
+} export default Cards;

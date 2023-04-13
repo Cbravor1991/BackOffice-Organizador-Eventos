@@ -7,11 +7,14 @@ import axios from '../api/axios';
 
 
 const ShowsEvents = () => {
+
   const [publications, setPublications] = useState([]);
   const [cardAmount, setCardAmount] = useState(0);
-
+  
+  let token_user;
+  
   const loadPublications = () => {
-    let token_user;
+    
     //window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE');
     /*if (!window.localStorage.getItem("token")){
       console.log("no autorizado")
