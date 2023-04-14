@@ -1,6 +1,5 @@
 import React from 'react';
 import { useRef, useState } from "react";
-import './CreateEventForm.scss';
 import axios from '../api/axios';
 import swal from "sweetalert2";
 import './swal.css';
