@@ -21,6 +21,7 @@ import CardEvent from '../components/CardEvent';
 import { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import Navbar from '../components/NavBar';
+import swal from 'sweetalert2';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,7 +51,7 @@ export default function ShowsEvents() {
 
   const loadPublications = () => {
     
-    //window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE');
+    
     /*if (!window.localStorage.getItem("token")){
       console.log("no autorizado")
       window.location.href = "/home";
@@ -90,9 +91,59 @@ export default function ShowsEvents() {
     // handle view button click for the row
   };
 
-  const handleEditClick = (event, row) => {
-    // handle edit button click for the row
-  };
+  const update = async (props) => {
+    console.log("probar")
+    sessionStorage.setItem("publication_data", JSON.stringify(props));
+    window.location.href="/editEvent/"
+  
+  
+   }
+
+   const deleteEvent = async (props) => {
+
+    let token_user;
+        
+      if (!window.localStorage.getItem("token")){
+        console.log("no autorizado")
+        window.location.href = "/home";
+        return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }
+  
+    const params = {event_id: props.id};
+  
+     swal.fire({
+      title: "Confirmar",
+      text: "¿Confirmas que deseas borrar el evento?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: 'Si, borrar!',
+      cancelButtonText: 'No',
+      dangerMode: true}).then(function(result) {
+  
+        if (result['isConfirmed']) {
+                
+          var options = {
+            method: 'DELETE',
+            url: '/organizer/event',
+            params: {event_id: props.id},
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token_user}`
+            }
+          };
+          
+          axios.request(options).then(function (response) {
+            console.log(response.data);
+            window.location.href="/showEvents"
+          }).catch(function (error) {
+            console.error(error);
+          });      
+        }    
+      })
+     } 
+  
 
   const handleDeleteClick = (event, row) => {
     // handle delete button click for the row
@@ -106,7 +157,8 @@ export default function ShowsEvents() {
     setRowsPerPage(event.target.value);
   };
 
-  const filteredData = data.filter((row) =>
+  const filteredData = publications
+  .filter((row) =>
     row.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
@@ -114,7 +166,7 @@ export default function ShowsEvents() {
 
 
   return (
-    (data && data.length > 0) ?
+    (publications && publications.length > 0) ?
       <div>
         <Navbar/>
         <CardEvent />
@@ -176,13 +228,13 @@ export default function ShowsEvents() {
                       </IconButton>
                       <IconButton
                         aria-label="editar"
-                        onClick={(event) => handleEditClick(event, row)}
+                        onClick={()=>{update(row)}}
                       >
                         EDITAR
                       </IconButton>
                       <IconButton
                         aria-label="eliminar"
-                        onClick={(event) => handleDeleteClick(event, row)}
+                        onClick={() => {deleteEvent(row)}}
                       >
                         <DeleteIcon />
                       </IconButton>

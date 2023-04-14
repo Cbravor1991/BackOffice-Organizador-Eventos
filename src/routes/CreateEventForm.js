@@ -82,7 +82,8 @@ const CreateEventForm = () => {
       setCapacity(numberOfTickets);
     }
   };
-  const handleSubmit = async (e) => { e.preventDefault();
+  const handleSubmit = async (e) => { 
+  e.preventDefault();
 
 
     console.log("hola")
@@ -96,9 +97,8 @@ const CreateEventForm = () => {
     console.log(latitude);
     console.log(longitude);
 
-    // if button enabled with JS hack floors
+    
     let token_user;
-    //window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqZWNhc3RpbGxvQGZpLnViYS5hciIsImV4cCI6MTY4MTA4Mzk0OH0.1lfXwumeCg1OGgP6lGdJNd4SeEwqbRlhNjP0wWyo_Lk' )
 
     if (!window.localStorage.getItem("token")) {
       console.log("no autorizado")
@@ -124,7 +124,8 @@ const CreateEventForm = () => {
             "direction": direction,
             "latitude": 0,
             "longitude": 0
-          }
+          },
+          "pic": "string"
         }),
         {
           headers: {
@@ -156,7 +157,7 @@ const CreateEventForm = () => {
         if (result.isConfirmed) {
           window.location.href = "http://localhost:3000/showEvents";
         } else if (result.isDismissed) {
-          window.location.href = "http://localhost:3000/imageLoader";
+          //window.location.href = "http://localhost:3000/imageLoader";
         }
       });
     } catch (err) {
