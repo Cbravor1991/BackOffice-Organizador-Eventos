@@ -9,8 +9,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import data from '../data/dataEvents';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -22,6 +20,8 @@ import { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import Navbar from '../components/NavBar';
 import swal from 'sweetalert2';
+import { Button} from '@mui/material';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,6 +48,8 @@ export default function ShowsEvents() {
   const [publications, setPublications] = useState([]);
   const [cardAmount, setCardAmount] = useState(0);
   let token_user;
+  
+ 
 
   const loadPublications = () => {
     
@@ -220,19 +222,54 @@ export default function ShowsEvents() {
                       {row.direction}
                     </StyledTableCell>
                     <StyledTableCell align="right">
-                      <IconButton
+                      <Button 
+                    sx={{
+                    backgroundColor: '#1286f7',
+                    border: 'none',
+                    color: 'white',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    padding: '10px 20px',
+                    borderRadius: '30px',
+                    marginTop: '20px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease-in-out'
+                  }}
                         aria-label="ver"
                         onClick={(event) => handleViewClick(event, row)}
                       >
                         VER
-                      </IconButton>
-                      <IconButton
+                      </Button>
+                      <Button
+                      sx={{
+                        backgroundColor: '#1286f7',
+                        border: 'none',
+                        color: 'white',
+                        fontSize: '16px',
+                        fontWeight: 'bold',
+                        padding: '10px 20px',
+                        borderRadius: '30px',
+                        marginTop: '20px',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s ease-in-out'
+                      }}
                         aria-label="editar"
                         onClick={()=>{update(row)}}
                       >
                         EDITAR
-                      </IconButton>
-                      <IconButton
+                      </Button>
+                      <IconButton sx={{
+                    backgroundColor: '#1286f7',
+                    border: 'none',
+                    color: 'white',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    padding: '10px 20px',
+                    borderRadius: '30px',
+                    marginTop: '20px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease-in-out'
+                  }}
                         aria-label="eliminar"
                         onClick={() => {deleteEvent(row)}}
                       >
@@ -246,6 +283,7 @@ export default function ShowsEvents() {
         </TableContainer>
       </div>
       : <div>
+        <Navbar/>
       <CardEvent />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
