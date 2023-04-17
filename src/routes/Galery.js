@@ -3,13 +3,8 @@ import ImageGrid from '../components/ImageGrid';
 import '../styles/index.css';
 import { Button, Divider, Typography, TextField } from '@mui/material';
 import ProgressBar from '../components/ProgressBar';
-import Box from '@mui/material/Box';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import axios from '../api/axios';
-import swal from 'sweetalert2';
 import './swal.css'
+import Navbar from '../components/NavBar';
 
 
 function Galery() {
@@ -42,7 +37,10 @@ function Galery() {
   };
 
   return (
+    <div>
+    <Navbar />
     <div className="Galery">
+      
       <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
         Selecciona tus fotos para cargar a la galeria
       </Typography>
@@ -88,6 +86,7 @@ function Galery() {
       </Button>
 
       <ImageGrid setSelectedImg={setSelectedImg} />
+    </div>
     </div>
   )
 }

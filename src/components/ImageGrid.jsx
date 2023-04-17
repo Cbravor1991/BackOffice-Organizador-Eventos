@@ -1,10 +1,17 @@
 import React from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 
-
-const ImageGrid = ({ setSelectedImg }) => {
+const ImageGrid = ({ setSelectedImg }) => {;
+  let photos;
+  if (!window.localStorage.getItem("photos_user")) {
+    photos = ["hola"]
+    return;
+  } else {
+    photos = JSON.parse(window.localStorage.getItem("photos_user"));
+  }
  
-  let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+  
 
 
 return (
