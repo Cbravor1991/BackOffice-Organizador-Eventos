@@ -13,7 +13,6 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material';
 import swal from 'sweetalert2';
 import Navbar from '../components/NavBar';
-import UploadButtons from '../components/UploadButton';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
