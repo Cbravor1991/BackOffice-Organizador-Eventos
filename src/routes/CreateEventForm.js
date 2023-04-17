@@ -56,7 +56,7 @@ const CreateEventForm = () => {
   const map = useRef(null);
   const [lat, setLat] = useState(-34.599722222222);
   const [lon, setLon] = useState(-58.381944444444);
-  const [zoom, setZoom] = useState(10);
+  const [zoom, setZoom] = useState(7);
 
 
   const today = new Date();
@@ -72,15 +72,18 @@ const CreateEventForm = () => {
     zoom: zoom
    });
    
-   const coordinates = new mapboxgl.LngLat(-58.38, -34.59);
-   new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
-   map.addControl(new mapboxgl.NavigationControl(), "top-right");
+   //const coordinates = new mapboxgl.LngLat(-58.38, -34.59);
+   //new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+   map.addControl(new mapboxgl.NavigationControl({showZoom: true}));
    
    map.addControl(
    new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     mapboxgl: mapboxgl,
-    marker: true,
+    marker: {
+      color: 'red',
+      offset: [340,-500]
+     },
     countries: 'ar',
     placeholder: direction
     })
@@ -237,7 +240,7 @@ const CreateEventForm = () => {
   }
 
 
-  useEffect(() => {
+/*  useEffect(() => {
    if (!map.current) return;
    map.current.on('move', () => {
    setLon(map.current.getCenter().lon.toFixed());
@@ -246,7 +249,22 @@ const CreateEventForm = () => {
    const coordinates = new mapboxgl.LngLat(lon, lat);
    new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
    });
-  });
+  }); */
+  
+  
+  useEffect(() => {
+
+    map.current && map.current.on(
+        'load', 
+        () => {
+          const coordinates = new mapboxgl.LngLat(lon,lat);
+          new mapboxgl.Marker({ color: '#63df29', scale: 1.5 }).setLngLat(coordinates).addTo(map);
+
+        }
+    )
+
+}, [])
+  
 
   const loadImages = (files) => {
     console.log("entro")
@@ -367,11 +385,10 @@ const CreateEventForm = () => {
                   Ubicación
                 </Typography>
               <div ref={mapContainer} className="map-container" 
-               style={{marginTop: "10px", marginLeft: "250px", height: 350, width: 350, justifyContent: 'center'}}/>
+               style={{marginTop: "10px", marginLeft: "50px", height: 500, width: 700, justifyContent: 'center'}}/>
                </Grid>
              </Grid>
                 
-            <Divider />
           </Stack>
 
         </Stack>
