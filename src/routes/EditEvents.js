@@ -153,31 +153,9 @@ const EditEvent = () => {
       });
 
 
-      sessionStorage.setItem("event_id", id_event);
-      window.localStorage.setItem("foto_actualizada", false)
-
-      swal.fire({
-        title: "Has modificado tu evento correctamente",
-        icon: "success",
-        customClass: {
-          container: 'spotify-modal-container',
-          popup: 'spotify-modal-popup',
-          title: 'spotify-modal-title',
-          content: 'spotify-modal-content',
-          confirmButton: 'spotify-modal-button',
-          cancelButton: 'spotify-modal-button'
-        },
-        showCancelButton: true,
-        showCloseButton: true,
-        cancelButtonText: "Agregar o quitar fotos de mi evento",
-        confirmButtonText: "Ir a mis eventos"
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          window.location.href = "http://localhost:3000/showEvents";
-        } else if (result.isDismissed) {
-          //window.location.href = "http://localhost:3000/editGallery";
-        }
-      });
+      window.localStorage.setItem("event_id", id_event);
+  
+      window.location.href = "/photoUpload";
 
 
 
@@ -197,14 +175,7 @@ const EditEvent = () => {
   }
 
 
-  const loadImages = () => {
-    window.location.href = "/editGallery";
-  }
-
-
-  const onReturn = () => {
-    window.location.href = "/showEvents";
-  }
+  
 
 
   /*------------------------------------------------------------------------------------------------------------------------*/
@@ -296,7 +267,31 @@ const EditEvent = () => {
             </Grid>
 
 
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1 }}>
+                  Edita las fotos de tu evento
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                  <Button variant="contained" onClick={handleSubmit} sx={{
+                    backgroundColor: '#1286f7',
+                    border: 'none',
+                    color: 'white',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    padding: '10px 20px',
+                    borderRadius: '30px',
+                    marginTop: '20px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease-in-out'
+                  }}>Cargar fotos</Button>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
 
+              </Grid>
+
+            </Grid>
 
 
 
@@ -312,9 +307,6 @@ const EditEvent = () => {
           </Stack>
 
         </Stack>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>Editar el evento</Button>
-        </Box>
       </Box>
 
     </ThemeProvider>

@@ -13,7 +13,6 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material';
 import swal from 'sweetalert2';
 import Navbar from '../components/NavBar';
-import UploadButtons from '../components/UploadButtons';
 
 const theme = createTheme({
   palette: {
@@ -151,8 +150,8 @@ const CreateEventForm = () => {
 
       );
       console.log(response.status);
-      sessionStorage.setItem("event_id", response.data.id);
-      window.location.href = "/galery";
+      window.localStorage.setItem("event_id", response.data.id);
+      window.location.href = "/photoUpload";
  } catch (err) {
       setError(true)
       if (!err?.response) {

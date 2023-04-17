@@ -30,28 +30,12 @@ function Galery() {
 
     const handleEvent = (e) => {
 
-     
-      swal.fire({
-        title: "Has creado tu evento correctamente",
-        icon: "success",
-        customClass: {
-          container: 'spotify-modal-container',
-          popup: 'spotify-modal-popup',
-          title: 'spotify-modal-title',
-          content: 'spotify-modal-content',
-          confirmButton: 'spotify-modal-button',
-          cancelButton: 'spotify-modal-button'
-        },
-        showCancelButton: true,
-        showCloseButton: true,
-        confirmButtonText: "Ir a mis eventos"
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          window.location.href = '/showEvents';
-        } else if (result.isDismissed) {
-          //window.location.href = "http://localhost:3000/editGallery";
-        }
-      });
+      let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+          photos= [];
+          window.localStorage.setItem("photos_user", JSON.stringify(photos));
+          window.location.href = '/updatePhotoGallery';
+
+
       
       
 
@@ -60,10 +44,7 @@ function Galery() {
   return (
     <div className="Galery">
       <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
-        Galeria
-      </Typography>
-      <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
-        Selecciona una foto para eliminar o comvertirla en portada
+        Selecciona tus fotos para cargar a la galeria
       </Typography>
 
       <Button sx={{
