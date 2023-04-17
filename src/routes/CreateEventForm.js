@@ -14,6 +14,13 @@ import { ThemeProvider } from '@mui/material';
 import swal from 'sweetalert2';
 import Navbar from '../components/NavBar';
 import UploadButtons from '../components/UploadButtons';
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+ 
+
+mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
+
 
 const theme = createTheme({
   palette: {
@@ -45,11 +52,56 @@ const CreateEventForm = () => {
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState(false);
+  
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [lat, setLat] = useState(-34.599722222222);
+  const [lon, setLon] = useState(-58.381944444444);
+  const [zoom, setZoom] = useState(10);
+
 
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
 
+
+  useEffect(() => {
+    const map = new mapboxgl.Map({
+    container: mapContainer.current,
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center: [lon, lat],
+    zoom: zoom
+   });
+   
+   const coordinates = new mapboxgl.LngLat(-58.38, -34.59);
+   new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+   map.addControl(new mapboxgl.NavigationControl(), "top-right");
+   
+   map.addControl(
+   new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl,
+    marker: false,
+    countries: 'ar',
+    })
+   ); 
+   
+   return () => map.remove();
+ });
+   
+    
+  const getAddress = () => {
+ 
+   
+  }
+  
+  
+  const getCoordinates = () => {
+ 
+  
+  }
+  
+  
   const handleDateChange = (e) => {
     const selectedDate = new Date(e.target.value);
     const currentDate = new Date();
@@ -177,6 +229,25 @@ const CreateEventForm = () => {
   }
 
 
+  const handleChangeDirection = (address) => {
+  
+    setDirection(address);
+    //getCoordinates();
+  
+  }
+
+
+  useEffect(() => {
+   if (!map.current) return;
+   map.current.on('move', () => {
+   setLon(map.current.getCenter().lon.toFixed());
+   setLat(map.current.getCenter().lat.toFixed());
+   setZoom(map.current.getZoom().toFixed());
+   const coordinates = new mapboxgl.LngLat(lon, lat);
+   new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+   });
+  });
+
   const loadImages = (files) => {
     console.log("entro")
   }
@@ -186,8 +257,7 @@ const CreateEventForm = () => {
   }
 
   return (
-
-
+  
     <ThemeProvider theme={theme}>
       <Box sx={{ border: '1px solid black' }}>
         <Navbar />
@@ -268,9 +338,8 @@ const CreateEventForm = () => {
                 <TextField fullWidth sx={{ m: 1 }} type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
               </Grid>
               <Grid item xs={6}>
-                <TextField fullWidth sx={{ m: 1 }} label="Dirección" value={direction} variant="outlined" onChange={(e) => setDirection(e.target.value)} />
+                <TextField fullWidth sx={{ m: 1 }} label="Dirección" value={direction} variant="outlined" onChange={(e) => handleChangeDirection(e.target.value)} />
               </Grid>
-
             </Grid>
 
             <Grid container spacing={2}>
@@ -291,16 +360,19 @@ const CreateEventForm = () => {
                     cursor: 'pointer',
                     transition: 'background-color 0.2s ease-in-out'
                   }}>Cargar fotos</Button>
-                </Box>
+                </Box>             
               </Grid>
               <Grid item xs={6}>
-
-              </Grid>
-
-            </Grid>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1 }}>
+                  Ubicación
+                </Typography>
+              <div ref={mapContainer} className="map-container" 
+               style={{marginTop: "10px", marginLeft: "250px", height: 350, width: 350, justifyContent: 'center'}}/>
+               </Grid>
+             </Grid>
+                
             <Divider />
           </Stack>
-
 
         </Stack>
       
