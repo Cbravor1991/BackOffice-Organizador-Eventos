@@ -13,9 +13,10 @@ import { Dashboard } from '@mui/icons-material';
 //import ImageLoader from './routes/ImageLoader';
 import { FileLoaderGallery } from './components/FileLoaderGallery';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import EditGallery from './routes/EditGallery';
+
 import ProtectedRoute from './components/ProtectedRoute';
 import Galery from './routes/Galery'
+import UpdatePhotoGallery from './routes/UpdatePhotoGallery'
 
 
 
@@ -37,8 +38,9 @@ export default function App() {
                 <Route path="editEvent" element={<EditEvent />} />
                 <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
                
-                <Route path="editGallery" element={<EditGallery />} />
-                <Route path="galery" element={<Galery />} />
+               
+                <Route path="photoUpload" element={<Galery />} />
+                <Route path= "updatePhotoGallery" element={<UpdatePhotoGallery />}/>
               </Route>
             </Route>
          </Routes>

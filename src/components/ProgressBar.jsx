@@ -10,14 +10,15 @@ const ProgressBar = ({ file, setFile }) => {
   useEffect(() => {
     if (url) {
       setFile(null);
-      console.log('te llamo una vez');
-      console.log(typeof url);
       let photos = JSON.parse(window.localStorage.getItem("photos_user"));
       photos.push(url);
       window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
       let token_user=window.localStorage.getItem("token"); 
-      let id_event = sessionStorage.getItem("event_id"); 
+      let id_event = window.localStorage.getItem("event_id"); 
+      console.log('aca')
+      console.log(url);
+      console.log(id_event);
       
       try{    
        const response= axios.post('/organizer/event/images',
@@ -41,11 +42,18 @@ const ProgressBar = ({ file, setFile }) => {
      }catch (err) {console.log(err)}
     
     }
+    
   }, [url, setFile]);
+
+
+  
  
 
   return (
+    
     <div className='progress-bar' style = {{ width: progress + '%'}}></div>
+    
+    
   );
 } 
 

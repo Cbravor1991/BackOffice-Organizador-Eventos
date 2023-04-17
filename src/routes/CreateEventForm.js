@@ -13,7 +13,7 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material';
 import swal from 'sweetalert2';
 import Navbar from '../components/NavBar';
-import UploadButtons from '../components/UploadButtons';
+import UploadButtons from '../components/UploadButton';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
@@ -81,8 +81,9 @@ const CreateEventForm = () => {
    new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     mapboxgl: mapboxgl,
-    marker: false,
+    marker: true,
     countries: 'ar',
+    placeholder: direction
     })
    ); 
    
@@ -203,8 +204,8 @@ const CreateEventForm = () => {
 
       );
       console.log(response.status);
-      sessionStorage.setItem("event_id", response.data.id);
-      window.location.href = "/galery";
+      window.localStorage.setItem("event_id", response.data.id);
+      window.location.href = "/photoUpload";
  } catch (err) {
       setError(true)
       if (!err?.response) {
