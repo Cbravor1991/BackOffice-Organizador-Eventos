@@ -441,7 +441,7 @@ const CreateEventForm = () => {
                   }}>Cargar fotos</Button>
                 </Box>
               </Grid>
-              <Grid item xs={6}>
+            
 
               </Grid>
 
