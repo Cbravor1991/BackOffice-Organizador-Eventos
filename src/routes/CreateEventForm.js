@@ -13,6 +13,13 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material';
 import swal from 'sweetalert2';
 import Navbar from '../components/NavBar';
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+ 
+
+mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
+
 import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -47,11 +54,21 @@ const CreateEventForm = () => {
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState(false);
+  
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [lat, setLat] = useState(-34.599722222222);
+  const [lon, setLon] = useState(-58.381944444444);
+  const [zoom, setZoom] = useState(7);
+
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
 
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
+
+
+
 
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
@@ -62,6 +79,52 @@ const CreateEventForm = () => {
   };
 
 
+
+  useEffect(() => {
+    const map = new mapboxgl.Map({
+    container: mapContainer.current,
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center: [lon, lat],
+    zoom: zoom
+   });
+   
+   map.addControl(new mapboxgl.NavigationControl({showZoom: true}));
+      
+   const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    mapboxgl: mapboxgl,
+    marker: {
+      color: 'red',
+      offset: [340,-500]
+     },
+    countries: 'ar',
+    placeholder: 'Ingrese una dirección',
+    textColor: 'black',
+    color: 'black'
+    });
+   
+   map.addControl(geocoder); 
+    
+   geocoder.on('result', function(e) {
+    const coordinates = e.result.center;
+    setLon(coordinates[0]);
+    setLat(coordinates[1]);
+    setDirection(e.result.place_name);
+    
+    console.log('center');
+    console.log(coordinates);
+    console.log('longitude');
+    console.log(lon);
+    console.log('latitude');
+    console.log(lat);
+    console.log('address');
+    console.log(direction);
+  })
+   
+   return () => map.remove();
+ }, []);
+   
+        
   const handleDateChange = (e) => {
     const selectedDate = new Date(e.target.value);
     const currentDate = new Date();
@@ -95,13 +158,17 @@ const CreateEventForm = () => {
       setCapacity(numberOfTickets);
     }
   };
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     let photos = [];
-
-
+   
+  
     window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
+    setLatitude(lat);
+    setLongitude(lon);
 
     console.log("hola")
     console.log(title);
@@ -134,8 +201,6 @@ const CreateEventForm = () => {
     }
 
     if (title != '' && category != '' && date != '' && description != '' && direction != '') {
-
-
 
 
       try {
@@ -190,17 +255,49 @@ const CreateEventForm = () => {
   }
 
 
+  const handleChangeDirection = (address) => {
+  
+    setDirection(address);
+  
+  }
+
+  /*useEffect(() => {
+   map.on('move', () => {
+     setLon(map.getCenter().lng.toFixed(4));
+     setLat(map.getCenter().lat.toFixed(4));
+     //setZoom(map.getZoom().toFixed(2));
+     console.log('longitude');
+     console.log(lon);
+     console.log('latitude');
+     console.log(lat);
+    })
+  });*/  
+
+
+ /*useEffect(() => {
+  map.geocoder.on('result', function(e) {
+    setLon(e.result.center.lng);
+    setLat(e.result.center.lat);
+    console.log('longitude');
+    console.log(lon);
+    console.log('latitude');
+    console.log(lat);
+  })
+  }, []);*/
+  
+
   const loadImages = (files) => {
     console.log("entro")
   }
+
 
   const back = () => {
     window.location.href = "/showEvents"
   }
 
+
   return (
-
-
+  
     <ThemeProvider theme={theme}>
       <Box sx={{ border: '1px solid black' }}>
         <Navbar />
@@ -324,47 +421,39 @@ const CreateEventForm = () => {
               </Grid>
             </Grid>
 
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1 }}>
+                  Elegui las fotos de tu evento
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                  <Button variant="contained" onClick={handleSubmit} sx={{
+                    backgroundColor: '#1286f7',
+                    border: 'none',
+                    color: 'white',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    padding: '10px 20px',
+                    borderRadius: '30px',
+                    marginTop: '20px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease-in-out'
+                  }}>Cargar fotos</Button>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
 
+              </Grid>
 
-            <Grid sx={{ width: '100%' }}>
-
-
-
-
-
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                <Button variant="contained" onClick={handleSubmit} sx={{
-                  backgroundColor: '#1286f7',
-                  border: 'none',
-                  color: 'white',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  padding: '10px 20px',
-                  borderRadius: '30px',
-                  marginTop: '20px',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s ease-in-out'
-                }}>Cargar fotos</Button>
-                <Button variant="contained" onClick={handleSubmit} sx={{
-                  backgroundColor: '#1286f7',
-                  border: 'none',
-                  color: 'white',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  padding: '10px 20px',
-                  borderRadius: '30px',
-                  marginTop: '20px',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s ease-in-out'
-                }}>Crear Evento</Button>
-              </Box>
-
-
-            </Grid>
-
+              <Grid item xs={6}>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1 }}>
+                  Ubicación
+                </Typography>
+              <div ref={mapContainer} className="map-container" 
+               style={{marginTop: "10px", marginLeft: "70px", height: 500, width: 700, justifyContent: 'center', textColor: 'black'}}/>
+               </Grid>
             <Divider />
           </Stack>
-
 
         </Stack>
 
