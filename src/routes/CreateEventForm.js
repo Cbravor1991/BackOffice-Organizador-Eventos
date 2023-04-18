@@ -405,41 +405,54 @@ const CreateEventForm = () => {
 
               </Grid>
 
-              <Grid item sx={{ width: '50%' }}>
-              <Typography variant="h6" component="div" sx={{ width: '100%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                    Ubicación
-                  </Typography>
-                
-               
-                  <div ref={mapContainer} className="map-container"
-                    style={{ marginTop: "10px", marginLeft: "20px", height: 500, width: 700, justifyContent: 'center', textColor: 'black' }} />
+              <Grid item sx={{ width: '50%', height: '300px' }}>
+                <Typography variant="h6" component="div" sx={{ width: '100%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                  Ubicación
+                </Typography>
 
-                
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                  <div ref={mapContainer} className="map-container"
+                />
+
+                </Box>
 
               </Grid>
             </Grid>
 
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1 }}>
-                  Elegui las fotos de tu evento
-                </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <Button variant="contained" onClick={handleSubmit} sx={{
-                    backgroundColor: '#1286f7',
-                    border: 'none',
-                    color: 'white',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    padding: '10px 20px',
-                    borderRadius: '30px',
-                    marginTop: '20px',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s ease-in-out'
-                  }}>Cargar fotos</Button>
-                </Box>
-              </Grid>
 
+            <Grid item sx={{ width: '100%' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                <Button variant="contained" onClick={handleSubmit} sx={{
+                  backgroundColor: '#1286f7',
+                  border: 'none',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  padding: '10px 20px',
+                  borderRadius: '30px',
+                  marginTop: '20px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s ease-in-out'
+                }}>Cargar fotos</Button>
+              </Box>
+
+            </Grid>
+
+            <Grid xs={6} sx={{ width: '100%' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                <Button variant="contained" onClick={handleSubmit} sx={{
+                  backgroundColor: '#1286f7',
+                  border: 'none',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  padding: '10px 20px',
+                  borderRadius: '30px',
+                  marginTop: '20px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s ease-in-out'
+                }}>Cargar evento</Button>
+              </Box>
 
             </Grid>
 
