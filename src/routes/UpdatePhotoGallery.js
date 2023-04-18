@@ -11,6 +11,7 @@ import Navbar from '../components/NavBar';
 import axios from '../api/axios';
 import { useState, useEffect } from 'react';
 import PhotosCard from '../components/Card_photos';
+import Portada from '../components/Portada';
 import ProgressBar from '../components/ProgressBar';
 import swal from 'sweetalert2';
 import './swal.css'
@@ -37,10 +38,13 @@ const theme = createTheme({
 export default function UpdatePhotoGallery() {
 
   const [photos, setPhotos] = useState([]);
+  let [portada, setPortada] = useState('https://img.freepik.com/fotos-premium/ponente-conferencia-presentacion-negocios-audiencia-sala-conferencias_561846-3.jpg?w=996');
   const [selectedImg, setSelectedImg] = useState(null);
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
   const types = ['image/png', 'image/jpeg'];
+
+
 
   const handleChange = (e) => {
     let selected = e.target.files[0];
@@ -109,8 +113,10 @@ export default function UpdatePhotoGallery() {
   const cards = photos.slice(1).map(item => {
     return (
       <PhotosCard
-        key={item.id}
+        key={item.id }
         {...item}
+  
+        
       />
     )
   })
@@ -129,6 +135,8 @@ export default function UpdatePhotoGallery() {
         <Button onClick={()=>{window.location.href = '/showEvents'}} variant="contained" component="label">
           Ir a mis eventos
         </Button>
+        
+        
         <Box sx={{
           flexWrap: 'wrap',
           mt: '7%',
@@ -139,6 +147,9 @@ export default function UpdatePhotoGallery() {
 
           gridGap: '40px 0'
         }}>
+            <Portada
+         portada = {portada}
+      />
           {cards}
         </Box>
 

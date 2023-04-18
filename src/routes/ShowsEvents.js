@@ -259,7 +259,7 @@ export default function ShowsEvents() {
                         EDITAR
                       </Button>
                       <IconButton sx={{
-                    backgroundColor: '#1286f7',
+                    backgroundColor: 'red',
                     border: 'none',
                     color: 'white',
                     fontSize: '16px',
