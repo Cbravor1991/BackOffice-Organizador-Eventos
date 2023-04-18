@@ -72,12 +72,9 @@ const CreateEventForm = () => {
     zoom: zoom
    });
    
-   //const coordinates = new mapboxgl.LngLat(-58.38, -34.59);
-   //new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
    map.addControl(new mapboxgl.NavigationControl({showZoom: true}));
-   
-   map.addControl(
-   new MapboxGeocoder({
+      
+   const geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     mapboxgl: mapboxgl,
     marker: {
@@ -85,26 +82,33 @@ const CreateEventForm = () => {
       offset: [340,-500]
      },
     countries: 'ar',
-    placeholder: direction
-    })
-   ); 
+    placeholder: 'Ingrese una dirección',
+    textColor: 'black',
+    color: 'black'
+    });
+   
+   map.addControl(geocoder); 
+    
+   geocoder.on('result', function(e) {
+    const coordinates = e.result.center;
+    setLon(coordinates[0]);
+    setLat(coordinates[1]);
+    setDirection(e.result.place_name);
+    
+    console.log('center');
+    console.log(coordinates);
+    console.log('longitude');
+    console.log(lon);
+    console.log('latitude');
+    console.log(lat);
+    console.log('address');
+    console.log(direction);
+  })
    
    return () => map.remove();
- });
+ }, []);
    
-    
-  const getAddress = () => {
- 
-   
-  }
-  
-  
-  const getCoordinates = () => {
- 
-  
-  }
-  
-  
+        
   const handleDateChange = (e) => {
     const selectedDate = new Date(e.target.value);
     const currentDate = new Date();
@@ -138,13 +142,16 @@ const CreateEventForm = () => {
       setCapacity(numberOfTickets);
     }
   };
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     let photos = [];
-   
-  
+     
     window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
+    setLatitude(lat);
+    setLongitude(lon);
 
     console.log("hola")
     console.log(title);
@@ -177,8 +184,6 @@ const CreateEventForm = () => {
     }
 
     if (title!='' && category!='' && date!= '' && description!= '' && direction!= '' ){
-
-
 
 
     try {
@@ -235,44 +240,43 @@ const CreateEventForm = () => {
   const handleChangeDirection = (address) => {
   
     setDirection(address);
-    //getCoordinates();
   
   }
 
+  /*useEffect(() => {
+   map.on('move', () => {
+     setLon(map.getCenter().lng.toFixed(4));
+     setLat(map.getCenter().lat.toFixed(4));
+     //setZoom(map.getZoom().toFixed(2));
+     console.log('longitude');
+     console.log(lon);
+     console.log('latitude');
+     console.log(lat);
+    })
+  });*/  
 
-/*  useEffect(() => {
-   if (!map.current) return;
-   map.current.on('move', () => {
-   setLon(map.current.getCenter().lon.toFixed());
-   setLat(map.current.getCenter().lat.toFixed());
-   setZoom(map.current.getZoom().toFixed());
-   const coordinates = new mapboxgl.LngLat(lon, lat);
-   new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
-   });
-  }); */
-  
-  
-  useEffect(() => {
 
-    map.current && map.current.on(
-        'load', 
-        () => {
-          const coordinates = new mapboxgl.LngLat(lon,lat);
-          new mapboxgl.Marker({ color: '#63df29', scale: 1.5 }).setLngLat(coordinates).addTo(map);
-
-        }
-    )
-
-}, [])
+ /*useEffect(() => {
+  map.geocoder.on('result', function(e) {
+    setLon(e.result.center.lng);
+    setLat(e.result.center.lat);
+    console.log('longitude');
+    console.log(lon);
+    console.log('latitude');
+    console.log(lat);
+  })
+  }, []);*/
   
 
   const loadImages = (files) => {
     console.log("entro")
   }
 
+
   const back = () => {
     window.location.href = "/showEvents"
   }
+
 
   return (
   
@@ -385,7 +389,7 @@ const CreateEventForm = () => {
                   Ubicación
                 </Typography>
               <div ref={mapContainer} className="map-container" 
-               style={{marginTop: "10px", marginLeft: "50px", height: 500, width: 700, justifyContent: 'center'}}/>
+               style={{marginTop: "10px", marginLeft: "70px", height: 500, width: 700, justifyContent: 'center', textColor: 'black'}}/>
                </Grid>
              </Grid>
                 
