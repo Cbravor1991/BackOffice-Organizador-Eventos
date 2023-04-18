@@ -16,6 +16,7 @@ import Navbar from '../components/NavBar';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import '../styles/MapBox.css';
  
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
@@ -278,7 +279,7 @@ const CreateEventForm = () => {
   }
 
 
-  return (
+  return ( 
   
     <ThemeProvider theme={theme}>
       <Box sx={{ border: '1px solid black' }}>
@@ -406,7 +407,4 @@ const CreateEventForm = () => {
 }
 
 export default CreateEventForm
-
-
-
 
