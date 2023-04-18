@@ -16,13 +16,14 @@ import Navbar from '../components/NavBar';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
- 
-
-mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
 
 import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+
+mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
+
 
 const theme = createTheme({
   palette: {
@@ -54,7 +55,7 @@ const CreateEventForm = () => {
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState(false);
-  
+
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [lat, setLat] = useState(-34.599722222222);
@@ -82,49 +83,49 @@ const CreateEventForm = () => {
 
   useEffect(() => {
     const map = new mapboxgl.Map({
-    container: mapContainer.current,
-    style: 'mapbox://styles/mapbox/streets-v12',
-    center: [lon, lat],
-    zoom: zoom
-   });
-   
-   map.addControl(new mapboxgl.NavigationControl({showZoom: true}));
-      
-   const geocoder = new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl,
-    marker: {
-      color: 'red',
-      offset: [340,-500]
-     },
-    countries: 'ar',
-    placeholder: 'Ingrese una dirección',
-    textColor: 'black',
-    color: 'black'
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [lon, lat],
+      zoom: zoom
     });
-   
-   map.addControl(geocoder); 
-    
-   geocoder.on('result', function(e) {
-    const coordinates = e.result.center;
-    setLon(coordinates[0]);
-    setLat(coordinates[1]);
-    setDirection(e.result.place_name);
-    
-    console.log('center');
-    console.log(coordinates);
-    console.log('longitude');
-    console.log(lon);
-    console.log('latitude');
-    console.log(lat);
-    console.log('address');
-    console.log(direction);
-  })
-   
-   return () => map.remove();
- }, []);
-   
-        
+
+    map.addControl(new mapboxgl.NavigationControl({ showZoom: true }));
+
+    const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl,
+      marker: {
+        color: 'red',
+        offset: [340, -500]
+      },
+      countries: 'ar',
+      placeholder: 'Ingrese una dirección',
+      textColor: 'black',
+      color: 'black'
+    });
+
+    map.addControl(geocoder);
+
+    geocoder.on('result', function (e) {
+      const coordinates = e.result.center;
+      setLon(coordinates[0]);
+      setLat(coordinates[1]);
+      setDirection(e.result.place_name);
+
+      console.log('center');
+      console.log(coordinates);
+      console.log('longitude');
+      console.log(lon);
+      console.log('latitude');
+      console.log(lat);
+      console.log('address');
+      console.log(direction);
+    })
+
+    return () => map.remove();
+  }, []);
+
+
   const handleDateChange = (e) => {
     const selectedDate = new Date(e.target.value);
     const currentDate = new Date();
@@ -158,13 +159,13 @@ const CreateEventForm = () => {
       setCapacity(numberOfTickets);
     }
   };
-  
-  
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let photos = [];
-   
-  
+
+
     window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
     setLatitude(lat);
@@ -256,9 +257,9 @@ const CreateEventForm = () => {
 
 
   const handleChangeDirection = (address) => {
-  
+
     setDirection(address);
-  
+
   }
 
   /*useEffect(() => {
@@ -271,20 +272,20 @@ const CreateEventForm = () => {
      console.log('latitude');
      console.log(lat);
     })
-  });*/  
+  });*/
 
 
- /*useEffect(() => {
-  map.geocoder.on('result', function(e) {
-    setLon(e.result.center.lng);
-    setLat(e.result.center.lat);
-    console.log('longitude');
-    console.log(lon);
-    console.log('latitude');
-    console.log(lat);
-  })
-  }, []);*/
-  
+  /*useEffect(() => {
+   map.geocoder.on('result', function(e) {
+     setLon(e.result.center.lng);
+     setLat(e.result.center.lat);
+     console.log('longitude');
+     console.log(lon);
+     console.log('latitude');
+     console.log(lat);
+   })
+   }, []);*/
+
 
   const loadImages = (files) => {
     console.log("entro")
@@ -297,7 +298,7 @@ const CreateEventForm = () => {
 
 
   return (
-  
+
     <ThemeProvider theme={theme}>
       <Box sx={{ border: '1px solid black' }}>
         <Navbar />
@@ -405,18 +406,15 @@ const CreateEventForm = () => {
               </Grid>
 
               <Grid item sx={{ width: '50%' }}>
-                <Box sx={{ height: '200px', overflow: 'auto', marginLeft: '50px', borderRadius: '10px' }}>
-                  <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                    Fecha del evento
+              <Typography variant="h6" component="div" sx={{ width: '100%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                    Ubicación
                   </Typography>
-                  <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }} type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
-                  <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                    Cantidad de tickets
-                  </Typography>
+                
+               
+                  <div ref={mapContainer} className="map-container"
+                    style={{ marginTop: "10px", marginLeft: "20px", height: 500, width: 700, justifyContent: 'center', textColor: 'black' }} />
 
-                  <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }} type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
-
-                </Box>
+                
 
               </Grid>
             </Grid>
@@ -441,17 +439,11 @@ const CreateEventForm = () => {
                   }}>Cargar fotos</Button>
                 </Box>
               </Grid>
-            
 
-              </Grid>
 
-              <Grid item xs={6}>
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1 }}>
-                  Ubicación
-                </Typography>
-              <div ref={mapContainer} className="map-container" 
-               style={{marginTop: "10px", marginLeft: "70px", height: 500, width: 700, justifyContent: 'center', textColor: 'black'}}/>
-               </Grid>
+            </Grid>
+
+
             <Divider />
           </Stack>
 
