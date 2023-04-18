@@ -209,7 +209,7 @@ const CreateEventForm = () => {
             "title": title,
             "category": category,
             "date": date,
-            "description": description,
+            "description": 'EN construcción',
             "capacity": capacity,
             "vacancies": 0,
             "ubication": {
