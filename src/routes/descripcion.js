@@ -13,21 +13,15 @@ const Formulario = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const content = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-    console.log(
-        content);
-  };
-
-  const toolbarOptions = {
-   
+    console.log(content);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="descripcion">Descripción:</label>
-      <Editor
+      <Editor sx={ {color: 'black'}}
         editorState={editorState}
         onEditorStateChange={handleEditorChange}
-        toolbar={toolbarOptions}
       />
       <button type="submit">Enviar</button>
     </form>

@@ -126,16 +126,30 @@ export default function UpdatePhotoGallery() {
     (photos && photos.length > 0) ?
       <ThemeProvider theme={theme}>
         <Navbar />
-        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
+         
+        <Box sx={{
+           textAlign: 'center'
+        }}>
+        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2,  textAlign: 'center' }}>
           Bienvenido a tu galeria
         </Typography>
         
         
 
-        <Button onClick={()=>{window.location.href = '/showEvents'}} variant="contained" component="label">
+        <Button  onClick={()=>{window.location.href = '/showEvents'}} variant="contained" component="label">
           Ir a mis eventos
         </Button>
-        
+        <Box sx={{
+           marginLeft: '590px'
+        }}>
+        <Portada sx={{
+          
+        }}
+         portada = {portada}
+      />
+      </Box>
+        </Box>
+
         
         <Box sx={{
           flexWrap: 'wrap',
@@ -147,9 +161,7 @@ export default function UpdatePhotoGallery() {
 
           gridGap: '40px 0'
         }}>
-            <Portada
-         portada = {portada}
-      />
+            
           {cards}
         </Box>
 

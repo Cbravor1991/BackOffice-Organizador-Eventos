@@ -7,6 +7,7 @@
 .Galery{
   max-width: 960px;
   margin: 0 auto;
+  text-align: center;
 }
 .Galery title h1{
   color: #1976d2;
