@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './App.css';
+//import './App.css';
 import HomePage from './routes/HomePage';
 import CreateEventForm from './routes/CreateEventForm';
 //import EventList from './routes/EventList';
@@ -17,6 +17,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import ProtectedRoute from './components/ProtectedRoute';
 import Galery from './routes/Galery'
 import UpdatePhotoGallery from './routes/UpdatePhotoGallery'
+import Formulario from './routes/descripcion'
 
 
 
@@ -37,6 +38,7 @@ export default function App() {
                 <Route path="showEvents" element={<ShowsEvents />} />
                 <Route path="editEvent" element={<EditEvent />} />
                 <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
+                <Route path="ver" element={<Formulario />} />  
                
                
                 <Route path="photoUpload" element={<Galery />} />

@@ -16,8 +16,9 @@ import Navbar from '../components/NavBar';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import '../styles/MapBox.css';
- 
+import { EditorState, convertToRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
 
@@ -52,64 +53,79 @@ const CreateEventForm = () => {
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState(false);
-  
+
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [lat, setLat] = useState(-34.599722222222);
   const [lon, setLon] = useState(-58.381944444444);
   const [zoom, setZoom] = useState(7);
 
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
 
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
 
 
+  const handleEditorChange = (newEditorState) => {
+    setEditorState(newEditorState);
+  };
+
+  const toolbarOptions = {
+
+  };
+
+
   useEffect(() => {
     const map = new mapboxgl.Map({
-    container: mapContainer.current,
-    style: 'mapbox://styles/mapbox/streets-v12',
-    center: [lon, lat],
-    zoom: zoom
-   });
-   
-   map.addControl(new mapboxgl.NavigationControl({showZoom: true}));
-      
-   const geocoder = new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl,
-    marker: {
-      color: 'red',
-      offset: [340,-500]
-     },
-    countries: 'ar',
-    placeholder: 'Ingrese una dirección',
-    textColor: 'black',
-    color: 'black'
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [lon, lat],
+      zoom: zoom
     });
-   
-   map.addControl(geocoder); 
-    
-   geocoder.on('result', function(e) {
-    const coordinates = e.result.center;
-    setLon(coordinates[0]);
-    setLat(coordinates[1]);
-    setDirection(e.result.place_name);
-    
-    console.log('center');
-    console.log(coordinates);
-    console.log('longitude');
-    console.log(lon);
-    console.log('latitude');
-    console.log(lat);
-    console.log('address');
-    console.log(direction);
-  })
-   
-   return () => map.remove();
- }, []);
-   
-        
+
+    map.addControl(new mapboxgl.NavigationControl({ showZoom: true }));
+
+    const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl,
+      marker: {
+        color: 'red',
+        offset: [340, -500]
+      },
+      countries: 'ar',
+      placeholder: 'Ingrese una dirección',
+      textColor: 'black',
+      color: 'black'
+    });
+
+    map.addControl(geocoder);
+
+    geocoder.on('result', function (event) {
+      //let result = JSON.parse(event.result);
+      let coordinates = event.result.center;
+      setLon(coordinates[0]);
+      setLat(coordinates[1]);
+      setDirection(event.result.place_name);
+
+      console.log('event');
+      console.log(event);
+      console.log('result');
+      console.log(event.result);
+      console.log('center');
+      console.log(coordinates);
+      console.log('longitude');
+      console.log(lon);
+      console.log('latitude');
+      console.log(lat);
+      console.log('address');
+      console.log(direction);
+    })
+
+    return () => map.remove();
+  }, []);
+
+
   const handleDateChange = (e) => {
     const selectedDate = new Date(e.target.value);
     const currentDate = new Date();
@@ -143,12 +159,13 @@ const CreateEventForm = () => {
       setCapacity(numberOfTickets);
     }
   };
-  
-  
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let photos = [];
-     
+
+
     window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
     setLatitude(lat);
@@ -184,49 +201,50 @@ const CreateEventForm = () => {
       token_user = window.localStorage.getItem("token");
     }
 
-    if (title!='' && category!='' && date!= '' && description!= '' && direction!= '' ){
+    if (title != '' && category != '' && date != '' && description != '' && direction != '') {
 
 
-    try {
-      const response = await axios.post('organizer/event',
-        JSON.stringify({
-          "title": title,
-          "category": category,
-          "date": date,
-          "description": description,
-          "capacity": capacity,
-          "vacancies": 0,
-          "ubication": {
-            "direction": direction,
-            "latitude": 0,
-            "longitude": 0
-          },
-          "pic": "string"
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token_user}`
+      try {
+        const response = await axios.post('organizer/event',
+          JSON.stringify({
+            "title": title,
+            "category": category,
+            "date": date,
+            "description": 'EN construcción',
+            "capacity": capacity,
+            "vacancies": 0,
+            "ubication": {
+              "direction": direction,
+              "latitude": 0,
+              "longitude": 0
+            },
+            "pic": "string"
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token_user}`
+            }
           }
+
+        );
+        console.log(response.status);
+        window.localStorage.setItem("event_id", response.data.id);
+        window.location.href = "/photoUpload";
+      } catch (err) {
+        setError(true)
+        if (!err?.response) {
+          setErrMsg('El servidor no responde');
+        } else if (err.response?.status === 401) {
+          setErrMsg('Contraseña o usuario incorrecto');
+        } else if (err.response?.status === 402) {
+          setErrMsg('No tiene autorización');
+        } else {
+          token_user = window.localStorage.getItem("token");
         }
 
-      );
-      console.log(response.status);
-      window.localStorage.setItem("event_id", response.data.id);
-      window.location.href = "/photoUpload";
- } catch (err) {
-      setError(true)
-      if (!err?.response) {
-        setErrMsg('El servidor no responde');
-      } else if (err.response?.status === 401) {
-        setErrMsg('Contraseña o usuario incorrecto');
-      } else if (err.response?.status === 402) {
-        setErrMsg('No tiene autorización');
-      } else {
-        token_user = window.localStorage.getItem("token");
       }
-
-    }} else {
+    } else {
       swal.fire({
         title: "Dejaste campos sin completar",
         text: "Recuerda que para cargar imagenes debes llenar los campos previos",
@@ -239,35 +257,11 @@ const CreateEventForm = () => {
 
 
   const handleChangeDirection = (address) => {
-  
+
     setDirection(address);
-  
+
   }
 
-  /*useEffect(() => {
-   map.on('move', () => {
-     setLon(map.getCenter().lng.toFixed(4));
-     setLat(map.getCenter().lat.toFixed(4));
-     //setZoom(map.getZoom().toFixed(2));
-     console.log('longitude');
-     console.log(lon);
-     console.log('latitude');
-     console.log(lat);
-    })
-  });*/  
-
-
- /*useEffect(() => {
-  map.geocoder.on('result', function(e) {
-    setLon(e.result.center.lng);
-    setLat(e.result.center.lat);
-    console.log('longitude');
-    console.log(lon);
-    console.log('latitude');
-    console.log(lat);
-  })
-  }, []);*/
-  
 
   const loadImages = (files) => {
     console.log("entro")
@@ -279,97 +273,149 @@ const CreateEventForm = () => {
   }
 
 
-  return ( 
-  
+  return (
+
     <ThemeProvider theme={theme}>
-      <Box sx={{ border: '1px solid black' }}>
+  
         <Navbar />
-        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
-          Crear evento
-        </Typography>
-        <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <Stack
-            direction="column"
-            spacing={3}
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              width: '100%',
-              maxWidth: '100%',
-              padding: '0 1rem',
-              fontFamily: 'Arial, sans-serif',
-              fontSize: '1rem',
-              flexGrow: 1,
+        <Box sx={{ border: '5px solid black', padding: '20px' }}>
+          <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+            Crear evento
+          </Typography>
+          <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Stack
+              direction="column"
+              spacing={3}
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                width: '100%',
+                maxWidth: '100%',
+                padding: '0 1rem',
+                fontFamily: 'Arial, sans-serif',
+                fontSize: '1rem',
+                flexGrow: 1,
 
-              border: '8px solid $primary-color' /* Agrega el borde */
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
+                border: '8px solid $primary-color' /* Agrega el borde */
+              }}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
 
-                <TextField error={error} fullWidth sx={{ m: 1 }} label="Nombre del evento" variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} />
+                  <TextField error={error} fullWidth sx={{ m: 1 }} label="Nombre del evento" variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} />
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControl fullWidth sx={{ m: 1 }}>
+                    <InputLabel id="demo-simple-select-label">Categoría</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={category}
+                      label="Tipo de evento"
+                      onChange={(e) => setCategory(e.target.value)}
+
+
+
+                    >
+
+                      <MenuItem sx={{ color: 'black' }} value="Evento deportivo">Evento deportivo</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Cena o gala">Cena o gala</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Clase, curso o taller">Clase, curso o taller</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Performance">Performance</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Conferencia">Conferencia</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Encuentro">Encuentro</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Networking">Networking</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Feria">Feria</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Festival">Festival</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Fiesta" >Fiesta</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Competencia">Competencia</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Promoción">Promoción"</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Seminario">Seminario</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Show">Show</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Torneo">Torneo</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Visita">Visita</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
+                    </Select>
+
+                  </FormControl>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <FormControl fullWidth sx={{ m: 1 }}>
-                  <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={category}
-                    label="Tipo de evento"
-                    onChange={(e) => setCategory(e.target.value)}
 
 
 
-                  >
-
-                    <MenuItem sx={{ color: 'black' }} value="Evento deportivo">Evento deportivo</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Cena o gala">Cena o gala</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Clase, curso o taller">Clase, curso o taller</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Performance">Performance</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Conferencia">Conferencia</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Encuentro">Encuentro</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Networking">Networking</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Feria">Feria</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Festival">Festival</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Fiesta" >Fiesta</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Competencia">Competencia</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Promoción">Promoción"</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Seminario">Seminario</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Show">Show</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Torneo">Torneo</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Visita">Visita</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
-                  </Select>
-
-                </FormControl>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField fullWidth sx={{ m: 1 }} type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField fullWidth sx={{ m: 1 }} label="Descripcion" value={description} variant="outlined" onChange={(e) => setDescription(e.target.value)} />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField fullWidth sx={{ m: 1 }} type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField fullWidth sx={{ m: 1 }} label="Dirección" value={direction} variant="outlined" onChange={(e) => handleChangeDirection(e.target.value)} />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1 }}>
-                  Elegui las fotos de tu evento
+              <Grid item xs={6} sx={{ width: '100%' }}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+                  Descripción
                 </Typography>
+
+
+                <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', marginLeft: '10px', borderRadius: '10px' }}>
+                  <Editor
+                    editorState={editorState}
+                    onEditorStateChange={handleEditorChange}
+                    toolbar={toolbarOptions}
+                    wrapperClassName="wrapper-class"
+                    editorClassName="editor-class"
+                    toolbarClassName="toolbar-class"
+                    style={{ maxHeight: '100px' }}
+                  />
+                </Box>
+
+
+              </Grid>
+
+              <Grid container spacing={2}>
+                <Grid item sx={{ width: '50%', marginTop: '20px' }}>
+                  <Box sx={{ height: '250px', overflow: 'auto', marginLeft: '200px', borderRadius: '10px' }}>
+                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                      Fecha del evento
+                    </Typography>
+                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
+                     type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
+                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                      Cantidad de tickets
+                    </Typography>
+
+                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
+                     type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
+
+                 </Box>
+                  
+                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                  <Button variant="contained" onClick={handleSubmit} sx={{
+                    backgroundColor: '#1286f7',
+                    border: 'none',
+                    color: 'white',
+                    width: '300px',
+                    height: '50px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    padding: '10px 20px',
+                    marginTop: '20px',
+                    marginRight: '150px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease-in-out'
+                  }}>Cargar fotos</Button>
+                </Box>
+
+                </Grid>
+                
+                
+                <Grid item sx={{ width: '50%', height: '300px' }}>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'right',  alignItems: 'center', textAlign: 'center' }}>
+                    <div ref={mapContainer} className="map-container"
+                     style={{width: 600, height: 350, marginLeft: '50px', marginTop: '20px', marginRight: '100px'}}
+                    />
+
+                  </Box>
+
+                </Grid>
+              </Grid>
+
+
+              <Grid xs={6} sx={{ width: '100%' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                   <Button variant="contained" onClick={handleSubmit} sx={{
                     backgroundColor: '#1286f7',
@@ -379,26 +425,24 @@ const CreateEventForm = () => {
                     fontWeight: 'bold',
                     padding: '10px 20px',
                     borderRadius: '30px',
-                    marginTop: '20px',
+                    width: '200px',
+                    height: '60px',
+                    marginTop: '100px',
                     cursor: 'pointer',
                     transition: 'background-color 0.2s ease-in-out'
-                  }}>Cargar fotos</Button>
-                </Box>             
-              </Grid>
-              <Grid item xs={6}>
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1 }}>
-                  Ubicación
-                </Typography>
-              <div ref={mapContainer} className="map-container" 
-               style={{marginTop: "10px", marginLeft: "70px", height: 500, width: 700, justifyContent: 'center', textColor: 'black'}}/>
-               </Grid>
-             </Grid>
-                
-          </Stack>
+                  }}>Crear</Button>
+                </Box>
 
-        </Stack>
+              </Grid>
+
+
+              <Divider />
+            </Stack>
+
+          </Stack>
+        </Box>
+
       
-      </Box>
 
     </ThemeProvider>
 
