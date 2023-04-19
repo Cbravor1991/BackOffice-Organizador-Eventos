@@ -48,11 +48,12 @@ const CreateEventForm = () => {
   const [capacity, setCapacity] = useState('');
   const [vacancies, setVacancies] = useState('');
   const [direction, setDirection] = useState('');
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
+  const [latitude, setLatitude] = useState(-34.599722222222);
+  const [longitude, setLongitude] = useState(-58.381944444444);
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState(false);
+  const [agenda, setAgenda] = useState([]);
 
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -217,11 +218,11 @@ const CreateEventForm = () => {
             "capacity": capacity,
             "vacancies": 0,
             "ubication": {
-              "direction": 'ojo',
-              "latitude": 0,
-              "longitude": 0
+              "direction": direction,
+              "latitude": latitude,
+              "longitude": longitude
             },
-            "pic": "string"
+            "agenda": agenda
           }),
           {
             headers: {
