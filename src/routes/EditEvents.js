@@ -14,6 +14,12 @@ import { ThemeProvider } from '@mui/material';
 import swal from 'sweetalert2';
 import Navbar from '../components/NavBar';
 import './swal.css'
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import { EditorState, convertToRaw, convertFromRaw  } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 
 
 
@@ -50,6 +56,8 @@ const EditEvent = () => {
   const [category, setCategory] = useState(props.category);
   const [date, setDate] = useState(props.date);
   const [description, setDescription] = useState(props.description);
+  console.log('viendo descripcion');
+  console.log(props.description);
   const [capacity, setCapacity] = useState(props.capacity);
   const [vacancies, setVacancies] = useState('');
   const [direction, setDirection] = useState(props.direction);
@@ -60,7 +68,25 @@ const EditEvent = () => {
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
 
+  useEffect(() => {
+    const rawContent = JSON.parse(props.description);
+    const contentState = convertFromRaw(rawContent);
+    setEditorState (EditorState.createWithContent(contentState));
+
+    
+  }, []);
+
+  const handleEditorChange = (newEditorState) => {
+    setEditorState(newEditorState);
+    setDescription (JSON.stringify(convertToRaw(editorState.getCurrentContent())));
+    
+  };
+
+  const toolbarOptions = {
+
+  };
 
 
   const handleDateChange = (e) => {
@@ -101,6 +127,77 @@ const EditEvent = () => {
   sessionStorage.setItem("event_id", id_event);
 
   console.log(length);
+
+  const handleSubmitEvent = async (e) => {
+    e.preventDefault();
+
+    let token_user;
+    // window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
+
+
+    if (!window.localStorage.getItem("token")) {
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }
+
+
+
+
+    try {
+
+      var options = {
+        method: 'PUT',
+        url: '/organizer/event',
+        params: { '': '' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token_user}`
+        },
+        data: {
+
+          "id": id_event,
+          "title": title,
+          "category": category,
+          "date": date,
+          "description": description,
+          "direction": direction,
+          "latitude": 0,
+          "longitude": 0,
+          "capacity": capacity,
+          "vacancies": 0
+        }
+      };
+
+      axios.request(options).then(function (response) {
+        console.log(response.data);
+      }).catch(function (error) {
+        console.error(error);
+      });
+
+
+      window.localStorage.setItem("event_id", id_event);
+  
+      window.location.href = "/showEvents";
+
+
+
+    } catch (err) {
+      setError(true)
+      if (!err?.response) {
+        setErrMsg('El servidor no responde');
+      } else if (err.response?.status === 401) {
+        setErrMsg('Contraseña o usuario incorrecto');
+      } else if (err.response?.status === 402) {
+        setErrMsg('No tiene autorización');
+      } else {
+        setErrMsg('El ingreso ha fallado');
+      }
+
+    }
+  }
 
 
   const handleSubmit = async (e) => {
@@ -182,98 +279,148 @@ const EditEvent = () => {
   return (
 
     <ThemeProvider theme={theme}>
-      <Box sx={{ border: '1px solid black' }}>
+  
         <Navbar />
-        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
-          Editar el evento
-        </Typography>
-        <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <Stack
-            direction="column"
-            spacing={3}
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              width: '100%',
-              maxWidth: '100%',
-              padding: '0 1rem',
-              fontFamily: 'Arial, sans-serif',
-              fontSize: '1rem',
-              flexGrow: 1,
+        <Box sx={{ border: '5px solid black', padding: '20px' }}>
+          <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+            Crear evento
+          </Typography>
+          <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Stack
+              direction="column"
+              spacing={3}
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                width: '100%',
+                maxWidth: '100%',
+                padding: '0 1rem',
+                fontFamily: 'Arial, sans-serif',
+                fontSize: '1rem',
+                flexGrow: 1,
 
-              border: '8px solid $primary-color' /* Agrega el borde */
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
+                border: '8px solid $primary-color' /* Agrega el borde */
+              }}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
 
-                <TextField error={error} fullWidth sx={{ m: 1 }} label="Nombre del evento" variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} />
-              </Grid>
-              <Grid item xs={6}>
-                <FormControl fullWidth sx={{ m: 1 }}>
-                  <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={category}
-                    label="Tipo de evento"
-                    onChange={(e) => setCategory(e.target.value)}
+                  <TextField error={error} fullWidth sx={{ m: 1 }} label="Nombre del evento" variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} />
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControl fullWidth sx={{ m: 1 }}>
+                    <InputLabel id="demo-simple-select-label">Categoría</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={category}
+                      label="Tipo de evento"
+                      onChange={(e) => setCategory(e.target.value)}
 
 
 
-                  >
+                    >
 
-                    <MenuItem sx={{ color: 'black' }} value="Evento deportivo">Evento deportivo</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Cena o gala">Cena o gala</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Clase, curso o taller">Clase, curso o taller</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Performance">Performance</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Conferencia">Conferencia</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Encuentro">Encuentro</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Networking">Networking</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Feria">Feria</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Festival">Festival</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Fiesta" >Fiesta</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Competencia">Competencia</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Promoción">Promoción"</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Seminario">Seminario</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Show">Show</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Torneo">Torneo</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Visita">Visita</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
-                  </Select>
+                      <MenuItem sx={{ color: 'black' }} value="Evento deportivo">Evento deportivo</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Cena o gala">Cena o gala</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Clase, curso o taller">Clase, curso o taller</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Performance">Performance</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Conferencia">Conferencia</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Encuentro">Encuentro</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Networking">Networking</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Feria">Feria</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Festival">Festival</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Fiesta" >Fiesta</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Competencia">Competencia</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Promoción">Promoción"</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Seminario">Seminario</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Show">Show</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Torneo">Torneo</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Visita">Visita</MenuItem>
+                      <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
+                    </Select>
 
-                </FormControl>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField fullWidth sx={{ m: 1 }} type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField fullWidth sx={{ m: 1 }} label="Descripcion" value={description} variant="outlined" onChange={(e) => setDescription(e.target.value)} />
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField fullWidth sx={{ m: 1 }} type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField fullWidth sx={{ m: 1 }} label="Dirección" value={direction} variant="outlined" onChange={(e) => setDirection(e.target.value)} />
+                  </FormControl>
+                </Grid>
               </Grid>
 
-            </Grid>
 
 
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1 }}>
-                  Edita las fotos de tu evento
+              <Grid item xs={6} sx={{ width: '100%' }}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+                  Descripción
                 </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+
+
+                <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', marginLeft: '10px', borderRadius: '10px' }}>
+                  <Editor
+                    editorState={editorState}
+                    onEditorStateChange={handleEditorChange}
+                    toolbar={toolbarOptions}
+                    wrapperClassName="wrapper-class"
+                    editorClassName="editor-class"
+                    toolbarClassName="toolbar-class"
+                    style={{ maxHeight: '100px' }}
+                  />
+                </Box>
+
+
+              </Grid>
+
+              <Grid container spacing={2}>
+                <Grid item sx={{ width: '50%', marginTop: '20px' }}>
+                  <Box sx={{ height: '250px', overflow: 'auto', marginLeft: '200px', borderRadius: '10px' }}>
+                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                      Fecha del evento
+                    </Typography>
+                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
+                     type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
+                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                      Cantidad de tickets
+                    </Typography>
+
+                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
+                     type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
+
+                 </Box>
+                  
+                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                   <Button variant="contained" onClick={handleSubmit} sx={{
+                    backgroundColor: '#1286f7',
+                    border: 'none',
+                    color: 'white',
+                    width: '300px',
+                    height: '50px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    padding: '10px 20px',
+                    marginTop: '20px',
+                    marginRight: '150px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease-in-out'
+                  }}>Editar Fotos</Button>
+                </Box>
+
+                </Grid>
+                
+                
+              {/*  <Grid item sx={{ width: '50%', height: '300px' }}>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'right',  alignItems: 'center', textAlign: 'center' }}>
+                    <div ref={mapContainer} className="map-container"
+                     style={{width: 600, height: 350, marginLeft: '50px', marginTop: '20px', marginRight: '100px'}}
+                    />
+
+                  </Box>
+
+                </Grid>*/}
+                </Grid>
+
+
+              <Grid xs={6} sx={{ width: '100%' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                  <Button variant="contained" onClick={handleSubmitEvent} sx={{
                     backgroundColor: '#1286f7',
                     border: 'none',
                     color: 'white',
@@ -281,33 +428,24 @@ const EditEvent = () => {
                     fontWeight: 'bold',
                     padding: '10px 20px',
                     borderRadius: '30px',
-                    marginTop: '20px',
+                    width: '200px',
+                    height: '60px',
+                    marginTop: '100px',
                     cursor: 'pointer',
                     transition: 'background-color 0.2s ease-in-out'
-                  }}>Cargar fotos</Button>
+                  }}>Editar evento</Button>
                 </Box>
-              </Grid>
-              <Grid item xs={6}>
 
               </Grid>
 
-            </Grid>
 
-
-
-
-
-
-
-
-            <Divider />
-
-
+              <Divider />
+            </Stack>
 
           </Stack>
+        </Box>
 
-        </Stack>
-      </Box>
+      
 
     </ThemeProvider>
   );

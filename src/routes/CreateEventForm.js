@@ -69,6 +69,8 @@ const CreateEventForm = () => {
 
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
+    setDescription (JSON.stringify(convertToRaw(editorState.getCurrentContent())));
+    
   };
 
   const toolbarOptions = {
@@ -161,6 +163,102 @@ const CreateEventForm = () => {
   };
 
 
+  
+  const handleSubmitevent = async (e) => {
+    e.preventDefault();
+    let photos = [];
+
+
+    window.localStorage.setItem("photos_user", JSON.stringify(photos));
+
+    setLatitude(lat);
+    setLongitude(lon);
+
+    console.log("hola")
+    console.log(title);
+    console.log(category);
+    console.log(date);
+    console.log(description);
+    console.log(capacity);
+    //console.log (vacancies);
+    console.log(direction);
+    console.log(latitude);
+    console.log(longitude);
+
+
+    let token_user;
+
+    if (!window.localStorage.getItem("token")) {
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }
+
+    if (!window.localStorage.getItem("token")) {
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }
+
+    if (title != '' && category != '' && date != '' && description != '') {
+
+
+      try {
+        const response = await axios.post('organizer/event',
+          JSON.stringify({
+            "title": title,
+            "category": category,
+            "date": date,
+            "description": description,
+            "capacity": capacity,
+            "vacancies": 0,
+            "ubication": {
+              "direction": 'ojo',
+              "latitude": 0,
+              "longitude": 0
+            },
+            "pic": "string"
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token_user}`
+            }
+          }
+
+        );
+        console.log(response.status);
+        window.localStorage.setItem("event_id", response.data.id);
+        window.location.href = "/showEvents";
+      } catch (err) {
+        setError(true)
+        if (!err?.response) {
+          setErrMsg('El servidor no responde');
+        } else if (err.response?.status === 401) {
+          setErrMsg('Contraseña o usuario incorrecto');
+        } else if (err.response?.status === 402) {
+          setErrMsg('No tiene autorización');
+        } else {
+          token_user = window.localStorage.getItem("token");
+        }
+
+      }
+    } else {
+      swal.fire({
+        title: "Dejaste campos sin completar",
+        text: "Recuerda que para cargar imagenes debes llenar los campos previos",
+        icon: "warning",
+        confirmButtonText: 'Entendido',
+      })
+
+    }
+  }
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let photos = [];
@@ -201,7 +299,7 @@ const CreateEventForm = () => {
       token_user = window.localStorage.getItem("token");
     }
 
-    if (title != '' && category != '' && date != '' && description != '' && direction != '') {
+    if (title != '' && category != '' && date != '' && description != '') {
 
 
       try {
@@ -210,11 +308,11 @@ const CreateEventForm = () => {
             "title": title,
             "category": category,
             "date": date,
-            "description": 'EN construcción',
+            "description": description,
             "capacity": capacity,
             "vacancies": 0,
             "ubication": {
-              "direction": direction,
+              "direction": 'ojo',
               "latitude": 0,
               "longitude": 0
             },
@@ -382,7 +480,7 @@ const CreateEventForm = () => {
 
                  </Box>
                   
-                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                 <Box sx={{marginLeft: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                   <Button variant="contained" onClick={handleSubmit} sx={{
                     backgroundColor: '#1286f7',
                     border: 'none',
@@ -417,7 +515,7 @@ const CreateEventForm = () => {
 
               <Grid xs={6} sx={{ width: '100%' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <Button variant="contained" onClick={handleSubmit} sx={{
+                  <Button variant="contained" onClick={handleSubmitevent} sx={{
                     backgroundColor: '#1286f7',
                     border: 'none',
                     color: 'white',
