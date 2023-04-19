@@ -110,7 +110,7 @@ export default function UpdatePhotoGallery() {
 
  
 
-  const cards = photos.slice(1).map(item => {
+  const cards = photos.map(item => {
     return (
       <PhotosCard
         key={item.id }

@@ -222,7 +222,12 @@ const CreateEventForm = () => {
               "latitude": latitude,
               "longitude": longitude
             },
-            "agenda": agenda
+            "agenda": [
+              {
+                "time": "string",
+                "description": "string"
+              }
+            ]
           }),
           {
             headers: {
@@ -313,11 +318,16 @@ const CreateEventForm = () => {
             "capacity": capacity,
             "vacancies": 0,
             "ubication": {
-              "direction": 'ojo',
-              "latitude": 0,
-              "longitude": 0
+              "direction": direction,
+              "latitude": latitude,
+              "longitude": longitude
             },
-            "pic": "string"
+            "agenda": [
+              {
+                "time": "string",
+                "description": "string"
+              }
+            ]
           }),
           {
             headers: {

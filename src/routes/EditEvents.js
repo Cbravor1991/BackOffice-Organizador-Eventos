@@ -239,7 +239,10 @@ const EditEvent = () => {
           "latitude": 0,
           "longitude": 0,
           "capacity": capacity,
-          "vacancies": 0
+          "vacancies": 0,
+         
+
+          
         }
       };
 
