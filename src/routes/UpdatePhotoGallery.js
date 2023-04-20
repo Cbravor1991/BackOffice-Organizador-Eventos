@@ -38,12 +38,12 @@ const theme = createTheme({
 export default function UpdatePhotoGallery() {
 
   const [photos, setPhotos] = useState([]);
-  let [portada, setPortada] = useState('https://img.freepik.com/fotos-premium/ponente-conferencia-presentacion-negocios-audiencia-sala-conferencias_561846-3.jpg?w=996');
+  
   const [selectedImg, setSelectedImg] = useState(null);
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
   const types = ['image/png', 'image/jpeg'];
-
+  const [cover, setCover] = useState('');
 
 
   const handleChange = (e) => {
@@ -87,9 +87,68 @@ export default function UpdatePhotoGallery() {
     }
 
     axios({ method: 'get', url: '/organizer/event/images', params: params, headers: headers })
-      .then((response) => {
-        setPhotos(response.data);
-        console.log(response.data)
+      .then((response_photo) => {
+        setPhotos(response_photo.data);
+
+
+
+
+
+        let id_event_photo = window.localStorage.getItem("event_id");
+    
+    
+        let token_user;  
+        if (!window.localStorage.getItem("token")){
+          console.log("no autorizado")
+          window.location.href = "/home";
+          return;
+        } else {
+          token_user = window.localStorage.getItem("token");
+        }
+      
+         const params = new URLSearchParams([['event_id', id_event_photo]]);
+                                 
+         const headers = {'accept': 'application/json',
+                                   'Access-Control-Allow-Origin': '*',
+                                   'Access-Control-Allow-Credentials': true,
+                                   'Access-Control-Allow-Headers': '*',
+                                   'Authorization': 'Bearer ' + token_user
+                                 }  
+                                
+        axios({method: 'get', url: '/organizer/event', params: params, headers: headers})
+           .then((response) => {
+            if (response.data.pic_id!= null) {
+              console.log('mostrame las fotos')
+              console.log(response.data.pic_id)
+              response_photo.data.map(item => {
+                if (response.data.pic_id == item.id){
+                  setCover(item.link)
+                }
+              
+               
+              })
+              }else {
+                setCover ('')
+              
+            }
+            
+
+      
+            
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+       
+      
+
+
+
+
+
+
+      
+      
 
       })
       .catch((error) => {
@@ -115,6 +174,7 @@ export default function UpdatePhotoGallery() {
       <PhotosCard
         key={item.id }
         {...item}
+        setSelectedCover={setCover}
   
         
       />
@@ -145,7 +205,7 @@ export default function UpdatePhotoGallery() {
         <Portada sx={{
           
         }}
-         portada = {portada}
+         cover = {cover}
       />
       </Box>
         </Box>

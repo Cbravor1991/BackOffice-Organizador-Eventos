@@ -29,7 +29,7 @@ export default function Portada(props) {
       <CardMedia
       
         sx={{ height: 200 }}
-        image= {props.portada}
+        image= {props.cover}
       />
       <CardContent>
        
