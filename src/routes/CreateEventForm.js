@@ -57,8 +57,6 @@ const CreateEventForm = () => {
 
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lat, setLat] = useState(-34.599722222222);
-  const [lon, setLon] = useState(-58.381944444444);
   const [zoom, setZoom] = useState(7);
 
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
@@ -83,7 +81,7 @@ const CreateEventForm = () => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v12',
-      center: [lon, lat],
+      center: [longitude, latitude],
       zoom: zoom
     });
 
@@ -107,8 +105,8 @@ const CreateEventForm = () => {
     geocoder.on('result', function (event) {
       //let result = JSON.parse(event.result);
       let coordinates = event.result.center;
-      setLon(coordinates[0]);
-      setLat(coordinates[1]);
+      setLongitude(coordinates[0]);
+      setLatitude(coordinates[1]);
       setDirection(event.result.place_name);
 
       console.log('event');
@@ -118,9 +116,9 @@ const CreateEventForm = () => {
       console.log('center');
       console.log(coordinates);
       console.log('longitude');
-      console.log(lon);
+      console.log(longitude);
       console.log('latitude');
-      console.log(lat);
+      console.log(latitude);
       console.log('address');
       console.log(direction);
     })
@@ -172,9 +170,6 @@ const CreateEventForm = () => {
 
     window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
-    setLatitude(lat);
-    setLongitude(lon);
-
     console.log("hola")
     console.log(title);
     console.log(category);
@@ -205,7 +200,7 @@ const CreateEventForm = () => {
       token_user = window.localStorage.getItem("token");
     }
 
-    if (title != '' && category != '' && date != '' && description != '') {
+    if (title != '' && category != '' && date != '' && description != '' && direction != '') {
 
 
       try {
@@ -271,9 +266,6 @@ const CreateEventForm = () => {
 
 
     window.localStorage.setItem("photos_user", JSON.stringify(photos));
-
-    setLatitude(lat);
-    setLongitude(lon);
 
     console.log("hola")
     console.log(title);
