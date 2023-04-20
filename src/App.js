@@ -18,7 +18,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Galery from './routes/Galery'
 import UpdatePhotoGallery from './routes/UpdatePhotoGallery'
 import Formulario from './routes/descripcion'
-
+import Preview from './routes/Preview';
 
 
 export default function App() {
@@ -39,6 +39,7 @@ export default function App() {
                 <Route path="editEvent" element={<EditEvent />} />
                 <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
                 <Route path="ver" element={<Formulario />} />  
+                <Route path="preview" element={<Preview />} />  
                
                
                 <Route path="photoUpload" element={<Galery />} />

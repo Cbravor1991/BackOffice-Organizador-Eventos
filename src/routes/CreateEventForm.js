@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
+import axios from '../api/axios';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import axios from '../api/axios';
 import { Select, MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -85,8 +85,6 @@ const CreateEventForm = () => {
       zoom: zoom
     });
 
-    map.addControl(new mapboxgl.NavigationControl({ showZoom: true }));
-
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
@@ -101,6 +99,8 @@ const CreateEventForm = () => {
     });
 
     map.addControl(geocoder);
+    
+    map.addControl(new mapboxgl.NavigationControl({ showZoom: true }));
 
     geocoder.on('result', function (event) {
       //let result = JSON.parse(event.result);
@@ -161,110 +161,11 @@ const CreateEventForm = () => {
     }
   };
 
-
   
-  const handleSubmitevent = async (e) => {
-    e.preventDefault();
-    let photos = [];
-
-
-    window.localStorage.setItem("photos_user", JSON.stringify(photos));
-
-    console.log("hola")
-    console.log(title);
-    console.log(category);
-    console.log(date);
-    console.log(description);
-    console.log(capacity);
-    //console.log (vacancies);
-    console.log(direction);
-    console.log(latitude);
-    console.log(longitude);
-
-
-    let token_user;
-
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-    if (title != '' && category != '' && date != '' && description != '' && direction != '') {
-
-
-      try {
-        const response = await axios.post('organizer/event',
-          JSON.stringify({
-            "title": title,
-            "category": category,
-            "date": date,
-            "description": description,
-            "capacity": capacity,
-            "vacancies": 0,
-            "ubication": {
-              "direction": direction,
-              "latitude": latitude,
-              "longitude": longitude
-            },
-            "agenda": [
-              {
-                "time": "string",
-                "description": "string"
-              }
-            ]
-          }),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token_user}`
-            }
-          }
-
-        );
-        console.log(response.status);
-        window.localStorage.setItem("event_id", response.data.id);
-        window.location.href = "/showEvents";
-      } catch (err) {
-        setError(true)
-        if (!err?.response) {
-          setErrMsg('El servidor no responde');
-        } else if (err.response?.status === 401) {
-          setErrMsg('Contraseña o usuario incorrecto');
-        } else if (err.response?.status === 402) {
-          setErrMsg('No tiene autorización');
-        } else {
-          token_user = window.localStorage.getItem("token");
-        }
-
-      }
-    } else {
-      swal.fire({
-        title: "Dejaste campos sin completar",
-        text: "Recuerda que para cargar imagenes debes llenar los campos previos",
-        icon: "warning",
-        confirmButtonText: 'Entendido',
-      })
-
-    }
-  }
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     let photos = [];
 
-
     window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
     console.log("hola")
@@ -277,7 +178,6 @@ const CreateEventForm = () => {
     console.log(direction);
     console.log(latitude);
     console.log(longitude);
-
 
     let token_user;
 
@@ -357,10 +257,52 @@ const CreateEventForm = () => {
   }
 
 
+
   const handleChangeDirection = (address) => {
 
     setDirection(address);
 
+  }
+
+
+  const handleCreate = () => {
+  
+    if (title != '' && category != '' && date != '' && description != '' && direction != '') {
+
+     const event = {"title": title,
+                   "category": category,
+                   "date": date,
+                   "description": description,
+                   "capacity": capacity,
+                   "vacancies": 0,
+                   "ubication": {
+                     "direction": direction,
+                     "latitude": latitude,
+                     "longitude": longitude
+                    },
+                   "agenda": [
+                   {
+                    "time": "string",
+                    "description": "string"
+                   }
+                  ]
+                }
+    
+          
+     window.localStorage.setItem("event", JSON.stringify(event));      
+    
+     window.location.href = '/Preview';   
+     
+    } else {
+      swal.fire({
+        title: "Dejaste campos sin completar",
+        text: "Recuerda que para cargar imagenes debes llenar los campos previos",
+        icon: "warning",
+        confirmButtonText: 'Entendido',
+      })
+
+    }   
+  
   }
 
 
@@ -518,7 +460,7 @@ const CreateEventForm = () => {
 
               <Grid xs={6} sx={{ width: '100%' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <Button variant="contained" onClick={handleSubmitevent} sx={{
+                  <Button variant="contained" onClick={handleCreate} sx={{
                     backgroundColor: '#1286f7',
                     border: 'none',
                     color: 'white',
