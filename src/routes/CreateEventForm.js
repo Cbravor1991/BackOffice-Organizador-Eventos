@@ -219,6 +219,11 @@ const CreateEventForm = () => {
                 "time": "string",
                 "description": "string"
               }
+            ], 
+            "authorizers": [
+              {
+                "email": "string"
+              }
             ]
           }),
           {
