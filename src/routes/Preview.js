@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import axios from '../api/axios';
 import swal from 'sweetalert2';
 import Navbar from '../components/NavBar';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
 
 
 const Preview = () => {
@@ -16,13 +18,19 @@ const Preview = () => {
  const [error, setError] = useState(false);
  const [errMsg, setErrMsg] = useState('');
  const errRef = useRef();
+ const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
 
  let props = JSON.parse(window.localStorage.getItem("event"));
  
  console.log(props);
 
  const stringDate = new Date(props.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-
+ 
+ useEffect(() => {
+   const rawContent = JSON.parse(props.description);
+   const contentState = convertFromRaw(rawContent);
+   setEditorState (EditorState.createWithContent(contentState));    
+ }, []);
   
  const handleSubmitEvent = async (e) => {
     e.preventDefault();
@@ -106,22 +114,22 @@ const Preview = () => {
             Confirme los datos del evento
           </Typography>
           <Typography variant="h6" component="div" sx={{ fontSize: 16, fontWeight: 700, mb: 1, justifyContent: 'center' }}>
-            {props.title}
+            {props.category}
           </Typography>
           <Typography variant="h5" component="div" sx={{ fontSize: 20, fontWeight: 700, mb: 1, justifyContent: 'center' }}>
-            {props.category}
+            {props.title}
           </Typography>
           <Typography color="textSecondary" sx={{ fontSize: 14, fontWeight: 400, color: '##1286f7', mb: 1, justifyContent: 'center' }}>
             {stringDate}
           </Typography>
           <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, justifyContent: 'center' }}>
-            {props.direction}
+            {props.ubication.direction}
           </Typography>
           <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, justifyContent: 'center' }}>
             Capacidad: {props.capacity}
           </Typography>
           <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, justifyContent: 'center' }}>
-            {props.description}
+            {editorState.getCurrentContent().getPlainText()}
           </Typography>
 
         </CardContent>
