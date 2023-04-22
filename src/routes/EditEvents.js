@@ -14,6 +14,7 @@ import { ThemeProvider } from '@mui/material';
 import swal from 'sweetalert2';
 import Navbar from '../components/NavBar';
 import './swal.css'
+import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { EditorState, convertToRaw, convertFromRaw  } from 'draft-js';
@@ -21,6 +22,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 
+mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
 
 
 const theme = createTheme({
@@ -38,15 +40,10 @@ const theme = createTheme({
 });
 
 
-
-
 const EditEvent = () => {
-
 
   let props = sessionStorage.getItem("publication_data")
   props = (JSON.parse(props))
-
-
 
   const userRef = useRef();
   const errRef = useRef();
@@ -62,21 +59,74 @@ const EditEvent = () => {
   const [vacancies, setVacancies] = useState('');
   const [direction, setDirection] = useState(props.direction);
   const [latitude, setLatitude] = useState(props.latitude);
-  const [length, setLength] = useState(props.length);
+  const [longitude, setLongitude] = useState(props.longitude);
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [zoom, setZoom] = useState(7);
+
 
   useEffect(() => {
     const rawContent = JSON.parse(props.description);
     const contentState = convertFromRaw(rawContent);
-    setEditorState (EditorState.createWithContent(contentState));
-
-    
+    setEditorState (EditorState.createWithContent(contentState));    
   }, []);
+  
+  
+  useEffect(() => {
+    const map = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [longitude, latitude],
+      zoom: zoom
+    });
+
+    const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl,
+      marker: {
+        color: 'red',
+        offset: [340, -500]
+      },
+      countries: 'ar',
+      placeholder: 'Ingrese una dirección',
+      textColor: 'black',
+      color: 'black'
+    });
+
+    map.addControl(geocoder);
+    
+    map.addControl(new mapboxgl.NavigationControl({ showZoom: true }));
+
+    geocoder.on('result', function (event) {
+      //let result = JSON.parse(event.result);
+      let coordinates = event.result.center;
+      setLongitude(coordinates[0]);
+      setLatitude(coordinates[1]);
+      setDirection(event.result.place_name);
+
+      console.log('event');
+      console.log(event);
+      console.log('result');
+      console.log(event.result);
+      console.log('center');
+      console.log(coordinates);
+      console.log('longitude');
+      console.log(longitude);
+      console.log('latitude');
+      console.log(latitude);
+      console.log('address');
+      console.log(direction);
+    })
+
+    return () => map.remove();
+  }, []);
+  
 
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
@@ -126,7 +176,7 @@ const EditEvent = () => {
 
   sessionStorage.setItem("event_id", id_event);
 
-  console.log(length);
+  //console.log(length);
 
   const handleSubmitEvent = async (e) => {
     e.preventDefault();
@@ -408,7 +458,7 @@ const EditEvent = () => {
                 </Grid>
                 
                 
-              {/*  <Grid item sx={{ width: '50%', height: '300px' }}>
+               <Grid item sx={{ width: '50%', height: '300px' }}>
 
                   <Box sx={{ display: 'flex', justifyContent: 'right',  alignItems: 'center', textAlign: 'center' }}>
                     <div ref={mapContainer} className="map-container"
@@ -417,8 +467,9 @@ const EditEvent = () => {
 
                   </Box>
 
-                </Grid>*/}
                 </Grid>
+
+              </Grid>
 
 
               <Grid xs={6} sx={{ width: '100%' }}>
@@ -436,7 +487,7 @@ const EditEvent = () => {
                     marginTop: '100px',
                     cursor: 'pointer',
                     transition: 'background-color 0.2s ease-in-out'
-                  }}>Editar evento</Button>
+                  }}>Guardar</Button>
                 </Box>
 
               </Grid>

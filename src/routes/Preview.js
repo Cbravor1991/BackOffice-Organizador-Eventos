@@ -8,6 +8,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import axios from '../api/axios';
 import swal from 'sweetalert2';
+import Navbar from '../components/NavBar';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
 
 
 const Preview = () => {
@@ -15,13 +18,19 @@ const Preview = () => {
  const [error, setError] = useState(false);
  const [errMsg, setErrMsg] = useState('');
  const errRef = useRef();
+ const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
 
  let props = JSON.parse(window.localStorage.getItem("event"));
  
  console.log(props);
 
  const stringDate = new Date(props.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-
+ 
+ useEffect(() => {
+   const rawContent = JSON.parse(props.description);
+   const contentState = convertFromRaw(rawContent);
+   setEditorState (EditorState.createWithContent(contentState));    
+ }, []);
   
  const handleSubmitEvent = async (e) => {
     e.preventDefault();
@@ -93,38 +102,44 @@ const Preview = () => {
 
 
  return (
-
+ 
   <Box sx={{ mb: 4 }}>
+      <Navbar />
       <Card variant="outlined" sx={{ borderRadius: 2, backgroundColor: '#fff', color: '#282828' }}>
-        <CardContent sx={{ pb: 2 }}>
+        <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
+          <Typography variant="h5" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+            Crear evento
+          </Typography>
           <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
             Confirme los datos del evento
           </Typography>
-          <Typography variant="h6" component="div" sx={{ fontSize: 16, fontWeight: 700, mb: 1 }}>
-            {props.title}
-          </Typography>
-          <Typography variant="h5" component="div" sx={{ fontSize: 20, fontWeight: 700, mb: 1 }}>
+          <Typography variant="h6" component="div" sx={{ fontSize: 16, fontWeight: 700, mb: 1, justifyContent: 'center' }}>
             {props.category}
           </Typography>
-          <Typography color="textSecondary" sx={{ fontSize: 14, fontWeight: 400, color: '##1286f7', mb: 1 }}>
+          <Typography variant="h5" component="div" sx={{ fontSize: 20, fontWeight: 700, mb: 1, justifyContent: 'center' }}>
+            {props.title}
+          </Typography>
+          <Typography color="textSecondary" sx={{ fontSize: 14, fontWeight: 400, color: '##1286f7', mb: 1, justifyContent: 'center' }}>
             {stringDate}
           </Typography>
-          <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1 }}>
-            {props.direction}
+          <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, justifyContent: 'center' }}>
+            {props.ubication.direction}
           </Typography>
-          <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1 }}>
-            {props.capacity}
+          <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, justifyContent: 'center' }}>
+            Capacidad: {props.capacity}
           </Typography>
-          <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1 }}>
-            {props.description}
+          <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, justifyContent: 'center' }}>
+            {editorState.getCurrentContent().getPlainText()}
           </Typography>
 
         </CardContent>
-        <CardActions sx={{ display: 'flex', justifyContent: 'space-between', pt: 0 }}>
-          <Button onClick={handleSubmitEvent} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#191414', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
+        <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
+          <Button onClick={handleSubmitEvent} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'center',
+           color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
             Aceptar
           </Button>
-          <Button onClick={() => {window.location.href = '/loadEvent'}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#191414', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' } }}>
+          <Button onClick={() => {window.history.back()}} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", justifyContent: 'center',
+           fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' } }}>
             Volver
           </Button>
         </CardActions>
