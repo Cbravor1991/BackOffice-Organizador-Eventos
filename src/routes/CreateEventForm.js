@@ -261,6 +261,12 @@ const CreateEventForm = () => {
     }
   }
 
+  const handleSubmit_faqs = async (e) => {
+    e.preventDefault();
+    window.location.href = "/faqs"
+   
+  }
+
 
 
   const handleChangeDirection = (address) => {
@@ -446,6 +452,24 @@ const CreateEventForm = () => {
                     transition: 'background-color 0.2s ease-in-out'
                   }}>Cargar fotos</Button>
                 </Box>
+
+                <Box sx={{marginLeft: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                  <Button variant="contained" onClick={handleSubmit_faqs} sx={{
+                    backgroundColor: '#1286f7',
+                    border: 'none',
+                    color: 'white',
+                    width: '300px',
+                    height: '50px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    padding: '10px 20px',
+                    marginTop: '20px',
+                    marginRight: '150px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease-in-out'
+                  }}>Preguntas frecuentes</Button>
+                </Box>
+
 
                 </Grid>
                 

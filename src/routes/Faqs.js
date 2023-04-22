@@ -38,6 +38,7 @@ export default function Faqs() {
   const [answer_3, setAnswer_3] = useState('');
   const [answer_4, setAnswer_4] = useState('');
   const [answer_5, setAnswer_5] = useState('');
+  let analizar = '';
 
   
   const toolbarOptions = {
@@ -140,13 +141,15 @@ export default function Faqs() {
 
   useEffect(() => {
 
-    const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
-    const analizar = JSON.parse(preguntasRecuperadasJSON);
+
 
     if (analizar== '') {
       
       
     } else {
+      const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
+       
+      analizar = JSON.parse(preguntasRecuperadasJSON);
         analizar.map((pregunta, index) => {
           if(pregunta.response!='' ) {
           if(index==0){
@@ -199,7 +202,7 @@ export default function Faqs() {
 
         <Grid item xs={6} sx={{ width: '100%' }}>
 
-        <FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '10px' }} variant="standard">
+        <FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '345px' }} variant="standard">
           <InputLabel htmlFor="standard-adornment-amount">Pregunta uno</InputLabel>
           <Input
            value={question_1}
@@ -211,7 +214,7 @@ export default function Faqs() {
                 
 
 
-                <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '10px' }}>
+                <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '345px' }}>
                   <Editor
                     editorState={editorState_1}
                     onEditorStateChange={handleEditorChange_1}
@@ -228,7 +231,7 @@ export default function Faqs() {
 
           <Grid item xs={6} sx={{ width: '100%' }}>
 
-<FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '10px' }} variant="standard">
+<FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '345px' }} variant="standard">
   <InputLabel htmlFor="standard-adornment-amount">Pregunta dos</InputLabel>
   <Input
    value={question_2}
@@ -240,7 +243,7 @@ export default function Faqs() {
         
 
 
-        <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '10px' }}>
+        <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '345px' }}>
           <Editor
             editorState={editorState_2}
             onEditorStateChange={handleEditorChange_2}
@@ -256,7 +259,7 @@ export default function Faqs() {
   </Grid>
   <Grid item xs={6} sx={{ width: '100%' }}>
 
-<FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '10px' }} variant="standard">
+<FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '345px' }} variant="standard">
   <InputLabel htmlFor="standard-adornment-amount">Pregunta tres</InputLabel>
   <Input
    value={question_3}
@@ -268,7 +271,7 @@ export default function Faqs() {
         
 
 
-        <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '10px' }}>
+        <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '345px' }}>
           <Editor
             editorState={editorState_3}
             onEditorStateChange={handleEditorChange_3}
@@ -284,7 +287,7 @@ export default function Faqs() {
   </Grid>
   <Grid item xs={6} sx={{ width: '100%' }}>
 
-<FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '10px' }} variant="standard">
+<FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '345px' }} variant="standard">
   <InputLabel htmlFor="standard-adornment-amount">Pregunta cuatro</InputLabel>
   <Input
    value={question_4}
@@ -296,7 +299,7 @@ export default function Faqs() {
         
 
 
-        <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '10px' }}>
+        <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '345px' }}>
           <Editor
             editorState={editorState_4}
             onEditorStateChange={handleEditorChange_4}
@@ -312,7 +315,7 @@ export default function Faqs() {
   </Grid>
   <Grid item xs={6} sx={{ width: '100%' }}>
 
-<FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '10px' }} variant="standard">
+<FormControl fullWidth sx={{ m: 1, width: '900px', marginLeft: '345px' }} variant="standard">
   <InputLabel htmlFor="standard-adornment-amount">Pregunta cinco</InputLabel>
   <Input
    value={question_5}
@@ -324,7 +327,7 @@ export default function Faqs() {
         
 
 
-        <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '10px' }}>
+        <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', width: '900px', marginLeft: '345px' }}>
           <Editor
             editorState={editorState_5}
             onEditorStateChange={handleEditorChange_5}
@@ -338,7 +341,11 @@ export default function Faqs() {
 
 
   </Grid>
-        <Box sx={{marginLeft: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+       
+      </div>
+      
+    </Box>
+    <Box sx={{marginLeft: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                   <Button variant="contained" onClick={handleSubmit} sx={{
                     backgroundColor: '#1286f7',
                     border: 'none',
@@ -354,8 +361,6 @@ export default function Faqs() {
                     transition: 'background-color 0.2s ease-in-out'
                   }}>Cargar preguntas</Button>
                 </Box>
-      </div>
-    </Box>
     </div>
   );
 }
