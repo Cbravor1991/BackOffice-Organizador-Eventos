@@ -19,6 +19,7 @@ import Galery from './routes/Galery'
 import UpdatePhotoGallery from './routes/UpdatePhotoGallery'
 import Formulario from './routes/descripcion'
 import Preview from './routes/Preview';
+import Faqs from './routes/Faqs'
 
 
 export default function App() {
@@ -40,6 +41,7 @@ export default function App() {
                 <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
                 <Route path="ver" element={<Formulario />} />  
                 <Route path="preview" element={<Preview />} />  
+                <Route path="faqs" element={<Faqs />} />  
                
                
                 <Route path="photoUpload" element={<Galery />} />

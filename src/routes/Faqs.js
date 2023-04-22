@@ -20,7 +20,7 @@ import CardFaqs from '../components/CardFaqs';
 import Navbar from '../components/NavBar';
 import { version } from 'react-dom';
 
-export default function Formulario() {
+export default function Faqs() {
   const [question_1, setQuestion_1] = useState('');
   const [question_2, setQuestion_2] = useState('');
   const [question_3, setQuestion_3] = useState('');
@@ -352,7 +352,7 @@ export default function Formulario() {
                     marginRight: '150px',
                     cursor: 'pointer',
                     transition: 'background-color 0.2s ease-in-out'
-                  }}>Cargar fotos</Button>
+                  }}>Cargar preguntas</Button>
                 </Box>
       </div>
     </Box>
