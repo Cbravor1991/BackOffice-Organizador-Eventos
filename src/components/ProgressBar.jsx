@@ -3,13 +3,13 @@ import useStorage from '../hooks/useStorage';
 import axios from '../api/axios';
 
 
-const ProgressBar = ({ file, setFile }) => {
+const ProgressBar = ({ url, progress }) => {
   
-  const{url, progress} = useStorage(file, setFile);
+  //const{url, progress} = useStorage(file, setFile);
  
   useEffect(() => {
     if (url) {
-      setFile(null);
+      //setFile(null);
       let photos = JSON.parse(window.localStorage.getItem("photos_user"));
       photos.push(url);
       window.localStorage.setItem("photos_user", JSON.stringify(photos));
@@ -43,7 +43,7 @@ const ProgressBar = ({ file, setFile }) => {
     
     }
     
-  }, [url, setFile]);
+  }, [url, progress]);
 
 
   

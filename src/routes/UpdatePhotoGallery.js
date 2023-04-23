@@ -16,6 +16,7 @@ import ProgressBar from '../components/ProgressBar';
 import swal from 'sweetalert2';
 import './swal.css'
 import { Box } from '@mui/material';
+import useStorage from '../hooks/useStorage';
 
 
 
@@ -44,7 +45,18 @@ export default function UpdatePhotoGallery() {
   const [error, setError] = useState(null);
   const types = ['image/png', 'image/jpeg'];
   const [cover, setCover] = useState('');
-
+  const [url, setUrl] = useState('');
+  //const{url, progress} = useStorage(file, setFile);
+  
+  //window.localStorage.setItem('url', url);
+  //window.localStorage.setItem('progress', progress);
+  //setUrl(window.localStorage.getItem('url'));
+  
+  console.log(url);
+  
+  let id_event = window.localStorage.getItem("event_id");
+  
+  console.log(id_event);
 
   const handleChange = (e) => {
     let selected = e.target.files[0];
@@ -53,11 +65,9 @@ export default function UpdatePhotoGallery() {
       setError('');
     } else {
       setFile(null);
-      setError('Selecciona u archivo que sea una imagen (png or jpg)');
+      setError('Selecciona un archivo que sea una imagen (png or jpg)');
     }
   };
-
-
 
 
   const loadImages = () => {
@@ -72,7 +82,7 @@ export default function UpdatePhotoGallery() {
     }
 
     //let id_event = sessionStorage.getItem("event_id"); 
-    let id_event = window.localStorage.getItem("event_id");
+    
     console.log(id_event)
 
 
@@ -90,14 +100,9 @@ export default function UpdatePhotoGallery() {
       .then((response_photo) => {
         setPhotos(response_photo.data);
 
-
-
-
-
         let id_event_photo = window.localStorage.getItem("event_id");
     
-    
-        let token_user;  
+            let token_user;  
         if (!window.localStorage.getItem("token")){
           console.log("no autorizado")
           window.location.href = "/home";
@@ -132,24 +137,11 @@ export default function UpdatePhotoGallery() {
               
             }
             
-
-      
-            
         })
         .catch((error) => {
           console.log(error);
         })
        
-      
-
-
-
-
-
-
-      
-      
-
       })
       .catch((error) => {
         console.log(error);
@@ -161,10 +153,8 @@ export default function UpdatePhotoGallery() {
   useEffect(() => {
 
     loadImages();
+    setUrl(window.localStorage.getItem('url')); 
  
-
-
-
   }, []);
 
  
@@ -175,11 +165,50 @@ export default function UpdatePhotoGallery() {
         key={item.id }
         {...item}
         setSelectedCover={setCover}
-  
-        
+         
       />
     )
   })
+  
+  
+  const saveImages = async () => {
+  
+      let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+      photos.push(url);
+      window.localStorage.setItem("photos_user", JSON.stringify(photos));
+
+      let token_user=window.localStorage.getItem("token"); 
+      let id_event = window.localStorage.getItem("event_id"); 
+      setUrl(window.localStorage.getItem('url'));
+      
+      console.log('aca')
+      console.log(url);
+      console.log(id_event);
+      
+      try{    
+       const response= axios.post('/organizer/event/images',
+                 JSON.stringify({ 
+                     'event_id': id_event,
+                     'link': url
+                 }),
+                 {
+                     headers: { 'Content-Type': 'application/json',
+                                'Access-Control-Allow-Origin': '*',
+                                'Access-Control-Allow-Credentials': true,
+                                'Access-Control-Allow-Headers': '*',
+                                'Authorization': 'Bearer ' + token_user,
+                              }
+                  },
+ 
+             )
+       .then((response) => {
+       console.log("Imágen cargada");
+       window.history.back();
+     })
+     }catch (err) {console.log(err)}
+  }
+
+
 
   return (
 
@@ -207,6 +236,18 @@ export default function UpdatePhotoGallery() {
         }}
          cover = {cover}
       />
+      
+      <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
+      <Button onClick={()=>{window.location.href = '/photoUpload'}}  variant="contained" component="label">
+          Cargar Imagenes nuevas
+        </Button>
+        
+      <Button onClick={saveImages} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'center',
+           color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
+            Guardar
+     </Button>
+    </CardActions>
+      
       </Box>
         </Box>
 
