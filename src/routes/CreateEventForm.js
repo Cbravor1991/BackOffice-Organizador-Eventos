@@ -37,6 +37,7 @@ const theme = createTheme({
   },
 });
 
+
 const CreateEventForm = () => {
 
    //voy a tener que ver si hay algo cargado antes 
@@ -77,7 +78,9 @@ const CreateEventForm = () => {
   let minDate = tomorrow.toISOString().split('T')[0];
   window.localStorage.setItem("preguntas_cargadas", JSON.stringify(''));;
 
-
+  const url = window.localStorage.getItem('url');
+  console.log(url);
+ 
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
     setDescription(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
@@ -178,120 +181,6 @@ const CreateEventForm = () => {
       setCapacity(numberOfTickets);
     }
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    let photos = [];
-
-    window.localStorage.setItem("photos_user", JSON.stringify(photos));
-
-    console.log("hola")
-    console.log(title);
-    console.log(category);
-    console.log(date);
-    console.log(description);
-    console.log(capacity);
-    //console.log (vacancies);
-    console.log(direction);
-    console.log(latitude);
-    console.log(longitude);
-
-    let token_user;
-
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-    if (title != '' && category != '' && date != '' && description != '') {
-
-
-      try {
-        const response = await axios.post('organizer/event',
-          JSON.stringify({
-            "title": title,
-            "category": category,
-            "date": date,
-            "description": description,
-            "capacity": capacity,
-            "vacancies": 0,
-            "ubication": {
-              "direction": direction,
-              "latitude": latitude,
-              "longitude": longitude
-            },
-            "agenda": [
-              {
-                "time": "string",
-                "description": "string"
-              }
-            ],
-            "authorizers": [
-              {
-                "email": "string"
-              }
-            ]
-          }),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token_user}`
-            }
-          }
-
-        );
-        console.log(response.status);
-        window.localStorage.setItem("event_id", response.data.id);
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        window.location.href = "/photoUpload";
-      } catch (err) {
-        setError(true)
-        if (!err?.response) {
-          setErrMsg('El servidor no responde');
-        } else if (err.response?.status === 401) {
-          setErrMsg('Contraseña o usuario incorrecto');
-        } else if (err.response?.status === 402) {
-          setErrMsg('No tiene autorización');
-        } else {
-          token_user = window.localStorage.getItem("token");
-        }
-
-      }
-    } else {
-      swal.fire({
-        title: "Dejaste campos sin completar",
-        text: "Recuerda que para cargar imagenes debes llenar los campos previos",
-        icon: "warning",
-        confirmButtonText: 'Entendido',
-      })
-
-    }
-  }
 
 
   const handleSubmit_sinPrevisualizacion = async (e) => {
@@ -451,7 +340,6 @@ const CreateEventForm = () => {
   }
 
 
-
   const handleChangeDirection = (address) => {
 
     setDirection(address);
@@ -498,10 +386,11 @@ const CreateEventForm = () => {
 
     }
 
+  const loadImages = (files) => {
+    window.localStorage.setItem('úrl', '');
+    window.location.href = "/photoUpload";
+    console.log("entro")
   }
-
-
-
 
 
   return (
@@ -608,13 +497,25 @@ const CreateEventForm = () => {
                     Cantidad de tickets
                   </Typography>
 
-                  <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
-                    type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
+              <Grid container spacing={2}>
+                <Grid item sx={{ width: '50%', marginTop: '20px' }}>
+                  <Box sx={{ height: '250px', overflow: 'auto', marginLeft: '200px', borderRadius: '10px' }}>
+                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                      Fecha del evento
+                    </Typography>
+                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
+                     type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
+                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                      Cantidad de tickets
+                    </Typography>
 
-                </Box>
+                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
+                     type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
 
-                <Box sx={{ marginLeft: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <Button variant="contained" onClick={handleSubmit} sx={{
+                 </Box>
+                  
+                 <Box sx={{marginLeft: '220px', display: 'flex', justifyContent: 'left', alignItems: 'center', textAlign: 'center' }}>
+                  <Button variant="contained" onClick={loadImages} sx={{
                     backgroundColor: '#1286f7',
                     border: 'none',
                     color: 'white',
@@ -624,7 +525,7 @@ const CreateEventForm = () => {
                     fontWeight: 'bold',
                     padding: '10px 20px',
                     marginTop: '20px',
-                    marginRight: '150px',
+                    marginRight: '300px',
                     cursor: 'pointer',
                     transition: 'background-color 0.2s ease-in-out'
                   }}>Cargar fotos</Button>

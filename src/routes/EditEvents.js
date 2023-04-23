@@ -20,6 +20,7 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { EditorState, convertToRaw, convertFromRaw  } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import useStorage from '../hooks/useStorage';
 
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
@@ -156,6 +157,7 @@ const EditEvent = () => {
     }
   };
 
+
   const handleDateChangeTickets = (e) => {
     const numberOfTickets = e.target.value;
 
@@ -193,9 +195,6 @@ const EditEvent = () => {
       token_user = window.localStorage.getItem("token");
     }
 
-
-
-
     try {
 
       var options = {
@@ -227,12 +226,8 @@ const EditEvent = () => {
         console.error(error);
       });
 
-
       window.localStorage.setItem("event_id", id_event);
-  
-      window.location.href = "/showEvents";
-
-
+        window.location.href = "/showEvents";
 
     } catch (err) {
       setError(true)
@@ -265,9 +260,6 @@ const EditEvent = () => {
       token_user = window.localStorage.getItem("token");
     }
 
-
-
-
     try {
 
       var options = {
@@ -290,9 +282,7 @@ const EditEvent = () => {
           "longitude": 0,
           "capacity": capacity,
           "vacancies": 0,
-         
-
-          
+                   
         }
       };
 
@@ -325,7 +315,12 @@ const EditEvent = () => {
   }
 
 
-  
+  const handleEditPhotos = () => {
+    
+    window.localStorage.setItem("event_id", id_event);
+    window.location.href = "/updatePhotoGallery";
+    
+  }
 
 
   /*------------------------------------------------------------------------------------------------------------------------*/
@@ -369,10 +364,7 @@ const EditEvent = () => {
                       id="demo-simple-select"
                       value={category}
                       label="Tipo de evento"
-                      onChange={(e) => setCategory(e.target.value)}
-
-
-
+                      onChange={(e) => setCategory(e.target.value)}s
                     >
 
                       <MenuItem sx={{ color: 'black' }} value="Evento deportivo">Evento deportivo</MenuItem>
@@ -439,7 +431,7 @@ const EditEvent = () => {
                  </Box>
                   
                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <Button variant="contained" onClick={handleSubmit} sx={{
+                  <Button variant="contained" onClick={handleEditPhotos} sx={{
                     backgroundColor: '#1286f7',
                     border: 'none',
                     color: 'white',
