@@ -124,7 +124,11 @@ const EditEvent = () => {
       console.log('address');
       console.log(direction);
     })
-
+    
+    map.on('load', () => {
+      geocoder.query(direction);    
+    });
+    
     return () => map.remove();
   }, []);
   
@@ -453,7 +457,7 @@ const EditEvent = () => {
                <Grid item sx={{ width: '50%', height: '300px' }}>
 
                   <Box sx={{ display: 'flex', justifyContent: 'right',  alignItems: 'center', textAlign: 'center' }}>
-                    <div ref={mapContainer} className="map-container"
+                    <div ref={mapContainer} className="mapboxgl-ctrl-top-right"
                      style={{width: 600, height: 350, marginLeft: '50px', marginTop: '20px', marginRight: '100px'}}
                     />
 
