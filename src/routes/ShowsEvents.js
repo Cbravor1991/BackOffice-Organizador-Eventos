@@ -121,7 +121,8 @@ export default function ShowsEvents() {
       token_user = window.localStorage.getItem("token");
     }
   
-    const params = {event_id: props.id};
+    //const params = {event_id: props.id};
+    
   
      swal.fire({
       title: "Confirmar",
@@ -134,14 +135,20 @@ export default function ShowsEvents() {
   
         if (result['isConfirmed']) {
                 
+          const params = new URLSearchParams([['event_id', props.id]]);
+          
+          const headers = {'accept': 'application/json',
+                               'Access-Control-Allow-Origin': '*',
+                               'Access-Control-Allow-Credentials': true,
+                               'Access-Control-Allow-Headers': '*',
+                               Authorization: `Bearer ${token_user}`
+                             }
+          
           var options = {
             method: 'DELETE',
             url: '/organizer/event',
-            params: {event_id: props.id},
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token_user}`
-            }
+            params: params,
+            headers: headers
           };
           
           axios.request(options).then(function (response) {
