@@ -105,8 +105,8 @@ const Preview = () => {
                     '/organizer/event/faq',
                     JSON.stringify({
                       "event_id": id_event,
-                      "question": '',
-                      "response": ''
+                      "question": pregunta.question,
+                      "response": pregunta.response
                     }),
                     {
                       headers: {
