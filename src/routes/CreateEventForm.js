@@ -49,7 +49,7 @@ const CreateEventForm = () => {
    const [title, setTitle] = useState(datos =='' ? '' : datos.titulo );
    const [category, setCategory] = useState(datos == '' ? '': datos.categoria);
    const [date, setDate] = useState(datos == '' ? '' : datos.fecha );
-   const [description, setDescription] = useState('');
+   const [description, setDescription] = useState(datos == '' ? '' : datos.descripcion);
    const [capacity, setCapacity] = useState(datos =='' ? '': datos.tickets);
    const [vacancies, setVacancies] = useState('');
    const [direction, setDirection] = useState(datos ? datos.direccion : '');
@@ -65,7 +65,7 @@ const CreateEventForm = () => {
    const map = useRef(null);
    const [zoom, setZoom] = useState(7);
    
-   const [editorState, setEditorState] = useState(datos == '' ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion)) ));
+   const [editorState, setEditorState] = useState(datos.direccion == '' ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(description) ));
 
    const today = new Date();
    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
@@ -74,6 +74,8 @@ const CreateEventForm = () => {
 
   const url = window.localStorage.getItem('url');
   console.log(url);
+  
+  let token_user=window.localStorage.getItem("token");
  
  
   const handleEditorChange = (newEditorState) => {
@@ -232,7 +234,7 @@ const CreateEventForm = () => {
                 "description": "string"
               }
             ],
-            "authorizers": [
+        "authorizers": [
               {
                 "email": "jecastillo@fi.uba.ar"
               }
@@ -255,11 +257,30 @@ const CreateEventForm = () => {
 
   const loadImages = (files) => {
     window.localStorage.setItem('úrl', '');
+    
+    const data = {
+    "titulo": "",
+    "categoria": "",
+    "descripcion": "",
+    "fecha": "",
+    "tickets": "",
+    "direccion": ""
+   }
+
+    data.titulo = title
+    data.categoria = category
+    data.descripcion = description
+    data.fecha = date
+    data.tickets = capacity
+    data.direccion = direction
+    
+    window.localStorage.setItem('cache_datos', JSON.stringify(data));
+
     window.location.href = "/photoUpload";
     console.log("entro")
   }
-
-
+  
+  
   return (
 
     <ThemeProvider theme={theme}>
