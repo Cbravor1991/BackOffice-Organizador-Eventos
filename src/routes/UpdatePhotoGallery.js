@@ -203,12 +203,20 @@ export default function UpdatePhotoGallery() {
              )
        .then((response) => {
        console.log("Imágen cargada");
+       setUrl(window.localStorage.getItem(''));
        window.history.back();
      })
      }catch (err) {console.log(err)}
   }
 
 
+  const handleUpload = () => {
+  
+    window.localStorage.setItem('úrl', '');
+    window.location.href = '/photoUpload';
+  
+ }
+ 
 
   return (
 
@@ -277,7 +285,7 @@ export default function UpdatePhotoGallery() {
         <Button onClick={()=>{window.location.href = '/showEvents'}} variant="contained" component="label">
           Ir a mis eventos
         </Button>
-        <Button onClick={()=>{window.location.href = '/photoUpload'}}  variant="contained" component="label">
+        <Button onClick={handleUpload}  variant="contained" component="label">
           Cargar Imagenes nuevas
         </Button>
 

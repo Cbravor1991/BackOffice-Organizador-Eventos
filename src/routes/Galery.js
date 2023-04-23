@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useState, useEffect } from 'react';
 import ImageGrid from '../components/ImageGrid';
 import '../styles/index.css';
 import { Button, Divider, Typography, TextField } from '@mui/material';
@@ -18,6 +19,17 @@ function Galery() {
   window.localStorage.setItem('url', url);
   window.localStorage.setItem('progress', progress);
   
+  let photos=[];
+  if (url) {
+    photos.push(url);
+  }
+  window.localStorage.setItem("photos_user", JSON.stringify(photos));
+  
+  useEffect(() => {
+    setSelectedImg(url);
+  }, []);
+  
+  
   console.log(url);
 
   const handleChange = (e) => {
@@ -25,6 +37,10 @@ function Galery() {
     if (selected && types.includes(selected.type)) {
        setFile(selected);
        window.localStorage.setItem('file', file);
+       if (url) {
+        photos.push(url);
+       }
+       window.localStorage.setItem("photos_user", JSON.stringify(photos));
        setError('');} else {
        setFile(null);
        setError('Selecciona u archivo que sea una imagen (png or jpg)');

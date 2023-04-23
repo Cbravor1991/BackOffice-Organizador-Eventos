@@ -221,6 +221,7 @@ const CreateEventForm = () => {
 
 
   const loadImages = (files) => {
+    window.localStorage.setItem('úrl', '');
     window.location.href = "/photoUpload";
     console.log("entro")
   }

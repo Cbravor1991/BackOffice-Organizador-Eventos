@@ -74,6 +74,7 @@ const Preview = () => {
              )
        .then((response) => {
        console.log("Imágen cargada");
+       setUrl(window.localStorage.getItem(''));
        window.location.href = "/showEvents"
      })
      }catch (err) {console.log(err)}
