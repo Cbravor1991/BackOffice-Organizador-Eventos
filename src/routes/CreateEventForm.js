@@ -223,7 +223,7 @@ const CreateEventForm = () => {
             ],
             "authorizers": [
               {
-                "email": "string"
+                "email": "jecastillo@fi.uba.ar"
               }
             ]
           }),
@@ -339,13 +339,18 @@ const CreateEventForm = () => {
           "longitude": longitude
         },
         "agenda": [
-          {
-            "time": "string",
-            "description": "string"
-          }
-        ]
-      }
-
+              {
+                "time": "string",
+                "description": "string"
+              }
+            ],
+            "authorizers": [
+              {
+                "email": "string"
+              }
+            ]
+          };
+      
       window.localStorage.setItem("event", JSON.stringify(event));
       window.location.href = '/Preview';
 
@@ -519,7 +524,7 @@ const CreateEventForm = () => {
             <Grid xs={6} sx={{ width: '100%' }}>
 
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                <Button variant="contained" onClick={handleSubmit_sinPrevisualizacion} sx={{
+                <Button variant="contained" onClick={handleCreate} sx={{
                   backgroundColor: '#1286f7',
                   border: 'none',
                   color: 'white',

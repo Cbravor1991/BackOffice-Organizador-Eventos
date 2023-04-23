@@ -81,6 +81,12 @@ const Preview = () => {
   }
   
   
+ const saveFAQs = async () => { 
+ 
+ 
+ }
+  
+  
  const handleSubmitEvent = async (e) => {
     e.preventDefault();
     let photos = [];
