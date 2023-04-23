@@ -65,7 +65,7 @@ const CreateEventForm = () => {
    const map = useRef(null);
    const [zoom, setZoom] = useState(7);
    
-   const [editorState, setEditorState] = useState(datos.direccion == '' ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(description) ));
+   const [editorState, setEditorState] = useState(datos == '' || datos.direccion == '' ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(description) ));
 
    const today = new Date();
    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);

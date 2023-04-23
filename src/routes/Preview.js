@@ -33,8 +33,13 @@ const Preview = () => {
  const [progress, setProgress] = useState(window.localStorage.getItem('progress'));
  const [file, setFile] = useState(window.localStorage.getItem('file'));
  const [eventId, setEventId] = useState(null);
+ const [preguntas, setPreguntas] = useState([]);
 
  let token_user=window.localStorage.getItem("token");
+ 
+ const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
+ let analizar = JSON.parse(preguntasRecuperadasJSON);   
+ 
  
  useEffect(() => {
    const rawContent = JSON.parse(props.description);
@@ -42,6 +47,8 @@ const Preview = () => {
    setEditorState (EditorState.createWithContent(contentState));    
    setUrl(window.localStorage.getItem('url')); 
    console.log(url);
+   setPreguntas(analizar);
+   console.log(preguntas);
  }, []);
 
 
@@ -84,10 +91,10 @@ const Preview = () => {
  const saveFAQs = async () => { 
  
      let id_event = window.localStorage.getItem("event_id");      
-     const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
-     let analizar = JSON.parse(preguntasRecuperadasJSON);
+     //const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
+     //let analizar = JSON.parse(preguntasRecuperadasJSON);     
      
-     if(analizar.length>0){
+     if(preguntas.length>0){
        console.log('ejecutando las preguntas')
 
        for (const [index, pregunta] of analizar.entries()) {
@@ -205,7 +212,7 @@ const Preview = () => {
           </Typography>
 
        <Card variant="outlined" sx={{ border:'2px solid black', borderRadius: 2, backgroundColor: '#fff', color: 'black',
-                                      justifyContent: 'center', width: '700px', height: '500px', marginLeft: '270px'}}>
+                                      justifyContent: 'center', width: '700px', height: '1000px', marginLeft: '270px'}}>
         <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
                     
           <img src={url} alt="preview" height="180" style={{ marginTop: '20px', marginLeft: '200px', display: 'flex', justifyContent: 'center' }} />
@@ -228,8 +235,23 @@ const Preview = () => {
           <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
             {editorState.getCurrentContent().getPlainText()}
           </Typography>
+          <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+            Preguntas frecuentes
+          </Typography>
+          
+          {preguntas.map(function (item, key) {
+            return (<div>
+             <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
+             {item.question}
+             </Typography>
+             <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
+             {item.response}
+             </Typography>
+             </div>
+            )})}
 
         </CardContent>
+        
         <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
           <Button onClick={handleSubmitEvent} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'center',
            color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
