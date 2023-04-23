@@ -38,7 +38,7 @@ export default function Faqs() {
   const [answer_3, setAnswer_3] = useState('');
   const [answer_4, setAnswer_4] = useState('');
   const [answer_5, setAnswer_5] = useState('');
-  let analizar = '';
+ 
 
   
   const toolbarOptions = {
@@ -98,9 +98,10 @@ export default function Faqs() {
     
     window.localStorage.setItem("preguntas", questionsJSON);
 
-    const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
-   
-   
+    const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas"); //siempre vas a pegar lo que esta aca
+    console.log(preguntasRecuperadasJSON);
+
+    window.location.href = "/loadEvent"
 
 
    
@@ -143,13 +144,16 @@ export default function Faqs() {
 
 
 
-    if (analizar== '') {
+    if (JSON.parse(window.localStorage.getItem("preguntas"))=='') {
+      console.log('a ver que onda');
+   
       
       
     } else {
       const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
+     
        
-      analizar = JSON.parse(preguntasRecuperadasJSON);
+      let analizar = JSON.parse(preguntasRecuperadasJSON);
         analizar.map((pregunta, index) => {
           if(pregunta.response!='' ) {
           if(index==0){
