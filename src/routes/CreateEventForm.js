@@ -65,7 +65,7 @@ const CreateEventForm = () => {
    const map = useRef(null);
    const [zoom, setZoom] = useState(7);
    
-   const [editorState, setEditorState] = useState(datos == '' ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion))) );
+   const [editorState, setEditorState] = useState(datos == '' ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion)) ));
 
    const today = new Date();
    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
@@ -171,124 +171,6 @@ const CreateEventForm = () => {
   };
 
 
-  const handleSubmit_sinPrevisualizacion = async (e) => {
-    e.preventDefault();
-
-    /*-------------------------------------------------------------------------------------------------------------------------------------*/
-    e.preventDefault();
-    let photos = [];
-
-    window.localStorage.setItem("photos_user", JSON.stringify(photos));
-
-    console.log("hola")
-    console.log(title);
-    console.log(category);
-    console.log(date);
-    console.log(description);
-    console.log(capacity);
-    //console.log (vacancies);
-    console.log(direction);
-    console.log(latitude);
-    console.log(longitude);
-
-    let token_user;
-
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-      try {
-        const response = axios.post('organizer/event',
-          JSON.stringify({
-            "title": title,
-            "category": category,
-            "date": date,
-            "description": description,
-            "capacity": capacity,
-            "vacancies": 0,
-            "ubication": {
-              "direction": direction,
-              "latitude": latitude,
-              "longitude": longitude
-            },
-            "agenda": [
-              {
-                "time": "string",
-                "description": "string"
-              }
-            ],
-            "authorizers": [
-              {
-                "email": "jecastillo@fi.uba.ar"
-              }
-            ]
-          }),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token_user}`
-            }
-          },
-
-        )
-          .then((response) => {
-            console.log()
-            const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
-            let analizar = JSON.parse(preguntasRecuperadasJSON);
-            if(analizar.length>0){
-              console.log('ejecutando las preguntas')
-
-            for (const [index, pregunta] of analizar.entries()) {
-              if (pregunta.response !== '') {
-                try {
-                  const response_faqs = axios.post(
-                    '/organizer/event/faq',
-                    JSON.stringify({
-
-                      "event_id": response.data.id,
-                      "question": '',
-                      "response": ''
-
-                    }),
-                    {
-                      headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token_user}`
-                      }
-                    }
-                  );
-
-                } catch (err) {
-                  setError(true);
-                  if (!err?.response_faqs) {
-                    setErrMsg('El servidor no responde');
-                  } else if (err.response_faqs?.status === 401) {
-                    setErrMsg('Contraseña o usuario incorrecto');
-                  } else if (err.response_faqs?.status === 402) {
-                    setErrMsg('No tiene autorización');
-                  } else {
-                    token_user = window.localStorage.getItem('token');
-                  }
-                }
-              }
-            }} else{}
-
-
-            let vaciar = JSON.stringify('');
-            window.localStorage.setItem("preguntas", vaciar);
-            window.localStorage.setItem('cache_datos', vaciar);
-            window.location.href = "/showEvents"
-
-          })
-      } catch (err) { console.log(err) }
-
-  }
-
-
   const handleSubmit_faqs = async (e) => {
     e.preventDefault();
     
@@ -324,6 +206,12 @@ const CreateEventForm = () => {
 
   const handleCreate = () => {
 
+    console.log(title);
+    console.log(category);
+    console.log(date);
+    console.log(description);
+    console.log(direction);
+    
     if (title != '' && category != '' && date != '' && description != '' && direction != '') {
 
       const event = {
@@ -346,7 +234,7 @@ const CreateEventForm = () => {
             ],
             "authorizers": [
               {
-                "email": "string"
+                "email": "jecastillo@fi.uba.ar"
               }
             ]
           };

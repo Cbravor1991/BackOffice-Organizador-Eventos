@@ -34,6 +34,7 @@ const Preview = () => {
  const [file, setFile] = useState(window.localStorage.getItem('file'));
  const [eventId, setEventId] = useState(null);
 
+ let token_user=window.localStorage.getItem("token");
  
  useEffect(() => {
    const rawContent = JSON.parse(props.description);
@@ -50,7 +51,6 @@ const Preview = () => {
       photos.push(url);
       window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
-      let token_user=window.localStorage.getItem("token"); 
       let id_event = window.localStorage.getItem("event_id"); 
       console.log('aca')
       console.log(url);
@@ -83,7 +83,54 @@ const Preview = () => {
   
  const saveFAQs = async () => { 
  
- 
+     let id_event = window.localStorage.getItem("event_id");      
+     const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
+     let analizar = JSON.parse(preguntasRecuperadasJSON);
+     
+     if(analizar.length>0){
+       console.log('ejecutando las preguntas')
+
+       for (const [index, pregunta] of analizar.entries()) {
+          if (pregunta.response !== '') {
+          
+                try {
+                  const response_faqs = axios.post(
+                    '/organizer/event/faq',
+                    JSON.stringify({
+                      "event_id": id_event,
+                      "question": '',
+                      "response": ''
+                    }),
+                    {
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': true,
+                        'Access-Control-Allow-Headers': '*',
+                        Authorization: `Bearer ${token_user}`
+                      }
+                    }
+                  );
+
+                } catch (err) {
+                  setError(true);
+                  if (!err?.response_faqs) {
+                    setErrMsg('El servidor no responde');
+                  } else if (err.response_faqs?.status === 401) {
+                    setErrMsg('Contraseña o usuario incorrecto');
+                  } else if (err.response_faqs?.status === 402) {
+                    setErrMsg('No tiene autorización');
+                  } else {
+                    token_user = window.localStorage.getItem('token');
+                  }
+                }
+              }
+            }} else{}
+
+            let vaciar = JSON.stringify('');
+            window.localStorage.setItem("preguntas", vaciar);
+            window.localStorage.setItem('cache_datos', vaciar);
+            window.location.href = "/showEvents"
  }
   
   
@@ -93,19 +140,6 @@ const Preview = () => {
 
     window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
-    /*console.log("hola")
-    console.log(title);
-    console.log(category);
-    console.log(date);
-    console.log(description);
-    console.log(capacity);
-    //console.log (vacancies);
-    console.log(direction);
-    console.log(latitude);
-    console.log(longitude);*/
-
-    let token_user;
-
     if (!window.localStorage.getItem("token")) {
       console.log("no autorizado")
       window.location.href = "/home";
@@ -121,7 +155,6 @@ const Preview = () => {
     } else {
       token_user = window.localStorage.getItem("token");
     }
-
 
       try {
         const response = await axios.post('organizer/event',
@@ -129,6 +162,9 @@ const Preview = () => {
           {
             headers: {
               'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': true,
+              'Access-Control-Allow-Headers': '*',
               Authorization: `Bearer ${token_user}`
             }
           }
@@ -136,6 +172,7 @@ const Preview = () => {
         ).then((response) => {window.localStorage.setItem("event_id", response.data.id);
           setEventId(response.data.id);
           saveImages();
+          saveFAQs();
           console.log(response.status); 
         })
       } catch (err) {
