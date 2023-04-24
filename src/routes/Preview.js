@@ -208,7 +208,7 @@ const Preview = () => {
                     {item.question}
                   </Typography>
                   <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-                    {item.answer}
+                    {item.response}
                   </Typography>
                 </Card>
               </div>

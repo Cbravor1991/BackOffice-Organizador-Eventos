@@ -61,7 +61,7 @@ const CreateEventForm = () => {
   { 
     sections: [{ time: "", description: "" }],
     mails: [{ email: "" }],
-    faqs: [{ question: "", answer: "" }]
+    faqs: [{ question: "", response: "" }]
   }
   });
   const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
@@ -325,9 +325,9 @@ const CreateEventForm = () => {
                       </IconButton>
 
                       <TextField 
-                        {...register(`faqs.${index}.answer`, { required: true })}
-                        error={errors.faqs && errors.faqs[index]?.answer}
-                        placeholder="answer" size="small" label="Respuesta" variant="outlined" 
+                        {...register(`faqs.${index}.response`, { required: true })}
+                        error={errors.faqs && errors.faqs[index]?.response}
+                        placeholder="response" size="small" label="Respuesta" variant="outlined" 
                         sx={{ mb: 1, width: '90%'}}
                         multiline rows={2}
                       />
@@ -336,7 +336,7 @@ const CreateEventForm = () => {
                     </div>
                   ))}
 
-                  <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", answer: "" })}>Agregar FAQ</Button>
+                  <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", response: "" })}>Agregar FAQ</Button>
                 </form>
               </div>
              </Grid>
