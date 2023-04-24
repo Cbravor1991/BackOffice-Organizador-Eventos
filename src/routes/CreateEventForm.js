@@ -80,12 +80,12 @@ const CreateEventForm = () => {
    const map = useRef(null);
    const [zoom, setZoom] = useState(7);
    
-   const [editorState, setEditorState] = useState(datos == '' || datos.direccion == '' ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(description) ));
+   const [editorState, setEditorState] = useState(datos == '' || (datos != '' && datos.descripcion == '') ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion)) ));
 
    const today = new Date();
    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
    let minDate = tomorrow.toISOString().split('T')[0];
-  window.localStorage.setItem("preguntas_cargadas", JSON.stringify(''));;
+  //window.localStorage.setItem("preguntas_cargadas", JSON.stringify(''));;
 
   const url = window.localStorage.getItem('url');
   // console.log(url);
@@ -188,7 +188,7 @@ const CreateEventForm = () => {
   };
 
 
-  const handleSubmit_faqs = async (e) => {
+/*  const handleSubmit_faqs = async (e) => {
     e.preventDefault();
     
    const data = {
@@ -211,7 +211,7 @@ const CreateEventForm = () => {
  
     window.location.href = "/faqs"
 
-  }
+  } */
 
 
   const handleChangeDirection = (address) => {
