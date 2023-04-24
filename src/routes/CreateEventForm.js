@@ -68,11 +68,11 @@ const CreateEventForm = () => {
    const { register, control, formState: { errors }, getValues } = useForm({ defaultValues: 
     { 
       sections: [{ time: "", description: "" }],
-      faqs: [{ question: "", answer: "" }],
+      mails: [{ email: "" }],
     }
    });
    const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
-   const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
+   const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
 
    const mapContainer = useRef(null);
    const map = useRef(null);
@@ -221,7 +221,7 @@ const CreateEventForm = () => {
 
   const handleCreate = () => {
     const formData = getValues();
-    
+
     if (title != '' && category != '' && date != '' && description != '' && direction != '') {
 
       console.log(formData.sections);
@@ -241,12 +241,8 @@ const CreateEventForm = () => {
         //"agenda": JSON.stringify(formData.sections),
         "agenda": formData.sections,
         //"faqs": JSON.stringify(formData.faqs),
-        "authorizers": [
-              {
-                "email": "jecastillo@fi.uba.ar"
-              }
-            ]
-          };
+        "authorizers": formData.mails,
+      };
       
       window.localStorage.setItem("event", JSON.stringify(event));
       window.location.href = '/Preview';
@@ -424,37 +420,28 @@ const CreateEventForm = () => {
 
              <Grid item xs={6} sx={{ width: '50%' }}>
               <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-                FAQs
+                Colaboradores autorizados
               </Typography>              
 
               <div style={{ display:'flex', justifyContent: 'center' }}>
                 <form style={{width:'100%'}}>
-                  {fieldsFaqs.map((field, index) => (
+                  {fieldsMails.map((field, index) => (
                     <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
                       <TextField 
-                        {...register(`faqs.${index}.question`, { required: true })}
-                        error={errors.faqs && errors.faqs[index]?.question}
-                        placeholder="question" size="small" label="Pregunta" variant="outlined" 
+                        {...register(`mails.${index}.email`, { required: true })}
+                        error={errors.mails && errors.mails[index]?.email}
+                        placeholder="email" size="small" label="Mail" variant="outlined" 
                         sx={{ mb: 1, marginRight: 1, width: '90%' }}
                       />
 
-                      <IconButton aria-label="delete" onClick={() => removeFaq(index)}>
+                      <IconButton aria-label="delete" onClick={() => removeMail(index)}>
                         <DeleteIcon />
-                      </IconButton>
-
-                      <TextField 
-                        {...register(`faqs.${index}.answer`, { required: true })}
-                        error={errors.faqs && errors.faqs[index]?.answer}
-                        placeholder="answer" size="small" label="Respuesta" variant="outlined" 
-                        sx={{ mb: 1, width: '90%'}}
-                        multiline rows={2}
-                      />
-                      
+                      </IconButton>                      
 
                     </div>
                   ))}
 
-                  <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", answer: "" })}>Agregar FAQ</Button>
+                  <Button variant="outlined" size='small' onClick={() => appendMail({ email: "" })}>Agregar colaborador</Button>
                 </form>
               </div>
              </Grid>
