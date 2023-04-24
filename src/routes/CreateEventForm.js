@@ -224,6 +224,8 @@ const CreateEventForm = () => {
     
     if (title != '' && category != '' && date != '' && description != '' && direction != '') {
 
+      console.log(formData.sections);
+
       const event = {
         "title": title,
         "category": category,
@@ -236,8 +238,9 @@ const CreateEventForm = () => {
           "latitude": latitude,
           "longitude": longitude
         },
-        "agenda": JSON.stringify(formData.faqs),
-        "faqs": JSON.stringify(formData.sections),
+        //"agenda": JSON.stringify(formData.sections),
+        "agenda": formData.sections,
+        //"faqs": JSON.stringify(formData.faqs),
         "authorizers": [
               {
                 "email": "jecastillo@fi.uba.ar"
