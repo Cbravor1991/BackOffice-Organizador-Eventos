@@ -1,7 +1,21 @@
 import React, { useState } from 'react';
 import { googleLogout, GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
+import { Button } from '@mui/material';
 import axios from '../api/axios';
+import { styled } from '@mui/material/styles';
+
+const LogoutButton = styled(Button)(({ theme }) => ({
+    backgroundColor: '#546e7a',
+    color: 'white',
+    padding: theme.spacing(1, 2),
+    borderRadius: 10,
+    '&:hover': {
+        backgroundColor: '#37474f',
+      },
+    cursor: 'pointer',
+    variant: 'contained',
+  }));  
 
 export default function LoginButton() {
     const handleLoginError = (error) => {
@@ -42,7 +56,7 @@ export default function LoginButton() {
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     <p>{localStorage.getItem('user')}</p>
                     <span style={{width: '20px'}}></span>
-                    <button className="header__btn" onClick={logOut}>Sign out</button>
+                    <LogoutButton onClick={logOut}>Sign out</LogoutButton>
                 </div>
             ) : (
                 <GoogleLogin
