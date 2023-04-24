@@ -1,5 +1,5 @@
 import React from 'react';
-//import '../styles/HomePage.scss';
+import '../styles/HomePage.scss';
 import { Link } from 'react-router-dom';
 import { useSpring, animated } from 'react-spring';
 import LoginButton from '../components/LoginButton'
@@ -33,14 +33,6 @@ const HomePage = () => {
       </section>
 
     
-      <footer className="footer">
-        <ul className="footer__menu">
-          <li><Link to="/about">Acerca de nosotros</Link></li>
-          <li><Link to="/terms">Términos y condiciones</Link></li>
-          <li><Link to="/privacy">Política de privacidad</Link></li>
-        </ul>
-      
-      </footer>
     </div>
   );
 };
