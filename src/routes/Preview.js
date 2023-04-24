@@ -258,6 +258,19 @@ const Preview = () => {
           <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
             {editorState.getCurrentContent().getPlainText()}
           </Typography>
+          
+          <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+            Agenda
+          </Typography>
+          
+          {props.agenda.map(function (item, key) {
+            return (<div>
+             <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
+             {item.time} : {item.description} 
+             </Typography>
+             </div>
+            )})}
+         
           <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
             Preguntas frecuentes
           </Typography>
