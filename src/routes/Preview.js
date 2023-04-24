@@ -77,7 +77,7 @@ const Preview = () => {
 
   const saveImages = async () => {
   
-    let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+      let photos = JSON.parse(window.localStorage.getItem("photos_user"));
       photos.push(url);
       window.localStorage.setItem("photos_user", JSON.stringify(photos));
 

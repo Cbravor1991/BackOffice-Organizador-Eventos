@@ -238,9 +238,9 @@ const CreateEventForm = () => {
           "latitude": latitude,
           "longitude": longitude
         },
-        //"agenda": JSON.stringify(formData.sections),
         "agenda": formData.sections,
-        //"faqs": JSON.stringify(formData.faqs),
+        //"faqs": formData.faqs,
+        "faqs": [],
         "authorizers": formData.mails,
       };
       
