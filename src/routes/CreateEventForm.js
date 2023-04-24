@@ -19,6 +19,13 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { EditorState, convertToRaw , convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { useForm, useFieldArray } from 'react-hook-form';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Controller } from 'react-hook-form';
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
 
@@ -58,9 +65,15 @@ const CreateEventForm = () => {
    const [errMsg, setErrMsg] = useState('');
    const [success, setSuccess] = useState(false);
    const [files, setFiles] = useState(false);
-   const [agenda, setAgenda] = useState([]);
-   const [faqs, setFaqs] = useState(null);
-   
+   const { register, control, formState: { errors }, getValues } = useForm({ defaultValues: 
+    { 
+      sections: [{ time: "", description: "" }],
+      faqs: [{ question: "", answer: "" }],
+    }
+   });
+   const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
+   const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
+
    const mapContainer = useRef(null);
    const map = useRef(null);
    const [zoom, setZoom] = useState(7);
@@ -73,7 +86,7 @@ const CreateEventForm = () => {
   window.localStorage.setItem("preguntas_cargadas", JSON.stringify(''));;
 
   const url = window.localStorage.getItem('url');
-  console.log(url);
+  // console.log(url);
   
   let token_user=window.localStorage.getItem("token");
  
@@ -144,7 +157,7 @@ const CreateEventForm = () => {
 
     if (selectedDate < currentDate) {
       swal.fire({
-        title: "Elegui otra fecha",
+        title: "Elegí otra fecha",
         text: "Recuerda que la proxima fecha disponible es el " + new Date(minDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }),
         icon: "warning",
         confirmButtonText: 'Entendido',
@@ -207,12 +220,7 @@ const CreateEventForm = () => {
 
 
   const handleCreate = () => {
-
-    console.log(title);
-    console.log(category);
-    console.log(date);
-    console.log(description);
-    console.log(direction);
+    const formData = getValues();
     
     if (title != '' && category != '' && date != '' && description != '' && direction != '') {
 
@@ -228,12 +236,8 @@ const CreateEventForm = () => {
           "latitude": latitude,
           "longitude": longitude
         },
-        "agenda": [
-              {
-                "time": "string",
-                "description": "string"
-              }
-            ],
+        "agenda": JSON.stringify(formData.faqs),
+        "faqs": JSON.stringify(formData.sections),
         "authorizers": [
               {
                 "email": "jecastillo@fi.uba.ar"
@@ -280,14 +284,13 @@ const CreateEventForm = () => {
     console.log("entro")
   }
   
-  
   return (
 
     <ThemeProvider theme={theme}>
 
       <Navbar />
       <Box sx={{ border: '5px solid black', padding: '20px' }}>
-        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
           Crear evento
         </Typography>
         <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -313,13 +316,14 @@ const CreateEventForm = () => {
             <Grid container spacing={2}>
 
               <Grid item xs={6}>
-                <TextField error={error} fullWidth sx={{ m: 1 }} label="Nombre del evento" variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <TextField size="small" error={error} fullWidth sx={{ m: 1 }} label="Nombre del evento" variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} />
               </Grid>
 
               <Grid item xs={6}>
                 <FormControl fullWidth sx={{ m: 1 }}>
-                  <InputLabel id="demo-simple-select-label">Categoría</InputLabel>
+                  <InputLabel size="small" id="demo-simple-select-label">Categoría</InputLabel>
                   <Select
+                    size="small"
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={category}
@@ -352,7 +356,7 @@ const CreateEventForm = () => {
 
             <Grid item xs={6} sx={{ width: '100%' }}>
 
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
                 Descripción
               </Typography>              
               <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', marginLeft: '10px', borderRadius: '10px' }}>
@@ -366,6 +370,90 @@ const CreateEventForm = () => {
                   style={{ maxHeight: '100px' }}
                 />
               </Box>
+            </Grid>
+
+            <Grid item xs={6} sx={{ width: '50%' }}>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                Agenda
+              </Typography>              
+
+              <div style={{ display:'flex', justifyContent: 'center' }}>
+                <form style={{width:'100%'}}>
+                  {fieldsSections.map((field, index) => (
+                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
+                      {/* intento de input con DATEPICKER */}
+                      {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker 
+                          {...register(`sections.${index}.time`, { required: true })}
+                          error={errors.sections && errors.sections[index]?.time}
+                          placeholder="Time" size="small" label="Horario" variant="outlined" 
+                          sx={{ mb: 1, marginRight: 1, width: '100px' }}
+                          slotProps={{ textField: { size: 'small' } }}
+                        />
+                      </LocalizationProvider> */}
+
+                      <TextField 
+                        {...register(`sections.${index}.time`, { required: true })}
+                        error={errors.sections && errors.sections[index]?.time}
+                        placeholder="time" size="small" label="Horario" variant="outlined" 
+                        sx={{ mb: 1, marginRight: 1, width: '100px' }}
+                      />
+
+                      <TextField 
+                        {...register(`sections.${index}.description`, { required: true })}
+                        error={errors.sections && errors.sections[index]?.description}
+                        placeholder="description" size="small" label="Descripción" variant="outlined" 
+                        sx={{ mb: 1, width: '65%'}}
+                      />
+                      
+                      <IconButton aria-label="delete" onClick={() => removeSection(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+
+                    </div>
+                  ))}
+
+                  <Button variant="outlined" size='small' onClick={() => appendSection({ time: "", description: "" })}>Agregar sección</Button>
+                </form>
+              </div>
+             </Grid>
+
+
+             <Grid item xs={6} sx={{ width: '50%' }}>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                FAQs
+              </Typography>              
+
+              <div style={{ display:'flex', justifyContent: 'center' }}>
+                <form style={{width:'100%'}}>
+                  {fieldsFaqs.map((field, index) => (
+                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
+                      <TextField 
+                        {...register(`faqs.${index}.question`, { required: true })}
+                        error={errors.faqs && errors.faqs[index]?.question}
+                        placeholder="question" size="small" label="Pregunta" variant="outlined" 
+                        sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                      />
+
+                      <IconButton aria-label="delete" onClick={() => removeFaq(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+
+                      <TextField 
+                        {...register(`faqs.${index}.answer`, { required: true })}
+                        error={errors.faqs && errors.faqs[index]?.answer}
+                        placeholder="answer" size="small" label="Respuesta" variant="outlined" 
+                        sx={{ mb: 1, width: '90%'}}
+                        multiline rows={2}
+                      />
+                      
+
+                    </div>
+                  ))}
+
+                  <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", answer: "" })}>Agregar FAQ</Button>
+                </form>
+              </div>
              </Grid>
 
 
@@ -376,12 +464,12 @@ const CreateEventForm = () => {
                     <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
                       Fecha del evento
                     </Typography>
-                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
+                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
                      type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
                     <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                       Cantidad de tickets
                     </Typography>
-                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
+                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
                      type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
                  </Box>
                  <Box sx={{marginLeft: '220px', display: 'flex', justifyContent: 'left', alignItems: 'center', textAlign: 'center' }}>
