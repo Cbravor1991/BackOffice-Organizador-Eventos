@@ -27,7 +27,6 @@ export default function Faqs() {
   const [question_4, setQuestion_4] = useState('');
   const [question_5, setQuestion_5] = useState('');
   
-
   const [editorState_1, setEditorState_1] = useState(() => EditorState.createEmpty());
   const [editorState_2, setEditorState_2] = useState(() => EditorState.createEmpty());
   const [editorState_3, setEditorState_3] = useState(() => EditorState.createEmpty());
@@ -40,11 +39,9 @@ export default function Faqs() {
   const [answer_5, setAnswer_5] = useState('');
  
 
-  
   const toolbarOptions = {
 
   };
-
 
 
   const handleSubmit = (event) => {
@@ -52,19 +49,12 @@ export default function Faqs() {
     event.preventDefault();
     const questions = [];
 
-   
-   
-
-
-
     const datos_1 = {
       question: question_1,
       response: answer_1
     }; 
 
     questions.push (datos_1)
-
-
 
     const datos_2 = {
       question: question_2,
@@ -87,7 +77,6 @@ export default function Faqs() {
 
     questions.push (datos_4)
 
-
     const datos_5 = {
       question: question_5,
       response: answer_5
@@ -97,62 +86,52 @@ export default function Faqs() {
     let questionsJSON = JSON.stringify(questions);
     
     window.localStorage.setItem("preguntas", questionsJSON);
+    
+    console.log(questionsJSON)
 
     const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas"); //siempre vas a pegar lo que esta aca
     console.log(preguntasRecuperadasJSON);
 
-     window.history.back();
-
-
-   
-   
-
-
+    window.history.back();
   };
+
 
   const handleEditorChange_1 = (newEditorState,) => {
     setEditorState_1(newEditorState);
-    setAnswer_1 (JSON.stringify(convertToRaw(editorState_1.getCurrentContent())));
-    
+    setAnswer_1 (JSON.stringify(convertToRaw(editorState_1.getCurrentContent())));    
   };
+
 
   const handleEditorChange_2 = (newEditorState) => {
     setEditorState_2(newEditorState);
-    setAnswer_2 (JSON.stringify(convertToRaw(editorState_2.getCurrentContent())));
-    
+    setAnswer_2 (JSON.stringify(convertToRaw(editorState_2.getCurrentContent())));    
   };
+
 
   const handleEditorChange_3 = (newEditorState) => {
     setEditorState_3(newEditorState);
-    setAnswer_3 (JSON.stringify(convertToRaw(editorState_3.getCurrentContent())));
-    
+    setAnswer_3 (JSON.stringify(convertToRaw(editorState_3.getCurrentContent())));    
   };
+
 
   const handleEditorChange_4 = (newEditorState) => {
     setEditorState_4(newEditorState);
-    setAnswer_4 (JSON.stringify(convertToRaw(editorState_4.getCurrentContent())));
-    
+    setAnswer_4 (JSON.stringify(convertToRaw(editorState_4.getCurrentContent())));    
   };
+
 
   const handleEditorChange_5 = (newEditorState) => {
     setEditorState_5(newEditorState);
-    setAnswer_5 (JSON.stringify(convertToRaw(editorState_5.getCurrentContent())));
-    
+    setAnswer_5 (JSON.stringify(convertToRaw(editorState_5.getCurrentContent())));    
   };
 
+
   useEffect(() => {
-
-
-
     if (JSON.parse(window.localStorage.getItem("preguntas"))=='') {
-      console.log('a ver que onda');
-   
-      
-      
+      console.log('a ver que onda');      
     } else {
       const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
-     
-       
+            
       let analizar = JSON.parse(preguntasRecuperadasJSON);
         analizar.map((pregunta, index) => {
           if(pregunta.response!='' ) {
@@ -185,14 +164,13 @@ export default function Faqs() {
             const contentState = convertFromRaw(rawContent);
             setEditorState_5 (EditorState.createWithContent(contentState));
             setQuestion_5(pregunta.question)
-          }
-
-         
+          }         
         }
       });
     }
     
   }, []);
+
 
   return (
     <div>

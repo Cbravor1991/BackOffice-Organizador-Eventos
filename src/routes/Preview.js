@@ -38,18 +38,41 @@ const Preview = () => {
  let token_user=window.localStorage.getItem("token");
  
  const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
- let analizar = JSON.parse(preguntasRecuperadasJSON);   
+ console.log(preguntasRecuperadasJSON);
+ let analizar = JSON.parse(preguntasRecuperadasJSON);  
+ console.log(analizar); 
  
  
  useEffect(() => {
+   console.log(props.description);
    const rawContent = JSON.parse(props.description);
+   console.log(rawContent);
    const contentState = convertFromRaw(rawContent);
-   setEditorState (EditorState.createWithContent(contentState));    
+   console.log(contentState);
+   setEditorState (EditorState.createWithContent(contentState));  
+   console.log(editorState);  
+   
    setUrl(window.localStorage.getItem('url')); 
    console.log(url);
    setPreguntas(analizar);
    console.log(preguntas);
  }, []);
+
+
+  const convert = (text) => {
+    if (text != '') {
+      console.log(text);
+      const rawContent2 = JSON.parse(text);
+      console.log(rawContent2);
+      const contentState2 = convertFromRaw(rawContent2);
+      console.log(contentState2);
+      const editorState2 = EditorState.createWithContent(contentState2);  
+      console.log(editorState2);
+      const result = editorState2.getCurrentContent().getPlainText();
+      console.log(result);
+      return result;
+    }
+  }
 
 
   const saveImages = async () => {
@@ -239,13 +262,15 @@ const Preview = () => {
             Preguntas frecuentes
           </Typography>
           
-          {preguntas.map(function (item, key) {
+          {analizar.map(function (item, key) {
             return (<div>
              <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
              {item.question}
              </Typography>
              <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-             {item.response}
+             {
+             convert(item.response)   
+             }
              </Typography>
              </div>
             )})}
