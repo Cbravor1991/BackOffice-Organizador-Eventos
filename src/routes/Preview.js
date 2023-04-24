@@ -12,6 +12,7 @@ import Navbar from '../components/NavBar';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import ProgressBar from '../components/ProgressBar';
+import { Grid } from '@mui/material';
 
 
 const Preview = () => {
@@ -148,8 +149,9 @@ const Preview = () => {
             Confirme los datos del evento
           </Typography>
 
+      <Grid style={{ display: 'flex', justifyContent: 'center' }}>
        <Card variant="outlined" sx={{ border:'2px solid black', borderRadius: 2, backgroundColor: '#fff', color: 'black',
-                                      justifyContent: 'center', width: '700px', height: '1000px', marginLeft: '270px'}}>
+                                      justifyContent: 'center', width: '700px', height: '1000px'}}>
         <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
                     
           <img src={url} alt="preview" height="180" style={{ marginTop: '20px', marginLeft: '200px', display: 'flex', justifyContent: 'center' }} />
@@ -169,6 +171,11 @@ const Preview = () => {
           <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
             Capacidad: {props.capacity}
           </Typography>
+
+          <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+            Descripción
+          </Typography>
+
           <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
             {editorState.getCurrentContent().getPlainText()}
           </Typography>
@@ -178,12 +185,16 @@ const Preview = () => {
           </Typography>
           
           {props.agenda.map(function (item, key) {
-            return (<div>
-             <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-             {item.time} : {item.description} 
-             </Typography>
-             </div>
-            )})}
+            return (
+              <div>
+                <Card sx={{ border:'0.5px solid grey', borderRadius: 2, backgroundColor: '#fff', color: 'black'}}>
+                  <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                    {item.time} : {item.description} 
+                  </Typography>
+                </Card>
+              </div>
+            )
+          })}
          
           <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
             Preguntas frecuentes
@@ -192,13 +203,16 @@ const Preview = () => {
           {props.faqs.map(function (item, key) {
             return (
               <div>
-                <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-                  {"Pregunta: " + item.question}
-                </Typography>
-                <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-                  {"Respuesta: " + item.answer}
-                </Typography>
+                <Card sx={{ border:'0.5px solid grey', borderRadius: 2, backgroundColor: '#fff', color: 'black'}}>
+                  <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 800, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                    {item.question}
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                    {item.answer}
+                  </Typography>
+                </Card>
               </div>
+              
             )})}
 
         </CardContent>
@@ -214,6 +228,7 @@ const Preview = () => {
           </Button>
         </CardActions>
        </Card>
+      </Grid>
       
     </Box>
 
