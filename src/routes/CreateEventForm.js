@@ -46,63 +46,45 @@ const theme = createTheme({
 
 
 const CreateEventForm = () => {
+  let datos = JSON.parse(window.localStorage.getItem('cache_datos'));
 
-   //voy a tener que ver si hay algo cargado antes 
-   let datos = JSON.parse(window.localStorage.getItem('cache_datos'));
+  const [error, setError] = useState(false);
+  const [title, setTitle] = useState(datos =='' ? '' : datos.titulo );
+  const [category, setCategory] = useState(datos == '' ? '': datos.categoria);
+  const [date, setDate] = useState(datos == '' ? '' : datos.fecha );
+  const [description, setDescription] = useState(datos == '' ? '' : datos.descripcion);
+  const [capacity, setCapacity] = useState(datos =='' ? '': datos.tickets);
+  const [direction, setDirection] = useState(datos ? datos.direccion : '');
+  const [latitude, setLatitude] = useState(-34.599722222222);
+  const [longitude, setLongitude] = useState(-58.381944444444);
+  const { register, control, formState: { errors }, getValues } = useForm({ defaultValues: 
+  { 
+    sections: [{ time: "", description: "" }],
+    mails: [{ email: "" }],
+    faqs: [{ question: "", answer: "" }]
+  }
+  });
+  const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
+  const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
+  const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
 
-   const userRef = useRef();
-   const errRef = useRef();
-   const [error, setError] = useState(false);
-   const [title, setTitle] = useState(datos =='' ? '' : datos.titulo );
-   const [category, setCategory] = useState(datos == '' ? '': datos.categoria);
-   const [date, setDate] = useState(datos == '' ? '' : datos.fecha );
-   const [description, setDescription] = useState(datos == '' ? '' : datos.descripcion);
-   const [capacity, setCapacity] = useState(datos =='' ? '': datos.tickets);
-   const [vacancies, setVacancies] = useState('');
-   const [direction, setDirection] = useState(datos ? datos.direccion : '');
-   const [latitude, setLatitude] = useState(-34.599722222222);
-   const [longitude, setLongitude] = useState(-58.381944444444);
-   const [errMsg, setErrMsg] = useState('');
-   const [success, setSuccess] = useState(false);
-   const [files, setFiles] = useState(false);
-   const { register, control, formState: { errors }, getValues } = useForm({ defaultValues: 
-    { 
-      sections: [{ time: "", description: "" }],
-      mails: [{ email: "" }],
-      faqs: [{ question: "", answer: "" }]
-    }
-   });
-   const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
-   const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
-   const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
-
-   const mapContainer = useRef(null);
-   const map = useRef(null);
-   const [zoom, setZoom] = useState(7);
-   
-   const [editorState, setEditorState] = useState(datos == '' || (datos != '' && datos.descripcion == '') ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion)) ));
-
-   const today = new Date();
-   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-   let minDate = tomorrow.toISOString().split('T')[0];
-  //window.localStorage.setItem("preguntas_cargadas", JSON.stringify(''));;
-
-  const url = window.localStorage.getItem('url');
-  // console.log(url);
+  const mapContainer = useRef(null);
+  const [zoom, setZoom] = useState(7);
   
-  let token_user=window.localStorage.getItem("token");
- 
- 
+  const [editorState, setEditorState] = useState(datos == '' || datos.direccion == '' ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(description) ));
+
+  const today = new Date();
+  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+  let minDate = tomorrow.toISOString().split('T')[0];
+
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
     setDescription(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
   };
 
-
   const toolbarOptions = {
 
   };
-
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -130,24 +112,10 @@ const CreateEventForm = () => {
     map.addControl(new mapboxgl.NavigationControl({ showZoom: true }));
 
     geocoder.on('result', function (event) {
-      //let result = JSON.parse(event.result);
       let coordinates = event.result.center;
       setLongitude(coordinates[0]);
       setLatitude(coordinates[1]);
       setDirection(event.result.place_name);
-
-      console.log('event');
-      console.log(event);
-      console.log('result');
-      console.log(event.result);
-      console.log('center');
-      console.log(coordinates);
-      console.log('longitude');
-      console.log(longitude);
-      console.log('latitude');
-      console.log(latitude);
-      console.log('address');
-      console.log(direction);
     })
     return () => map.remove();
   }, []);
@@ -187,47 +155,10 @@ const CreateEventForm = () => {
     }
   };
 
-
-/*  const handleSubmit_faqs = async (e) => {
-    e.preventDefault();
-    
-   const data = {
-    "titulo": "",
-    "categoria": "",
-    "descripcion": "",
-    "fecha": "",
-    "tickets": "",
-    "direccion": ""
-   }
-
-    data.titulo = title
-    data.categoria = category
-    data.descripcion = description
-    data.fecha = date
-    data.tickets = capacity
-    data.direccion = direction
-    
-    window.localStorage.setItem('cache_datos', JSON.stringify(data));
- 
-    window.location.href = "/faqs"
-
-  } */
-
-
-  const handleChangeDirection = (address) => {
-
-    setDirection(address);
-
-  }
-
-
   const handleCreate = () => {
     const formData = getValues();
 
     if (title != '' && category != '' && date != '' && description != '' && direction != '') {
-
-      console.log(formData.sections);
-
       const event = {
         "title": title,
         "category": category,
@@ -257,7 +188,6 @@ const CreateEventForm = () => {
       })
 
   } }
-
 
   const loadImages = (files) => {
     window.localStorage.setItem('úrl', '');

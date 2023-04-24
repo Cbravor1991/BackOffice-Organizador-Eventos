@@ -18,10 +18,7 @@ const Preview = () => {
 
  const [error, setError] = useState(false);
  const [errMsg, setErrMsg] = useState('');
- const errRef = useRef();
  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
- //const [file, setFile] = useState(null);
- //const [error, setError] = useState(null);
  
  let props = JSON.parse(window.localStorage.getItem("event"));
  
@@ -30,18 +27,9 @@ const Preview = () => {
  const stringDate = new Date(props.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
  
  const [url, setUrl] = useState('');
- const [progress, setProgress] = useState(window.localStorage.getItem('progress'));
- const [file, setFile] = useState(window.localStorage.getItem('file'));
  const [eventId, setEventId] = useState(null);
- const [preguntas, setPreguntas] = useState([]);
 
  let token_user=window.localStorage.getItem("token");
- 
- const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
- console.log(preguntasRecuperadasJSON);
- let analizar = JSON.parse(preguntasRecuperadasJSON);  
- console.log(analizar); 
- 
  
  useEffect(() => {
    console.log(props.description);
@@ -54,26 +42,7 @@ const Preview = () => {
    
    setUrl(window.localStorage.getItem('url')); 
    console.log(url);
-   setPreguntas(analizar);
-   console.log(preguntas);
  }, []);
-
-
-  const convert = (text) => {
-    if (text != '') {
-      console.log(text);
-      const rawContent2 = JSON.parse(text);
-      console.log(rawContent2);
-      const contentState2 = convertFromRaw(rawContent2);
-      console.log(contentState2);
-      const editorState2 = EditorState.createWithContent(contentState2);  
-      console.log(editorState2);
-      const result = editorState2.getCurrentContent().getPlainText();
-      console.log(result);
-      return result;
-    }
-  }
-
 
   const saveImages = async () => {
   
@@ -109,60 +78,6 @@ const Preview = () => {
      })
      }catch (err) {console.log(err)}
   }
-  
-  
- const saveFAQs = async () => { 
- 
-     let id_event = window.localStorage.getItem("event_id");      
-     //const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
-     //let analizar = JSON.parse(preguntasRecuperadasJSON);     
-     
-     if(preguntas.length>0){
-       console.log('ejecutando las preguntas')
-
-       for (const [index, pregunta] of analizar.entries()) {
-          if (pregunta.response !== '') {
-          
-                try {
-                  const response_faqs = axios.post(
-                    '/organizer/event/faq',
-                    JSON.stringify({
-                      "event_id": id_event,
-                      "question": pregunta.question,
-                      "response": pregunta.response
-                    }),
-                    {
-                      headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Credentials': true,
-                        'Access-Control-Allow-Headers': '*',
-                        Authorization: `Bearer ${token_user}`
-                      }
-                    }
-                  );
-
-                } catch (err) {
-                  setError(true);
-                  if (!err?.response_faqs) {
-                    setErrMsg('El servidor no responde');
-                  } else if (err.response_faqs?.status === 401) {
-                    setErrMsg('Contraseña o usuario incorrecto');
-                  } else if (err.response_faqs?.status === 402) {
-                    setErrMsg('No tiene autorización');
-                  } else {
-                    token_user = window.localStorage.getItem('token');
-                  }
-                }
-              }
-            }} else{}
-
-            let vaciar = JSON.stringify('');
-            window.localStorage.setItem("preguntas", vaciar);
-            window.localStorage.setItem('cache_datos', vaciar);
-            window.location.href = "/showEvents"
- }
-  
   
  const handleSubmitEvent = async (e) => {
     e.preventDefault();
@@ -202,7 +117,6 @@ const Preview = () => {
         ).then((response) => {window.localStorage.setItem("event_id", response.data.id);
           setEventId(response.data.id);
           saveImages();
-          saveFAQs();
           console.log(response.status); 
         })
       } catch (err) {
@@ -275,17 +189,16 @@ const Preview = () => {
             Preguntas frecuentes
           </Typography>
           
-          {analizar.map(function (item, key) {
-            return (<div>
-             <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-             {item.question}
-             </Typography>
-             <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-             {
-             convert(item.response)   
-             }
-             </Typography>
-             </div>
+          {props.faqs.map(function (item, key) {
+            return (
+              <div>
+                <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  {"Pregunta: " + item.question}
+                </Typography>
+                <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  {"Respuesta: " + item.answer}
+                </Typography>
+              </div>
             )})}
 
         </CardContent>
