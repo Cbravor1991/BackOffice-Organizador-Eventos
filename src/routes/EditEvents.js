@@ -21,6 +21,9 @@ import { EditorState, convertToRaw, convertFromRaw  } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import useStorage from '../hooks/useStorage';
+import { useForm, useFieldArray } from 'react-hook-form';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
@@ -45,6 +48,8 @@ const EditEvent = () => {
 
   let props = sessionStorage.getItem("publication_data")
   props = (JSON.parse(props))
+  
+  console.log(props);
 
   const userRef = useRef();
   const errRef = useRef();
@@ -71,14 +76,27 @@ const EditEvent = () => {
   const map = useRef(null);
   const [zoom, setZoom] = useState(7);
   const [faqs, setFaqs] = useState(null);
+  //const [agenda, setAgenta] = useState(props.agenda);
   const [preguntas, setPreguntas] = useState([]);
+  const { register, control, formState: { errors }, getValues } = useForm({ defaultValues: 
+    { 
+      //sections: [{ time: "", description: "" }],
+      //mails: [{ email: "" }],
+      sections: props.agenda,
+      mails: props.authorizers
+    }
+   });
+   const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
+   const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
+
 
   let token_user=window.localStorage.getItem("token");
  
   const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
   let analizar = JSON.parse(preguntasRecuperadasJSON);   
  
-
+   console.log(props.agenda);
+   console.log(props.authorizers);
 
   useEffect(() => {
     const rawContent = JSON.parse(props.description);
@@ -543,8 +561,82 @@ const EditEvent = () => {
                   />
                 </Box>
 
-
               </Grid>
+              
+              <Grid item xs={6} sx={{ width: '50%' }}>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                Agenda
+              </Typography>              
+
+              <div style={{ display:'flex', justifyContent: 'center' }}>
+                <form style={{width:'100%'}}>
+                  {fieldsSections.map((field, index) => (
+                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
+                      {/* intento de input con DATEPICKER */}
+                      {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker 
+                          {...register(`sections.${index}.time`, { required: true })}
+                          error={errors.sections && errors.sections[index]?.time}
+                          placeholder="Time" size="small" label="Horario" variant="outlined" 
+                          sx={{ mb: 1, marginRight: 1, width: '100px' }}
+                          slotProps={{ textField: { size: 'small' } }}
+                        />
+                      </LocalizationProvider> */}
+
+                      <TextField 
+                        {...register(`sections.${index}.time`, { required: true })}
+                        error={errors.sections && errors.sections[index]?.time}
+                        placeholder="time" size="small" label="Horario" variant="outlined" 
+                        sx={{ mb: 1, marginRight: 1, width: '100px' }}
+                      />
+
+                      <TextField 
+                        {...register(`sections.${index}.description`, { required: true })}
+                        error={errors.sections && errors.sections[index]?.description}
+                        placeholder="description" size="small" label="Descripción" variant="outlined" 
+                        sx={{ mb: 1, width: '65%'}}
+                      />
+                      
+                      <IconButton aria-label="delete" onClick={() => removeSection(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+
+                    </div>
+                  ))}
+
+                  <Button variant="outlined" size='small' onClick={() => appendSection({ time: "", description: "" })}>Agregar sección</Button>
+                </form>
+              </div>
+             </Grid>
+
+
+             <Grid item xs={6} sx={{ width: '50%' }}>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                Colaboradores autorizados
+              </Typography>              
+
+              <div style={{ display:'flex', justifyContent: 'center' }}>
+                <form style={{width:'100%'}}>
+                  {fieldsMails.map((field, index) => (
+                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
+                      <TextField 
+                        {...register(`mails.${index}.email`, { required: true })}
+                        error={errors.mails && errors.mails[index]?.email}
+                        placeholder="email" size="small" label="Mail" variant="outlined" 
+                        sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                      />
+
+                      <IconButton aria-label="delete" onClick={() => removeMail(index)}>
+                        <DeleteIcon />
+                      </IconButton>                      
+
+                    </div>
+                  ))}
+
+                  <Button variant="outlined" size='small' onClick={() => appendMail({ email: "" })}>Agregar colaborador</Button>
+                </form>
+              </div>
+             </Grid>
 
               <Grid container spacing={2}>
                 <Grid item sx={{ width: '50%', marginTop: '20px' }}>
