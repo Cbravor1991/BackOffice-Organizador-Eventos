@@ -101,7 +101,7 @@ export default function Faqs() {
     const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas"); //siempre vas a pegar lo que esta aca
     console.log(preguntasRecuperadasJSON);
 
-    window.location.href = "/loadEvent"
+     window.history.back();
 
 
    

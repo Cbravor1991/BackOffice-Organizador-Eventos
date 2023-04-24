@@ -70,12 +70,25 @@ const EditEvent = () => {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [zoom, setZoom] = useState(7);
+  const [faqs, setFaqs] = useState(null);
+  const [preguntas, setPreguntas] = useState([]);
+
+  let token_user=window.localStorage.getItem("token");
+ 
+  const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
+  let analizar = JSON.parse(preguntasRecuperadasJSON);   
+ 
 
 
   useEffect(() => {
     const rawContent = JSON.parse(props.description);
     const contentState = convertFromRaw(rawContent);
-    setEditorState (EditorState.createWithContent(contentState));    
+    setEditorState (EditorState.createWithContent(contentState));   
+    
+    setPreguntas(analizar);
+    console.log(preguntas);
+
+    loadFaqs(); 
   }, []);
   
   
@@ -131,6 +144,43 @@ const EditEvent = () => {
     
     return () => map.remove();
   }, []);
+
+
+  const loadFaqs = () => {
+  
+     let token_user;
+    if (!window.localStorage.getItem("token")) {
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }
+
+    let id_event = sessionStorage.getItem("event_id"); 
+    
+    console.log(id_event)
+
+    const params = new URLSearchParams([['event_id', id_event]]);
+
+    const headers = {
+      'accept': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+      'Access-Control-Allow-Headers': '*',
+      'Authorization': 'Bearer ' + token_user
+    }
+
+    axios({ method: 'get', url: '/organizer/event/faq', params: params, headers: headers })
+      .then((response) => {
+        setFaqs(response.data);
+        console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+       
+  }
   
 
   const handleEditorChange = (newEditorState) => {
@@ -164,7 +214,6 @@ const EditEvent = () => {
 
   const handleDateChangeTickets = (e) => {
     const numberOfTickets = e.target.value;
-
 
     if (numberOfTickets > 10000) {
       swal.fire({
@@ -255,7 +304,6 @@ const EditEvent = () => {
     let token_user;
     // window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
 
-
     if (!window.localStorage.getItem("token")) {
       console.log("no autorizado")
       window.location.href = "/home";
@@ -290,18 +338,17 @@ const EditEvent = () => {
         }
       };
 
-      axios.request(options).then(function (response) {
+      axios.request(options)
+      .then(function (response) {
         console.log(response.data);
+        saveFAQs();
       }).catch(function (error) {
         console.error(error);
       });
 
-
       window.localStorage.setItem("event_id", id_event);
   
       window.location.href = "/photoUpload";
-
-
 
     } catch (err) {
       setError(true)
@@ -316,6 +363,88 @@ const EditEvent = () => {
       }
 
     }
+  }
+
+
+  const handleSubmit_faqs = async (e) => {
+    e.preventDefault();
+    
+   const data = {
+    "titulo": "",
+    "categoria": "",
+    "descripcion": "",
+    "fecha": "",
+    "tickets": "",
+    "direccion": ""
+   }
+
+    data.titulo = title
+    data.categoria = category
+    data.descripcion = description
+    data.fecha = date
+    data.tickets = capacity
+    data.direccion = direction
+    
+    window.localStorage.setItem('cache_datos', JSON.stringify(data));
+ 
+    window.localStorage.setItem("preguntas", JSON.stringify(faqs));
+ 
+    window.location.href = "/faqs";
+
+  }
+  
+  
+  const saveFAQs = async () => { 
+ 
+     let id_event = window.localStorage.getItem("event_id");      
+     //const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
+     //let analizar = JSON.parse(preguntasRecuperadasJSON);     
+     
+     if(preguntas.length>0){
+       console.log('ejecutando las preguntas')
+
+       for (const [index, pregunta] of analizar.entries()) {
+          if (pregunta.response !== '') {
+          
+                try {
+                  const response_faqs = axios.post(
+                    '/organizer/event/faq',
+                    JSON.stringify({
+                      "event_id": id_event,
+                      "question": pregunta.question,
+                      "response": pregunta.response
+                    }),
+                    {
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Credentials': true,
+                        'Access-Control-Allow-Headers': '*',
+                        Authorization: `Bearer ${token_user}`
+                      }
+                    }
+                  );
+
+                } catch (err) {
+                  setError(true);
+                  if (!err?.response_faqs) {
+                    setErrMsg('El servidor no responde');
+                  } else if (err.response_faqs?.status === 401) {
+                    setErrMsg('Contraseña o usuario incorrecto');
+                  } else if (err.response_faqs?.status === 402) {
+                    setErrMsg('No tiene autorización');
+                  } else {
+                    token_user = window.localStorage.getItem('token');
+                  }
+                }
+              }
+            }} else{}
+
+            let vaciar = JSON.stringify('');
+            window.localStorage.setItem("preguntas", vaciar);
+            window.localStorage.setItem('cache_datos', vaciar);
+            window.location.href = "/showEvents"
+ 
   }
 
 
@@ -449,6 +578,23 @@ const EditEvent = () => {
                     cursor: 'pointer',
                     transition: 'background-color 0.2s ease-in-out'
                   }}>Editar Fotos</Button>
+                </Box>
+                
+                <Box sx={{ marginLeft: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                  <Button variant="contained" onClick={handleSubmit_faqs} sx={{
+                    backgroundColor: '#1286f7',
+                    border: 'none',
+                    color: 'white',
+                    width: '300px',
+                    height: '50px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    padding: '10px 20px',
+                    marginTop: '20px',
+                    marginRight: '150px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease-in-out'
+                  }}>Preguntas frecuentes</Button>
                 </Box>
 
                 </Grid>
