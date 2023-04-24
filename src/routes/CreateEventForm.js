@@ -69,10 +69,12 @@ const CreateEventForm = () => {
     { 
       sections: [{ time: "", description: "" }],
       mails: [{ email: "" }],
+      faqs: [{ question: "", answer: "" }]
     }
    });
    const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
    const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
+   const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
 
    const mapContainer = useRef(null);
    const map = useRef(null);
@@ -239,8 +241,7 @@ const CreateEventForm = () => {
           "longitude": longitude
         },
         "agenda": formData.sections,
-        //"faqs": formData.faqs,
-        "faqs": [],
+        "faqs": formData.faqs,
         "authorizers": formData.mails,
       };
       
@@ -353,12 +354,13 @@ const CreateEventForm = () => {
             </Grid>
 
 
-            <Grid item xs={6} sx={{ width: '100%' }}>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
 
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
                 Descripción
               </Typography>              
-              <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', marginLeft: '10px', borderRadius: '10px' }}>
+              <Box sx={{ border: '1px solid black', height: '300px', overflow: 'auto', borderRadius: '10px' }}>
                 <Editor
                   editorState={editorState}
                   onEditorStateChange={handleEditorChange}
@@ -371,7 +373,47 @@ const CreateEventForm = () => {
               </Box>
             </Grid>
 
-            <Grid item xs={6} sx={{ width: '50%' }}>
+
+            <Grid item xs={6}>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                FAQs
+              </Typography>              
+
+              <div style={{ mb: 1, display:'flex', justifyContent: 'center' }}>
+                <form style={{width:'100%'}}>
+                  {fieldsFaqs.map((field, index) => (
+                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', display: 'flex'}}>
+                      <TextField 
+                        {...register(`faqs.${index}.question`, { required: true })}
+                        error={errors.faqs && errors.faqs[index]?.question}
+                        placeholder="question" size="small" label="Pregunta" variant="outlined" 
+                        sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                      />
+
+                      <IconButton aria-label="delete" onClick={() => removeFaq(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+
+                      <TextField 
+                        {...register(`faqs.${index}.answer`, { required: true })}
+                        error={errors.faqs && errors.faqs[index]?.answer}
+                        placeholder="answer" size="small" label="Respuesta" variant="outlined" 
+                        sx={{ mb: 1, width: '90%'}}
+                        multiline rows={2}
+                      />
+                      
+
+                    </div>
+                  ))}
+
+                  <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", answer: "" })}>Agregar FAQ</Button>
+                </form>
+              </div>
+             </Grid>
+            </Grid>
+
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
               <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
                 Agenda
               </Typography>              
@@ -445,7 +487,7 @@ const CreateEventForm = () => {
                 </form>
               </div>
              </Grid>
-
+            </Grid>
 
              <Grid container spacing={2}>
 
@@ -479,7 +521,7 @@ const CreateEventForm = () => {
                   }}>Cargar fotos</Button>
                 </Box>
 
-                <Box sx={{ marginLeft: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                {/* <Box sx={{ marginLeft: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                   <Button variant="contained" onClick={handleSubmit_faqs} sx={{
                     backgroundColor: '#1286f7',
                     border: 'none',
@@ -494,7 +536,7 @@ const CreateEventForm = () => {
                     cursor: 'pointer',
                     transition: 'background-color 0.2s ease-in-out'
                   }}>Preguntas frecuentes</Button>
-                </Box>
+                </Box> */}
               </Grid>
 
               <Grid item sx={{ width: '50%', height: '300px' }}>
