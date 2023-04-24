@@ -71,8 +71,7 @@ const CreateEventForm = () => {
   const mapContainer = useRef(null);
   const [zoom, setZoom] = useState(7);
   
-  const [editorState, setEditorState] = useState(datos == '' || datos.direccion == '' ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(description) ));
-
+  const [editorState, setEditorState] = useState(datos == '' || (datos != '' && datos.descripcion == '') ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion)) ));
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
