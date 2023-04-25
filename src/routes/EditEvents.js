@@ -83,11 +83,13 @@ const EditEvent = () => {
       //sections: [{ time: "", description: "" }],
       //mails: [{ email: "" }],
       sections: props.agenda,
-      mails: props.authorizers
+      mails: props.authorizers,
+      faqs: props.faqs
     }
    });
    const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
    const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
+   const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
 
 
   let token_user=window.localStorage.getItem("token");
@@ -257,6 +259,7 @@ const EditEvent = () => {
     let token_user;
     // window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
 
+    const formData = getValues();
 
     if (!window.localStorage.getItem("token")) {
       console.log("no autorizado")
@@ -287,7 +290,9 @@ const EditEvent = () => {
           "latitude": 0,
           "longitude": 0,
           "capacity": capacity,
-          "vacancies": 0
+          "vacancies": 0,
+          "agenda" : formData.sections,
+          "faqs" : formData.faqs
         }
       };
 
@@ -542,7 +547,7 @@ const EditEvent = () => {
               </Grid>
 
 
-
+             <Grid container spacing={2}>
               <Grid item xs={6} sx={{ width: '100%' }}>
                 <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
                   Descripción
@@ -562,6 +567,44 @@ const EditEvent = () => {
                 </Box>
 
               </Grid>
+              
+              <Grid item xs={6}>
+              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                FAQs
+              </Typography>              
+
+              <div style={{ mb: 1, display:'flex', justifyContent: 'center' }}>
+                <form style={{width:'100%'}}>
+                  {fieldsFaqs.map((field, index) => (
+                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', display: 'flex'}}>
+                      <TextField 
+                        {...register(`faqs.${index}.question`, { required: true })}
+                        error={errors.faqs && errors.faqs[index]?.question}
+                        placeholder="question" size="small" label="Pregunta" variant="outlined" 
+                        sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                      />
+
+                      <IconButton aria-label="delete" onClick={() => removeFaq(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+
+                      <TextField 
+                        {...register(`faqs.${index}.response`, { required: true })}
+                        error={errors.faqs && errors.faqs[index]?.response}
+                        placeholder="response" size="small" label="Respuesta" variant="outlined" 
+                        sx={{ mb: 1, width: '90%'}}
+                        multiline rows={2}
+                      />
+                      
+
+                    </div>
+                  ))}
+
+                  <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", response: "" })}>Agregar FAQ</Button>
+                </form>
+              </div>
+             </Grid>
+            </Grid>
               
               <Grid item xs={6} sx={{ width: '50%' }}>
               <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
@@ -672,23 +715,6 @@ const EditEvent = () => {
                   }}>Editar Fotos</Button>
                 </Box>
                 
-                <Box sx={{ marginLeft: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <Button variant="contained" onClick={handleSubmit_faqs} sx={{
-                    backgroundColor: '#1286f7',
-                    border: 'none',
-                    color: 'white',
-                    width: '300px',
-                    height: '50px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    padding: '10px 20px',
-                    marginTop: '20px',
-                    marginRight: '150px',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s ease-in-out'
-                  }}>Preguntas frecuentes</Button>
-                </Box>
-
                 </Grid>
                 
                 

@@ -245,12 +245,12 @@ export default function UpdatePhotoGallery() {
          cover = {cover}
       />
       
-      <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
+      <CardActions sx={{ display: 'flex', justifyContent: 'left', pt: 0 }}>
       <Button onClick={()=>{window.location.href = '/photoUpload'}}  variant="contained" component="label">
           Cargar Imagenes nuevas
         </Button>
         
-      <Button onClick={saveImages} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'center',
+      <Button onClick={saveImages} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'right',
            color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
             Guardar
      </Button>

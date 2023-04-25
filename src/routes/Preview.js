@@ -154,7 +154,7 @@ const Preview = () => {
                                       justifyContent: 'center', width: '700px', height: '1000px'}}>
         <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
                     
-          <img src={url} alt="preview" height="180" style={{ marginTop: '20px', marginLeft: '200px', display: 'flex', justifyContent: 'center' }} />
+          <img src={url} alt="preview" height="180" style={{ marginTop: '20px', marginLeft: '120px', display: 'flex', justifyContent: 'center' }} />
           
           <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
             {props.category}
@@ -187,8 +187,8 @@ const Preview = () => {
           {props.agenda.map(function (item, key) {
             return (
               <div>
-                <Card sx={{ border:'0.5px solid grey', borderRadius: 2, backgroundColor: '#fff', color: 'black'}}>
-                  <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                <Card sx={{ border:'0.5px solid grey', borderRadius: 2, backgroundColor: '#fff', color: 'black', }}>
+                  <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'left' }}>
                     {item.time} : {item.description} 
                   </Typography>
                 </Card>
@@ -204,10 +204,10 @@ const Preview = () => {
             return (
               <div>
                 <Card sx={{ border:'0.5px solid grey', borderRadius: 2, backgroundColor: '#fff', color: 'black'}}>
-                  <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 800, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 800, mb: 1, display: 'flex', justifyContent: 'left' }}>
                     {item.question}
                   </Typography>
-                  <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'left' }}>
                     {item.response}
                   </Typography>
                 </Card>
