@@ -104,7 +104,7 @@ export default function ShowsEvents() {
   };
 
   const update = async (props) => {
-    console.log("probar")
+  
     sessionStorage.setItem("publication_data", JSON.stringify(props));
     window.location.href="/editEvent/"
   
@@ -154,7 +154,7 @@ export default function ShowsEvents() {
           };
           
           axios.request(options).then(function (response) {
-            console.log(response.data);
+            console.log(response.data[0].link);
             window.location.href="/showEvents"
           }).catch(function (error) {
             console.error(error);

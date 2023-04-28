@@ -9,6 +9,7 @@ import axios from '../api/axios';
 import swal from 'sweetalert2';
 
 export default function PhotosCard(props) {
+  console.log(props.link)
 
   const coverPhoto = async (props) => {
 
