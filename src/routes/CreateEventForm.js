@@ -16,7 +16,7 @@ import Navbar from '../components/NavBar';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { EditorState, convertToRaw , convertFromRaw } from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -26,6 +26,8 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Controller } from 'react-hook-form';
+import Galery from '../components/Galery';
+
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
 
@@ -47,22 +49,26 @@ const theme = createTheme({
 
 const CreateEventForm = () => {
   let datos = JSON.parse(window.localStorage.getItem('cache_datos'));
+  let token_user=window.localStorage.getItem("token");
+
+  const [errMsg, setErrMsg] = useState('');
 
   const [error, setError] = useState(false);
-  const [title, setTitle] = useState(datos =='' ? '' : datos.titulo );
-  const [category, setCategory] = useState(datos == '' ? '': datos.categoria);
-  const [date, setDate] = useState(datos == '' ? '' : datos.fecha );
+  const [title, setTitle] = useState(datos == '' ? '' : datos.titulo);
+  const [category, setCategory] = useState(datos == '' ? '' : datos.categoria);
+  const [date, setDate] = useState(datos == '' ? '' : datos.fecha);
   const [description, setDescription] = useState(datos == '' ? '' : datos.descripcion);
-  const [capacity, setCapacity] = useState(datos =='' ? '': datos.tickets);
+  const [capacity, setCapacity] = useState(datos == '' ? '' : datos.tickets);
   const [direction, setDirection] = useState(datos ? datos.direccion : '');
   const [latitude, setLatitude] = useState(-34.599722222222);
   const [longitude, setLongitude] = useState(-58.381944444444);
-  const { register, control, formState: { errors }, getValues } = useForm({ defaultValues: 
-  { 
-    sections: [{ time: "", description: "" }],
-    mails: [{ email: "" }],
-    faqs: [{ question: "", response: "" }]
-  }
+  const { register, control, formState: { errors }, getValues } = useForm({
+    defaultValues:
+    {
+      sections: [{ time: "", description: "" }],
+      mails: [{ email: "" }],
+      faqs: [{ question: "", response: "" }]
+    }
   });
   const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
   const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
@@ -70,11 +76,16 @@ const CreateEventForm = () => {
 
   const mapContainer = useRef(null);
   const [zoom, setZoom] = useState(7);
-  
-  const [editorState, setEditorState] = useState(datos == '' || (datos != '' && datos.descripcion == '') ?() => EditorState.createEmpty(): EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion)) ));
+
+  const [editorState, setEditorState] = useState(datos == '' || (datos != '' && datos.descripcion == '') ? () => EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion))));
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
+
+  let photos = [];
+
+
+  window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
@@ -154,29 +165,99 @@ const CreateEventForm = () => {
     }
   };
 
-  const handleCreate = () => {
-    const formData = getValues();
+  const handleCreate = async (e) => {
+    e.preventDefault();
 
+    let photos = window.localStorage.getItem("photos_user");
+    console.log( photos)
+  
     if (title != '' && category != '' && date != '' && description != '' && direction != '') {
-      const event = {
+      const event =  {
         "title": title,
         "category": category,
         "date": date,
-        "description": description,
+        "description": date,
         "capacity": capacity,
-        "vacancies": 0,
         "ubication": {
           "direction": direction,
           "latitude": latitude,
           "longitude": longitude
         },
-        "agenda": formData.sections,
-        "faqs": formData.faqs,
-        "authorizers": formData.mails,
-      };
+        "agenda": [
+          {
+            "time": "10:00",
+            "description": "Noel Gallagher"
+          }
+        ],
+        "faqs": [
+          {
+            "question": "¿A que hora empieza?",
+            "response": "a las 10"
+          }
+        ],
+        "authorizers": [
+          {
+            "email": "string"
+          }
+        ],
+        "images": [
+          {
+            "link": photos
+          }
+        ]
+      }
+
+
+
       
-      window.localStorage.setItem("event", JSON.stringify(event));
-      window.location.href = '/Preview';
+  
+
+    if (!window.localStorage.getItem("token")) {
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }
+
+    if (!window.localStorage.getItem("token")) {
+      console.log("no autorizado")
+      window.location.href = "/home";
+      return;
+    } else {
+      token_user = window.localStorage.getItem("token");
+    }
+
+      try {
+        const response = await axios.post('organizer/event',
+          JSON.stringify(event),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Credentials': true,
+              'Access-Control-Allow-Headers': '*',
+              Authorization: `Bearer ${token_user}`
+            }
+          }
+
+        ).then((response) => {
+         window.localStorage.setItem("photos_user",  JSON.stringify([]));
+        })
+      } catch (err) {
+        setError(true)
+        if (!err?.response) {
+          setErrMsg('El servidor no responde');
+        } else if (err.response?.status === 401) {
+          setErrMsg('Contraseña o usuario incorrecto');
+        } else if (err.response?.status === 402) {
+          setErrMsg('No tiene autorización');
+        } else {
+          token_user = window.localStorage.getItem("token");
+        }
+
+      }
+
 
     } else {
       swal.fire({
@@ -185,20 +266,20 @@ const CreateEventForm = () => {
         icon: "warning",
         confirmButtonText: 'Entendido',
       })
-
-  } }
+    } 
+  }
 
   const loadImages = (files) => {
     window.localStorage.setItem('úrl', '');
-    
+
     const data = {
-    "titulo": "",
-    "categoria": "",
-    "descripcion": "",
-    "fecha": "",
-    "tickets": "",
-    "direccion": ""
-   }
+      "titulo": "",
+      "categoria": "",
+      "descripcion": "",
+      "fecha": "",
+      "tickets": "",
+      "direccion": ""
+    }
 
     data.titulo = title
     data.categoria = category
@@ -206,13 +287,13 @@ const CreateEventForm = () => {
     data.fecha = date
     data.tickets = capacity
     data.direccion = direction
-    
+
     window.localStorage.setItem('cache_datos', JSON.stringify(data));
 
     window.location.href = "/photoUpload";
     console.log("entro")
   }
-  
+
   return (
 
     <ThemeProvider theme={theme}>
@@ -241,7 +322,7 @@ const CreateEventForm = () => {
             }}
           >
 
-       
+
             <Grid container spacing={2}>
 
               <Grid item xs={6}>
@@ -283,164 +364,149 @@ const CreateEventForm = () => {
             </Grid>
 
 
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
 
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                Descripción
-              </Typography>              
-              <Box sx={{ border: '1px solid black', height: '300px', overflow: 'auto', borderRadius: '10px' }}>
-                <Editor
-                  editorState={editorState}
-                  onEditorStateChange={handleEditorChange}
-                  toolbar={toolbarOptions}
-                  wrapperClassName="wrapper-class"
-                  editorClassName="editor-class"
-                  toolbarClassName="toolbar-class"
-                  style={{ maxHeight: '100px' }}
-                />
-              </Box>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                  Descripción
+                </Typography>
+                <Box sx={{ border: '1px solid black', height: '300px', overflow: 'auto', borderRadius: '10px' }}>
+                  <Editor
+                    editorState={editorState}
+                    onEditorStateChange={handleEditorChange}
+                    toolbar={toolbarOptions}
+                    wrapperClassName="wrapper-class"
+                    editorClassName="editor-class"
+                    toolbarClassName="toolbar-class"
+                    style={{ maxHeight: '100px' }}
+                  />
+                </Box>
+              </Grid>
+
+
+              <Grid item xs={6}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                  FAQs
+                </Typography>
+
+                <div style={{ mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  <form style={{ width: '100%' }}>
+                    {fieldsFaqs.map((field, index) => (
+                      <div key={field.id} sx={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+                        <TextField
+                          {...register(`faqs.${index}.question`, { required: true })}
+                          error={errors.faqs && errors.faqs[index]?.question}
+                          placeholder="question" size="small" label="Pregunta" variant="outlined"
+                          sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                        />
+
+                        <IconButton aria-label="delete" onClick={() => removeFaq(index)}>
+                          <DeleteIcon />
+                        </IconButton>
+
+                        <TextField
+                          {...register(`faqs.${index}.response`, { required: true })}
+                          error={errors.faqs && errors.faqs[index]?.response}
+                          placeholder="response" size="small" label="Respuesta" variant="outlined"
+                          sx={{ mb: 1, width: '90%' }}
+                          multiline rows={2}
+                        />
+
+
+                      </div>
+                    ))}
+
+                    <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", response: "" })}>Agregar FAQ</Button>
+                  </form>
+                </div>
+              </Grid>
             </Grid>
 
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  Agenda
+                </Typography>
 
-            <Grid item xs={6}>
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                FAQs
-              </Typography>              
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <form style={{ width: '100%' }}>
+                    {fieldsSections.map((field, index) => (
+                      <div key={field.id} sx={{ alignItems: 'center', justifyContent: 'center', mb: 1, display: 'flex' }}>
 
-              <div style={{ mb: 1, display:'flex', justifyContent: 'center' }}>
-                <form style={{width:'100%'}}>
-                  {fieldsFaqs.map((field, index) => (
-                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', display: 'flex'}}>
-                      <TextField 
-                        {...register(`faqs.${index}.question`, { required: true })}
-                        error={errors.faqs && errors.faqs[index]?.question}
-                        placeholder="question" size="small" label="Pregunta" variant="outlined" 
-                        sx={{ mb: 1, marginRight: 1, width: '90%' }}
-                      />
+                        <TextField
+                          {...register(`sections.${index}.time`, { required: true })}
+                          error={errors.sections && errors.sections[index]?.time}
+                          placeholder="time" size="small" label="Horario" variant="outlined"
+                          sx={{ mb: 1, marginRight: 1, width: '100px' }}
+                        />
 
-                      <IconButton aria-label="delete" onClick={() => removeFaq(index)}>
-                        <DeleteIcon />
-                      </IconButton>
+                        <TextField
+                          {...register(`sections.${index}.description`, { required: true })}
+                          error={errors.sections && errors.sections[index]?.description}
+                          placeholder="description" size="small" label="Descripción" variant="outlined"
+                          sx={{ mb: 1, width: '65%' }}
+                        />
 
-                      <TextField 
-                        {...register(`faqs.${index}.response`, { required: true })}
-                        error={errors.faqs && errors.faqs[index]?.response}
-                        placeholder="response" size="small" label="Respuesta" variant="outlined" 
-                        sx={{ mb: 1, width: '90%'}}
-                        multiline rows={2}
-                      />
-                      
+                        <IconButton aria-label="delete" onClick={() => removeSection(index)}>
+                          <DeleteIcon />
+                        </IconButton>
 
-                    </div>
-                  ))}
+                      </div>
+                    ))}
 
-                  <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", response: "" })}>Agregar FAQ</Button>
-                </form>
-              </div>
-             </Grid>
+                    <Button variant="outlined" size='small' onClick={() => appendSection({ time: "", description: "" })}>Agregar sección</Button>
+                  </form>
+                </div>
+              </Grid>
+
+
+              <Grid item xs={6} sx={{ width: '50%' }}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  Colaboradores autorizados
+                </Typography>
+
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <form style={{ width: '100%' }}>
+                    {fieldsMails.map((field, index) => (
+                      <div key={field.id} sx={{ alignItems: 'center', justifyContent: 'center', mb: 1, display: 'flex' }}>
+                        <TextField
+                          {...register(`mails.${index}.email`, { required: true })}
+                          error={errors.mails && errors.mails[index]?.email}
+                          placeholder="email" size="small" label="Mail" variant="outlined"
+                          sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                        />
+
+                        <IconButton aria-label="delete" onClick={() => removeMail(index)}>
+                          <DeleteIcon />
+                        </IconButton>
+
+                      </div>
+                    ))}
+
+                    <Button variant="outlined" size='small' onClick={() => appendMail({ email: "" })}>Agregar colaborador</Button>
+                  </form>
+                </div>
+              </Grid>
             </Grid>
 
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-                Agenda
-              </Typography>              
+            <Grid container spacing={2}>
 
-              <div style={{ display:'flex', justifyContent: 'center' }}>
-                <form style={{width:'100%'}}>
-                  {fieldsSections.map((field, index) => (
-                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
-
-                      <TextField 
-                        {...register(`sections.${index}.time`, { required: true })}
-                        error={errors.sections && errors.sections[index]?.time}
-                        placeholder="time" size="small" label="Horario" variant="outlined" 
-                        sx={{ mb: 1, marginRight: 1, width: '100px' }}
-                      />
-
-                      <TextField 
-                        {...register(`sections.${index}.description`, { required: true })}
-                        error={errors.sections && errors.sections[index]?.description}
-                        placeholder="description" size="small" label="Descripción" variant="outlined" 
-                        sx={{ mb: 1, width: '65%'}}
-                      />
-                      
-                      <IconButton aria-label="delete" onClick={() => removeSection(index)}>
-                        <DeleteIcon />
-                      </IconButton>
-
-                    </div>
-                  ))}
-
-                  <Button variant="outlined" size='small' onClick={() => appendSection({ time: "", description: "" })}>Agregar sección</Button>
-                </form>
-              </div>
-             </Grid>
-
-
-             <Grid item xs={6} sx={{ width: '50%' }}>
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-                Colaboradores autorizados
-              </Typography>              
-
-              <div style={{ display:'flex', justifyContent: 'center' }}>
-                <form style={{width:'100%'}}>
-                  {fieldsMails.map((field, index) => (
-                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
-                      <TextField 
-                        {...register(`mails.${index}.email`, { required: true })}
-                        error={errors.mails && errors.mails[index]?.email}
-                        placeholder="email" size="small" label="Mail" variant="outlined" 
-                        sx={{ mb: 1, marginRight: 1, width: '90%' }}
-                      />
-
-                      <IconButton aria-label="delete" onClick={() => removeMail(index)}>
-                        <DeleteIcon />
-                      </IconButton>                      
-
-                    </div>
-                  ))}
-
-                  <Button variant="outlined" size='small' onClick={() => appendMail({ email: "" })}>Agregar colaborador</Button>
-                </form>
-              </div>
-             </Grid>
-            </Grid>
-
-             <Grid container spacing={2}>
-
-                <Grid item sx={{ width: '50%', marginTop: '20px' }}>
-                  <Box sx={{ height: '250px', overflow: 'auto', marginLeft: '200px', borderRadius: '10px' }}>
-                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                      Fecha del evento
-                    </Typography>
-                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
-                     type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
-                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                      Cantidad de tickets
-                    </Typography>
-                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
-                     type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
-                 </Box>
-                 <Box sx={{marginLeft: '220px', display: 'flex', justifyContent: 'left', alignItems: 'center', textAlign: 'center' }}>
-                  <Button variant="contained" onClick={loadImages} sx={{
-                    backgroundColor: '#1286f7',
-                    border: 'none',
-                    color: 'white',
-                    width: '300px',
-                    height: '50px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    padding: '10px 20px',
-                    marginTop: '20px',
-                    marginRight: '300px',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s ease-in-out'
-                  }}>Cargar fotos</Button>
+              <Grid item sx={{ width: '50%', marginTop: '20px' }}>
+                <Box sx={{ height: '250px', overflow: 'auto', marginLeft: '200px', borderRadius: '10px' }}>
+                  <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                    Fecha del evento
+                  </Typography>
+                  <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+                    type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
+                  <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    Cantidad de tickets
+                  </Typography>
+                  <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+                    type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
                 </Box>
 
               </Grid>
+
 
               <Grid item sx={{ width: '50%', height: '300px' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'right', alignItems: 'center', textAlign: 'center' }}>
@@ -449,8 +515,15 @@ const CreateEventForm = () => {
                   />
                 </Box>
               </Grid>
+              <Box sx={{ width: '100%', marginTop: '200px' }}>
+
+                <Galery />
+
+              </Box>
+
 
             </Grid>
+
 
 
             <Grid xs={6} sx={{ width: '100%' }}>
@@ -476,7 +549,7 @@ const CreateEventForm = () => {
 
 
             <Divider />
-            
+
           </Stack>
         </Stack>
       </Box>

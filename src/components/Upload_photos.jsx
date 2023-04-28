@@ -5,7 +5,6 @@ import { Button, Divider, Typography, TextField } from '@mui/material';
 import ProgressBar from '../components/ProgressBar';
 import './swal.css'
 import Navbar from '../components/NavBar';
-import Portada from '../components/Portada';
 
 
 function Galery() {
@@ -13,7 +12,6 @@ function Galery() {
   const [selectedImg, setSelectedImg] = useState(null);
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
-  const [cover, setCover] = useState('');
   const types = ['image/png', 'image/jpeg'];
 
   const handleChange = (e) => {
@@ -86,9 +84,8 @@ function Galery() {
         Finalizar carga de fotos
        
       </Button>
-    
 
-      <ImageGrid setCover={setCover} cover = {cover} />
+      <ImageGrid setSelectedImg={setSelectedImg} />
     </div>
     </div>
   )

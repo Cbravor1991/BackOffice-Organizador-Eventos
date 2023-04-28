@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import ImageGrid from '../components/ImageGrid';
 import '../styles/index.css';
 import { Button, Divider, Typography, TextField } from '@mui/material';
-import ProgressBar from '../components/ProgressBar';
-import './swal.css'
-import Navbar from '../components/NavBar';
-import Portada from '../components/Portada';
+import ProgressBar from './ProgressBar';
+import '../routes/swal.css'
+import Navbar from './NavBar';
+
 
 
 function Galery() {
@@ -40,7 +40,7 @@ function Galery() {
 
   return (
     <div>
-    <Navbar />
+    
     <div className="Galery">
       
       <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
@@ -71,21 +71,7 @@ function Galery() {
         {file && <ProgressBar file={file} setFile={setFile} />}
       </div>
 
-      <Button onClick={handleEvent}  sx={{
-        backgroundColor: '#1286f7',
-        border: 'none',
-        color: 'white',
-        fontSize: '16px',
-        fontWeight: 'bold',
-        padding: '10px 20px',
-        borderRadius: '30px',
-        marginTop: '20px',
-        cursor: 'pointer',
-        transition: 'background-color 0.2s ease-in-out'
-      }} variant="contained" component="label">
-        Finalizar carga de fotos
-       
-      </Button>
+
     
 
       <ImageGrid setCover={setCover} cover = {cover} />
