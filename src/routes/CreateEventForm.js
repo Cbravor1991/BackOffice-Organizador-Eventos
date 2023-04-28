@@ -49,7 +49,7 @@ const theme = createTheme({
 
 const CreateEventForm = () => {
   let datos = JSON.parse(window.localStorage.getItem('cache_datos'));
-  let token_user=window.localStorage.getItem("token");
+  let token_user = window.localStorage.getItem("token");
 
   const [errMsg, setErrMsg] = useState('');
 
@@ -169,14 +169,14 @@ const CreateEventForm = () => {
     e.preventDefault();
 
     let photos = window.localStorage.getItem("photos_user");
-    console.log( photos)
-  
+    console.log(photos)
+
     if (title != '' && category != '' && date != '' && description != '' && direction != '') {
-      const event =  {
+      const event = {
         "title": title,
         "category": category,
         "date": date,
-        "description": date,
+        "description": description,
         "capacity": capacity,
         "ubication": {
           "direction": direction,
@@ -209,24 +209,24 @@ const CreateEventForm = () => {
 
 
 
-      
-  
 
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
 
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
+
+      if (!window.localStorage.getItem("token")) {
+        console.log("no autorizado")
+        window.location.href = "/home";
+        return;
+      } else {
+        token_user = window.localStorage.getItem("token");
+      }
+
+      if (!window.localStorage.getItem("token")) {
+        console.log("no autorizado")
+        window.location.href = "/home";
+        return;
+      } else {
+        token_user = window.localStorage.getItem("token");
+      }
 
       try {
         const response = await axios.post('organizer/event',
@@ -242,7 +242,8 @@ const CreateEventForm = () => {
           }
 
         ).then((response) => {
-         window.localStorage.setItem("photos_user",  JSON.stringify([]));
+          window.localStorage.setItem("photos_user", JSON.stringify([]));
+          window.location.href = "/showEvents"
         })
       } catch (err) {
         setError(true)
@@ -266,7 +267,7 @@ const CreateEventForm = () => {
         icon: "warning",
         confirmButtonText: 'Entendido',
       })
-    } 
+    }
   }
 
   const loadImages = (files) => {
@@ -516,9 +517,7 @@ const CreateEventForm = () => {
                 </Box>
               </Grid>
               <Box sx={{ width: '100%', marginTop: '200px' }}>
-
-                <Galery />
-
+                 <Galery />
               </Box>
 
 
