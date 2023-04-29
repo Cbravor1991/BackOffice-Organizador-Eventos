@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import axios from '../api/axios';
+import { api } from '../api/axios';
 import { Select, MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -175,15 +175,8 @@ const EditEvent = () => {
 
     const params = new URLSearchParams([['event_id', id_event]]);
 
-    const headers = {
-      'accept': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-      'Access-Control-Allow-Headers': '*',
-      'Authorization': 'Bearer ' + token_user
-    }
 
-    axios({ method: 'get', url: '/organizer/event/faq', params: params, headers: headers })
+    api.get('/organizer/event/faq', { params: params })
       .then((response) => {
         setFaqs(response.data);
         console.log(response.data);
@@ -266,13 +259,7 @@ const EditEvent = () => {
       var options = {
         method: 'PUT',
         url: '/organizer/event',
-        params: { '': '' },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token_user}`
-        },
         data: {
-
           "id": id_event,
           "title": title,
           "category": category,
@@ -288,7 +275,7 @@ const EditEvent = () => {
         }
       };
 
-      axios.request(options).then(function (response) {
+      api.request(options).then(function (response) {
         console.log(response.data);
       }).catch(function (error) {
         console.error(error);
@@ -315,30 +302,11 @@ const EditEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    let token_user;
-    // window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
-
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
     try {
-
       var options = {
         method: 'PUT',
         url: '/organizer/event',
-        params: { '': '' },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token_user}`
-        },
         data: {
-
           "id": id_event,
           "title": title,
           "category": category,
@@ -349,11 +317,10 @@ const EditEvent = () => {
           "longitude": 0,
           "capacity": capacity,
           "vacancies": 0,
-
         }
       };
 
-      axios.request(options)
+      api.request(options)
         .then(function (response) {
 
         }).catch(function (error) {
@@ -664,7 +631,7 @@ const EditEvent = () => {
 
                 </Box>
 
-            
+
 
               </Grid>
 
@@ -678,12 +645,12 @@ const EditEvent = () => {
 
                 </Box>
 
-             
+
 
               </Grid>
               <Box sx={{ width: '100%', marginTop: '200px' }}>
-                  <Galery />
-                </Box>
+                <Galery />
+              </Box>
 
             </Grid>
 

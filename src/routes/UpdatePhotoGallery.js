@@ -1,24 +1,15 @@
 import * as React from 'react';
-import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import Navbar from '../components/NavBar';
-import axios from '../api/axios';
+import { api } from '../api/axios';
 import { useState, useEffect } from 'react';
 import PhotosCard from '../components/Card_photos';
-import Portada from '../components/Portada';
-import ProgressBar from '../components/ProgressBar';
-import swal from 'sweetalert2';
 import './swal.css'
 import { Box } from '@mui/material';
-import useStorage from '../hooks/useStorage';
-
-
 
 const theme = createTheme({
   palette: {
@@ -39,23 +30,22 @@ const theme = createTheme({
 export default function UpdatePhotoGallery() {
 
   const [photos, setPhotos] = useState([]);
-  
-  const [selectedImg, setSelectedImg] = useState(null);
+
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
   const types = ['image/png', 'image/jpeg'];
   const [cover, setCover] = useState('');
   const [url, setUrl] = useState('');
   //const{url, progress} = useStorage(file, setFile);
-  
+
   //window.localStorage.setItem('url', url);
   //window.localStorage.setItem('progress', progress);
   //setUrl(window.localStorage.getItem('url'));
-  
+
   console.log(url);
-  
+
   let id_event = window.localStorage.getItem("event_id");
-  
+
   console.log(id_event);
 
   const handleChange = (e) => {
@@ -71,142 +61,101 @@ export default function UpdatePhotoGallery() {
 
 
   const loadImages = () => {
-
-    let token_user;
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-    //let id_event = sessionStorage.getItem("event_id"); 
-    
-    console.log(id_event)
-
-
     const params = new URLSearchParams([['event_id', id_event]]);
 
-    const headers = {
-      'accept': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-      'Access-Control-Allow-Headers': '*',
-      'Authorization': 'Bearer ' + token_user
-    }
-
-    axios({ method: 'get', url: '/organizer/event/images', params: params, headers: headers })
+    api.get('/organizer/event/images', { params: params })
       .then((response_photo) => {
         setPhotos(response_photo.data);
-       })
-        .catch((error) => {
-          console.log(error);
-        })
-       
-      }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
 
-
+  }
 
   useEffect(() => {
 
     loadImages();
-   
-  }, []);
 
- 
+  }, []);
 
   const cards = photos.map(item => {
     return (
       <PhotosCard
-        key={item.id }
+        key={item.id}
         {...item}
         setSelectedCover={setCover}
-         
+
       />
     )
   })
-  
-  
-  const saveImages = async () => {
-  
-      let photos = JSON.parse(window.localStorage.getItem("photos_user"));
-      photos.push(url);
-      window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
-      let token_user=window.localStorage.getItem("token"); 
-      let id_event = window.localStorage.getItem("event_id"); 
-     try{    
-       const response= axios.post('/organizer/event/images',
-                 JSON.stringify({ 
-                     'event_id': id_event,
-                     'link': url
-                 }),
-                 {
-                     headers: { 'Content-Type': 'application/json',
-                                'Access-Control-Allow-Origin': '*',
-                                'Access-Control-Allow-Credentials': true,
-                                'Access-Control-Allow-Headers': '*',
-                                'Authorization': 'Bearer ' + token_user,
-                              }
-                  },
- 
-             )
-       .then((response) => {
-       console.log("Imágen cargada");
-       setUrl(window.localStorage.getItem(''));
-       window.history.back();
-     })
-     }catch (err) {console.log(err)}
+
+  const saveImages = async () => {
+
+    let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+    photos.push(url);
+    window.localStorage.setItem("photos_user", JSON.stringify(photos));
+
+    let id_event = window.localStorage.getItem("event_id");
+    try {
+      api.post('/organizer/event/images',
+        JSON.stringify({
+          'event_id': id_event,
+          'link': url
+        }),
+      )
+        .then((response) => {
+          console.log("Imágen cargada");
+          setUrl(window.localStorage.getItem(''));
+          window.history.back();
+        })
+    } catch (err) { console.log(err) }
   }
 
 
   const handleUpload = () => {
-  
+
     window.localStorage.setItem('úrl', '');
     window.location.href = '/photoUpload';
-  
- }
- 
+
+  }
 
   return (
 
     (photos && photos.length > 0) ?
       <ThemeProvider theme={theme}>
         <Navbar />
-         
-        <Box sx={{
-           textAlign: 'center'
-        }}>
-        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2,  textAlign: 'center' }}>
-          Bienvenido a tu galeria
-        </Typography>
-        
-        
 
-        <Button  onClick={()=>{window.location.href = '/showEvents'}} variant="contained" component="label">
-          Ir a mis eventos
-        </Button>
         <Box sx={{
-           marginLeft: '590px'
+          textAlign: 'center'
         }}>
-     
-      
-      <CardActions sx={{ display: 'flex', justifyContent: 'left', pt: 0 }}>
-      <Button onClick={()=>{window.location.href = '/photoUpload'}}  variant="contained" component="label">
-          Cargar Imagenes nuevas
-        </Button>
-        
-      <Button onClick={saveImages} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'right',
-           color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
-            Guardar
-     </Button>
-    </CardActions>
-      
-      </Box>
+          <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, textAlign: 'center' }}>
+            Bienvenido a tu galeria
+          </Typography>
+
+          <Button onClick={() => { window.location.href = '/showEvents' }} variant="contained" component="label">
+            Ir a mis eventos
+          </Button>
+          <Box sx={{
+            marginLeft: '590px'
+          }}>
+            <CardActions sx={{ display: 'flex', justifyContent: 'left', pt: 0 }}>
+              <Button onClick={() => { window.location.href = '/photoUpload' }} variant="contained" component="label">
+                Cargar Imagenes nuevas
+              </Button>
+
+              <Button onClick={saveImages} sx={{
+                fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'right',
+                color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' }
+              }}>
+                Guardar
+              </Button>
+            </CardActions>
+
+          </Box>
         </Box>
 
-        
         <Box sx={{
           flexWrap: 'wrap',
           mt: '7%',
@@ -217,11 +166,9 @@ export default function UpdatePhotoGallery() {
 
           gridGap: '40px 0'
         }}>
-            
+
           {cards}
         </Box>
-
-
 
       </ThemeProvider>
       : <ThemeProvider theme={theme}>
@@ -229,25 +176,12 @@ export default function UpdatePhotoGallery() {
         <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
           Bienvenido a tu galeria
         </Typography>
-        <Button onClick={()=>{window.location.href = '/showEvents'}} variant="contained" component="label">
+        <Button onClick={() => { window.location.href = '/showEvents' }} variant="contained" component="label">
           Ir a mis eventos
         </Button>
-        <Button onClick={handleUpload}  variant="contained" component="label">
+        <Button onClick={handleUpload} variant="contained" component="label">
           Cargar Imagenes nuevas
         </Button>
-
-
-
-
-
-
       </ThemeProvider>
-
-
   )
-
-
-
-
-
 }

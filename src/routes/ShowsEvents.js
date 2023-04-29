@@ -9,7 +9,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import data from '../data/dataEvents';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -17,7 +16,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import CardEvent from '../components/CardEvent';
 import { useEffect, useState } from 'react';
-import axios from '../api/axios';
+import { api } from '../api/axios';
 import Navbar from '../components/NavBar';
 import swal from 'sweetalert2';
 import { Button} from '@mui/material';
@@ -46,7 +45,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function ShowsEvents() {
 
   const [publications, setPublications] = useState([]);
-  const [cardAmount, setCardAmount] = useState(0);
   let token_user;
   
  
@@ -66,12 +64,7 @@ export default function ShowsEvents() {
 
     token_user = (window.localStorage.getItem("token"));
     console.log(token_user);
-    axios.get('/organizer/events', {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token_user}`
-      }
-    })
+    api.get('/organizer/events')
       .then((response) => {
         setPublications(response.data);
       })
@@ -113,20 +106,6 @@ export default function ShowsEvents() {
    }
 
    const deleteEvent = async (props) => {
-
-    let token_user;
-        
-      if (!window.localStorage.getItem("token")){
-        console.log("no autorizado")
-        window.location.href = "/home";
-        return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-  
-    //const params = {event_id: props.id};
-    
-  
      swal.fire({
       title: "Confirmar",
       text: "¿Confirmas que deseas borrar el evento?",
@@ -140,21 +119,13 @@ export default function ShowsEvents() {
                 
           const params = new URLSearchParams([['event_id', props.id]]);
           
-          const headers = {'accept': 'application/json',
-                               'Access-Control-Allow-Origin': '*',
-                               'Access-Control-Allow-Credentials': true,
-                               'Access-Control-Allow-Headers': '*',
-                               Authorization: `Bearer ${token_user}`
-                             }
-          
           var options = {
             method: 'DELETE',
             url: '/organizer/event',
             params: params,
-            headers: headers
           };
           
-          axios.request(options).then(function (response) {
+          api.request(options).then(function (response) {
             console.log(response.data[0].link);
             window.location.href="/showEvents"
           }).catch(function (error) {
@@ -164,10 +135,6 @@ export default function ShowsEvents() {
       })
      } 
   
-
-  const handleDeleteClick = (event, row) => {
-    // handle delete button click for the row
-  };
 
   const handleSearchChange = (event) => {
     setSearchText(event.target.value);
@@ -181,9 +148,6 @@ export default function ShowsEvents() {
   .filter((row) =>
     row.title.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const pageCount = Math.ceil(filteredData.length / rowsPerPage);
-
 
   return (
     (publications && publications.length > 0) ?

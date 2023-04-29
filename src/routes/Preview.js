@@ -6,7 +6,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import axios from '../api/axios';
+import { api } from '../api/axios';
 import Navbar from '../components/NavBar';
 import { EditorState, convertFromRaw } from 'draft-js';
 import { Grid } from '@mui/material';
@@ -52,21 +52,11 @@ const Preview = () => {
     console.log(id_event);
 
     try {
-      const response = axios.post('/organizer/event/images',
+      const response = api.post('/organizer/event/images',
         JSON.stringify({
           'event_id': id_event,
           'link': url
         }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true,
-            'Access-Control-Allow-Headers': '*',
-            'Authorization': 'Bearer ' + token_user,
-          }
-        },
-
       )
         .then((response) => {
           console.log("Imágen cargada");
@@ -99,17 +89,8 @@ const Preview = () => {
     }
 
     try {
-      const response = await axios.post('organizer/event',
+      const response = await api.post('organizer/event',
         JSON.stringify(props),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true,
-            'Access-Control-Allow-Headers': '*',
-            Authorization: `Bearer ${token_user}`
-          }
-        }
       ).then((response) => {
         window.localStorage.setItem("event_id", response.data.id);
         setEventId(response.data.id);

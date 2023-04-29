@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import axios from '../api/axios';
+import { api } from '../api/axios';
 import { Select, MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -43,10 +43,6 @@ const theme = createTheme({
 
 const CreateEventForm = () => {
   let datos = JSON.parse(window.localStorage.getItem('cache_datos'));
-  let token_user = window.localStorage.getItem("token");
-
-  const [errMsg, setErrMsg] = useState('');
-  
 
   const [error, setError] = useState();
   const [title, setTitle] = useState(datos === '' ? '' : datos.titulo);
@@ -162,86 +158,54 @@ const CreateEventForm = () => {
     e.preventDefault();
     const formData = getValues();
     let photos = JSON.parse(window.localStorage.getItem("photos_user"));
-    
+  
+    // if no completo todos los campos
+    // swal.fire({
+    //   title: "Dejaste campos sin completar",
+    //   text: "Recuerda que para cargar imagenes debes llenar los campos previos",
+    //   icon: "warning",
+    //   confirmButtonText: 'Entendido',
+    // })
+    // return
 
-    if (1 || title !== '' && category !== '' && date !== '' && description !== '' && direction !== '') {
-      const event = {
-        "title": title,
-        "category": category,
-        "date": date,
-        "description": description,
-        "capacity": capacity,
-        "ubication": {
-          "direction": direction,
-          "latitude": latitude,
-          "longitude": longitude
-        },
-        "agenda": formData.sections,
-        "faqs": formData.faqs,
-        "authorizers": formData.mails,
-        "images": photos
-      };
 
-      try {
-        await axios.post('organizer/event',
-          JSON.stringify(event),
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Credentials': true,
-              'Access-Control-Allow-Headers': '*',
-              Authorization: `Bearer ${token_user}`
-            }
-          }
-        ).then(async( response) => {
-          window.localStorage.setItem("photos_user", JSON.stringify([]));
-          console.log(response.data)
-     
-          try {
-            const response_2 = await axios.post('organizer/event/cover/pic',
-              JSON.stringify({
-               "link": window.localStorage.getItem('coverPic'), 
-               "event_id": response.data.id
-      
-              }),
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${token_user}`
-                }
-              }
-      
-            );
-            console.log('salio');
-            window.location.href = '/showEvents'
-          
-          } catch (err) {
-           
-            console.log('fijate hiciste algo mal')
-      
-          }
-        })
-      } catch (err) {
-        setError(true)
-        if (!err?.response) {
-          setErrMsg('El servidor no responde');
-        } else if (err.response?.status === 401) {
-          setErrMsg('Contraseña o usuario incorrecto');
-        } else if (err.response?.status === 402) {
-          setErrMsg('No tiene autorización');
-        } else {
-          token_user = window.localStorage.getItem("token");
+    const event = {
+      "title": title,
+      "category": category,
+      "date": date,
+      "description": description,
+      "capacity": capacity,
+      "ubication": {
+        "direction": direction,
+        "latitude": latitude,
+        "longitude": longitude
+      },
+      "agenda": formData.sections,
+      "faqs": formData.faqs,
+      "authorizers": formData.mails,
+      "images": photos
+    };
+
+    await api
+      .post('organizer/event', JSON.stringify(event))
+      .then(async( response) => {
+        window.localStorage.setItem("photos_user", JSON.stringify([]));
+        console.log(response.data)
+  
+        try {
+          await api.post(
+            'organizer/event/cover/pic',
+            JSON.stringify({
+              "link": window.localStorage.getItem('coverPic'), 
+              "event_id": response.data.id
+            }),
+          );
+          window.location.href = '/showEvents'
+        } catch (err) {
+          console.log('fijate hiciste algo mal')
         }
       }
-    } else {
-      swal.fire({
-        title: "Dejaste campos sin completar",
-        text: "Recuerda que para cargar imagenes debes llenar los campos previos",
-        icon: "warning",
-        confirmButtonText: 'Entendido',
-      })
-    } 
+      )
   }
 
   return (
