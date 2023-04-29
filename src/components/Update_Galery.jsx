@@ -11,10 +11,10 @@ import Navbar from '../components/NavBar';
 import axios from '../api/axios';
 import { useState, useEffect } from 'react';
 import PhotosCard from '../components/Card_photos';
-import Portada from '../components/Portada';
-import ProgressBar from '../components/ProgressBar';
+import Portada from './Portada';
+import ProgressBar from './ProgressBar';
 import swal from 'sweetalert2';
-import './swal.css'
+import '../routes/swal.css'
 import { Box } from '@mui/material';
 import useStorage from '../hooks/useStorage';
 
@@ -52,11 +52,15 @@ export default function UpdatePhotoGallery() {
   //window.localStorage.setItem('progress', progress);
   //setUrl(window.localStorage.getItem('url'));
   
-  console.log(url);
+
   
-  let id_event = window.localStorage.getItem("event_id");
+  let props = JSON.parse(sessionStorage.getItem("publication_data"))
+
+  let id_event = props.id;
+
+
   
-  console.log(id_event);
+ 
 
   const handleChange = (e) => {
     let selected = e.target.files[0];
@@ -81,9 +85,9 @@ export default function UpdatePhotoGallery() {
       token_user = window.localStorage.getItem("token");
     }
 
-    //let id_event = sessionStorage.getItem("event_id"); 
     
-    console.log(id_event)
+    
+ 
 
 
     const params = new URLSearchParams([['event_id', id_event]]);
@@ -98,7 +102,13 @@ export default function UpdatePhotoGallery() {
 
     axios({ method: 'get', url: '/organizer/event/images', params: params, headers: headers })
       .then((response_photo) => {
-        setPhotos(response_photo.data);
+        console.log( response_photo.data[0])
+        setPhotos( JSON.parse(response_photo.data[0]))
+    
+      
+       
+        
+     
        })
         .catch((error) => {
           console.log(error);
@@ -173,7 +183,7 @@ export default function UpdatePhotoGallery() {
 
     (photos && photos.length > 0) ?
       <ThemeProvider theme={theme}>
-        <Navbar />
+   
          
         <Box sx={{
            textAlign: 'center'
@@ -184,9 +194,6 @@ export default function UpdatePhotoGallery() {
         
         
 
-        <Button  onClick={()=>{window.location.href = '/showEvents'}} variant="contained" component="label">
-          Ir a mis eventos
-        </Button>
         <Box sx={{
            marginLeft: '590px'
         }}>
@@ -197,10 +204,7 @@ export default function UpdatePhotoGallery() {
           Cargar Imagenes nuevas
         </Button>
         
-      <Button onClick={saveImages} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'right',
-           color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
-            Guardar
-     </Button>
+   
     </CardActions>
       
       </Box>
@@ -225,7 +229,7 @@ export default function UpdatePhotoGallery() {
 
       </ThemeProvider>
       : <ThemeProvider theme={theme}>
-        <Navbar />
+
         <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
           Bienvenido a tu galeria
         </Typography>

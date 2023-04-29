@@ -17,13 +17,14 @@ import './swal.css'
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { EditorState, convertToRaw, convertFromRaw  } from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import useStorage from '../hooks/useStorage';
 import { useForm, useFieldArray } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import Galery from '../components/Update_Galery';
 
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
@@ -47,9 +48,10 @@ const theme = createTheme({
 const EditEvent = () => {
 
   let props = sessionStorage.getItem("publication_data")
+
   props = (JSON.parse(props))
-  
-  console.log(props);
+
+
 
   const userRef = useRef();
   const errRef = useRef();
@@ -59,8 +61,8 @@ const EditEvent = () => {
   const [category, setCategory] = useState(props.category);
   const [date, setDate] = useState(props.date);
   const [description, setDescription] = useState(props.description);
-  console.log('viendo descripcion');
-  console.log(props.description);
+
+
   const [capacity, setCapacity] = useState(props.capacity);
   const [vacancies, setVacancies] = useState('');
   const [direction, setDirection] = useState(props.direction);
@@ -78,40 +80,40 @@ const EditEvent = () => {
   const [faqs, setFaqs] = useState(null);
   //const [agenda, setAgenta] = useState(props.agenda);
   const [preguntas, setPreguntas] = useState([]);
-  const { register, control, formState: { errors }, getValues } = useForm({ defaultValues: 
-    { 
-      //sections: [{ time: "", description: "" }],
-      //mails: [{ email: "" }],
-      sections: props.agenda,
-      mails: props.authorizers,
-      faqs: props.faqs
-    }
-   });
-   const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
-   const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
-   const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
+  /* const { register, control, formState: { errors }, getValues } = useForm({ defaultValues: 
+     { 
+       //sections: [{ time: "", description: "" }],
+       //mails: [{ email: "" }],
+       sections: props.agenda,
+       mails: props.authorizers,
+       faqs: props.faqs
+     }
+    });
+    const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
+    const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
+    const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });*/
 
 
-  let token_user=window.localStorage.getItem("token");
- 
-  const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
-  let analizar = JSON.parse(preguntasRecuperadasJSON);   
- 
-   console.log(props.agenda);
-   console.log(props.authorizers);
+  let token_user = window.localStorage.getItem("token");
+
+  /*const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
+  let analizar = JSON.parse(preguntasRecuperadasJSON);   */
+
+
 
   useEffect(() => {
+
     const rawContent = JSON.parse(props.description);
     const contentState = convertFromRaw(rawContent);
-    setEditorState (EditorState.createWithContent(contentState));   
-    
-    setPreguntas(analizar);
-    console.log(preguntas);
+    setEditorState(EditorState.createWithContent(contentState));
 
-    loadFaqs(); 
+    /*setPreguntas(analizar);
+    console.log(preguntas);*/
+
+    // loadFaqs(); 
   }, []);
-  
-  
+
+
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
@@ -134,7 +136,7 @@ const EditEvent = () => {
     });
 
     map.addControl(geocoder);
-    
+
     map.addControl(new mapboxgl.NavigationControl({ showZoom: true }));
 
     geocoder.on('result', function (event) {
@@ -144,31 +146,20 @@ const EditEvent = () => {
       setLatitude(coordinates[1]);
       setDirection(event.result.place_name);
 
-      console.log('event');
-      console.log(event);
-      console.log('result');
-      console.log(event.result);
-      console.log('center');
-      console.log(coordinates);
-      console.log('longitude');
-      console.log(longitude);
-      console.log('latitude');
-      console.log(latitude);
-      console.log('address');
-      console.log(direction);
+
     })
-    
+
     map.on('load', () => {
-      geocoder.query(direction);    
+      geocoder.query(direction);
     });
-    
+
     return () => map.remove();
   }, []);
 
 
   const loadFaqs = () => {
-  
-     let token_user;
+
+    let token_user;
     if (!window.localStorage.getItem("token")) {
       console.log("no autorizado")
       window.location.href = "/home";
@@ -177,8 +168,8 @@ const EditEvent = () => {
       token_user = window.localStorage.getItem("token");
     }
 
-    let id_event = sessionStorage.getItem("event_id"); 
-    
+    let id_event = sessionStorage.getItem("event_id");
+
     console.log(id_event)
 
     const params = new URLSearchParams([['event_id', id_event]]);
@@ -195,18 +186,18 @@ const EditEvent = () => {
       .then((response) => {
         setFaqs(response.data);
         console.log(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-       
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
   }
-  
+
 
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
-    setDescription (JSON.stringify(convertToRaw(editorState.getCurrentContent())));
-    
+    setDescription(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
+
   };
 
   const toolbarOptions = {
@@ -259,7 +250,7 @@ const EditEvent = () => {
     let token_user;
     // window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
 
-    const formData = getValues();
+    //const formData = getValues();
 
     if (!window.localStorage.getItem("token")) {
       console.log("no autorizado")
@@ -291,8 +282,8 @@ const EditEvent = () => {
           "longitude": 0,
           "capacity": capacity,
           "vacancies": 0,
-          "agenda" : formData.sections,
-          "faqs" : formData.faqs
+          "agenda": "string",
+          "faqs": "string"
         }
       };
 
@@ -303,7 +294,7 @@ const EditEvent = () => {
       });
 
       window.localStorage.setItem("event_id", id_event);
-        window.location.href = "/showEvents";
+      window.location.href = "/showEvents";
 
     } catch (err) {
       setError(true)
@@ -357,20 +348,19 @@ const EditEvent = () => {
           "longitude": 0,
           "capacity": capacity,
           "vacancies": 0,
-                   
+
         }
       };
 
       axios.request(options)
-      .then(function (response) {
-        console.log(response.data);
-        saveFAQs();
-      }).catch(function (error) {
-        console.error(error);
-      });
+        .then(function (response) {
+
+        }).catch(function (error) {
+          console.error(error);
+        });
 
       window.localStorage.setItem("event_id", id_event);
-  
+
       window.location.href = "/photoUpload";
 
     } catch (err) {
@@ -389,35 +379,9 @@ const EditEvent = () => {
   }
 
 
-  const handleSubmit_faqs = async (e) => {
-    e.preventDefault();
-    
-   const data = {
-    "titulo": "",
-    "categoria": "",
-    "descripcion": "",
-    "fecha": "",
-    "tickets": "",
-    "direccion": ""
-   }
 
-    data.titulo = title
-    data.categoria = category
-    data.descripcion = description
-    data.fecha = date
-    data.tickets = capacity
-    data.direccion = direction
-    
-    window.localStorage.setItem('cache_datos', JSON.stringify(data));
- 
-    window.localStorage.setItem("preguntas", JSON.stringify(faqs));
- 
-    window.location.href = "/faqs";
 
-  }
-  
-  
-  const saveFAQs = async () => { 
+  /*const saveFAQs = async () => { 
  
      let id_event = window.localStorage.getItem("event_id");      
      //const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
@@ -468,14 +432,14 @@ const EditEvent = () => {
             window.localStorage.setItem('cache_datos', vaciar);
             window.location.href = "/showEvents"
  
-  }
+  }*/
 
 
   const handleEditPhotos = () => {
-    
+
     window.localStorage.setItem("event_id", id_event);
     window.location.href = "/updatePhotoGallery";
-    
+
   }
 
 
@@ -483,71 +447,71 @@ const EditEvent = () => {
   return (
 
     <ThemeProvider theme={theme}>
-  
-        <Navbar />
-        <Box sx={{ border: '5px solid black', padding: '20px' }}>
-          <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
-            Crear evento
-          </Typography>
-          <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-            <Stack
-              direction="column"
-              spacing={3}
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                width: '100%',
-                maxWidth: '100%',
-                padding: '0 1rem',
-                fontFamily: 'Arial, sans-serif',
-                fontSize: '1rem',
-                flexGrow: 1,
 
-                border: '8px solid $primary-color' /* Agrega el borde */
-              }}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
+      <Navbar />
+      <Box sx={{ border: '5px solid black', padding: '20px' }}>
+        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+          Crear evento
+        </Typography>
+        <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <Stack
+            direction="column"
+            spacing={3}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              width: '100%',
+              maxWidth: '100%',
+              padding: '0 1rem',
+              fontFamily: 'Arial, sans-serif',
+              fontSize: '1rem',
+              flexGrow: 1,
 
-                  <TextField error={error} fullWidth sx={{ m: 1 }} label="Nombre del evento" variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} />
-                </Grid>
-                <Grid item xs={6}>
-                  <FormControl fullWidth sx={{ m: 1 }}>
-                    <InputLabel id="demo-simple-select-label">Categoría</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={category}
-                      label="Tipo de evento"
-                      onChange={(e) => setCategory(e.target.value)}s
-                    >
+              border: '8px solid $primary-color' /* Agrega el borde */
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
 
-                      <MenuItem sx={{ color: 'black' }} value="Evento deportivo">Evento deportivo</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Cena o gala">Cena o gala</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Clase, curso o taller">Clase, curso o taller</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Performance">Performance</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Conferencia">Conferencia</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Encuentro">Encuentro</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Networking">Networking</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Feria">Feria</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Festival">Festival</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Fiesta" >Fiesta</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Competencia">Competencia</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Promoción">Promoción"</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Seminario">Seminario</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Show">Show</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Torneo">Torneo</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Visita">Visita</MenuItem>
-                      <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
-                    </Select>
-
-                  </FormControl>
-                </Grid>
+                <TextField error={error} fullWidth sx={{ m: 1 }} label="Nombre del evento" variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} />
               </Grid>
+              <Grid item xs={6}>
+                <FormControl fullWidth sx={{ m: 1 }}>
+                  <InputLabel id="demo-simple-select-label">Categoría</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={category}
+                    label="Tipo de evento"
+                    onChange={(e) => setCategory(e.target.value)} s
+                  >
+
+                    <MenuItem sx={{ color: 'black' }} value="Evento deportivo">Evento deportivo</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Cena o gala">Cena o gala</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Clase, curso o taller">Clase, curso o taller</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Performance">Performance</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Conferencia">Conferencia</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Encuentro">Encuentro</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Networking">Networking</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Feria">Feria</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Festival">Festival</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Fiesta" >Fiesta</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Competencia">Competencia</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Promoción">Promoción"</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Seminario">Seminario</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Show">Show</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Torneo">Torneo</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Visita">Visita</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
+                  </Select>
+
+                </FormControl>
+              </Grid>
+            </Grid>
 
 
-             <Grid container spacing={2}>
+            <Grid container spacing={2}>
               <Grid item xs={6} sx={{ width: '100%' }}>
                 <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
                   Descripción
@@ -567,8 +531,9 @@ const EditEvent = () => {
                 </Box>
 
               </Grid>
-              
-              <Grid item xs={6}>
+            </Grid>
+
+            {/*  <Grid item xs={6}>
               <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
                 FAQs
               </Typography>              
@@ -616,7 +581,7 @@ const EditEvent = () => {
                   {fieldsSections.map((field, index) => (
                     <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
                       {/* intento de input con DATEPICKER */}
-                      {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker 
                           {...register(`sections.${index}.time`, { required: true })}
                           error={errors.sections && errors.sections[index]?.time}
@@ -624,7 +589,7 @@ const EditEvent = () => {
                           sx={{ mb: 1, marginRight: 1, width: '100px' }}
                           slotProps={{ textField: { size: 'small' } }}
                         />
-                      </LocalizationProvider> */}
+                      </LocalizationProvider> 
 
                       <TextField 
                         {...register(`sections.${index}.time`, { required: true })}
@@ -679,87 +644,77 @@ const EditEvent = () => {
                   <Button variant="outlined" size='small' onClick={() => appendMail({ email: "" })}>Agregar colaborador</Button>
                 </form>
               </div>
-             </Grid>
+             </Grid>*/}
 
-              <Grid container spacing={2}>
-                <Grid item sx={{ width: '50%', marginTop: '20px' }}>
-                  <Box sx={{ height: '250px', overflow: 'auto', marginLeft: '200px', borderRadius: '10px' }}>
-                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                      Fecha del evento
-                    </Typography>
-                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
-                     type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
-                    <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                      Cantidad de tickets
-                    </Typography>
+            <Grid container spacing={2}>
+              <Grid item sx={{ width: '50%', marginTop: '20px' }}>
+                <Box sx={{ height: '250px', overflow: 'auto', marginLeft: '200px', borderRadius: '10px' }}>
+                  <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                    Fecha del evento
+                  </Typography>
+                  <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+                    type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
+                  <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    Cantidad de tickets
+                  </Typography>
 
-                    <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }} 
-                     type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
+                  <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+                    type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
 
-                 </Box>
-                  
-                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <Button variant="contained" onClick={handleEditPhotos} sx={{
-                    backgroundColor: '#1286f7',
-                    border: 'none',
-                    color: 'white',
-                    width: '300px',
-                    height: '50px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    padding: '10px 20px',
-                    marginTop: '20px',
-                    marginRight: '150px',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s ease-in-out'
-                  }}>Editar Fotos</Button>
                 </Box>
-                
-                </Grid>
-                
-                
-               <Grid item sx={{ width: '50%', height: '300px' }}>
 
-                  <Box sx={{ display: 'flex', justifyContent: 'right',  alignItems: 'center', textAlign: 'center' }}>
-                    <div ref={mapContainer} className="mapboxgl-ctrl-top-right"
-                     style={{width: 600, height: 350, marginLeft: '50px', marginTop: '20px', marginRight: '100px'}}
-                    />
-
-                  </Box>
-
-                </Grid>
+            
 
               </Grid>
 
 
-              <Grid xs={6} sx={{ width: '100%' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <Button variant="contained" onClick={handleSubmitEvent} sx={{
-                    backgroundColor: '#1286f7',
-                    border: 'none',
-                    color: 'white',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    padding: '10px 20px',
-                    borderRadius: '30px',
-                    width: '200px',
-                    height: '60px',
-                    marginTop: '100px',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s ease-in-out'
-                  }}>Guardar</Button>
+              <Grid item sx={{ width: '50%', height: '300px' }}>
+
+                <Box sx={{ display: 'flex', justifyContent: 'right', alignItems: 'center', textAlign: 'center' }}>
+                  <div ref={mapContainer} className="mapboxgl-ctrl-top-right"
+                    style={{ width: 600, height: 350, marginLeft: '50px', marginTop: '20px', marginRight: '100px' }}
+                  />
+
                 </Box>
 
+             
+
               </Grid>
+              <Box sx={{ width: '100%', marginTop: '200px' }}>
+                  <Galery />
+                </Box>
+
+            </Grid>
 
 
-              <Divider />
-            </Stack>
+            <Grid xs={6} sx={{ width: '100%' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                <Button variant="contained" onClick={handleSubmit} sx={{
+                  backgroundColor: '#1286f7',
+                  border: 'none',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  padding: '10px 20px',
+                  borderRadius: '30px',
+                  width: '200px',
+                  height: '60px',
+                  marginTop: '100px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s ease-in-out'
+                }}>Guardar</Button>
+              </Box>
 
+            </Grid>
+
+
+            <Divider />
           </Stack>
-        </Box>
 
-      
+        </Stack>
+      </Box>
+
+
 
     </ThemeProvider>
   );

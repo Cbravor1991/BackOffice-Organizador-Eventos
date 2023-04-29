@@ -9,7 +9,10 @@ import axios from '../api/axios';
 import swal from 'sweetalert2';
 
 export default function PhotosCard(props) {
-  console.log(props.link)
+
+  let event_id = JSON.parse(sessionStorage.getItem("publication_data")).id;
+
+ 
 
   const coverPhoto = async (props) => {
 
@@ -28,15 +31,18 @@ export default function PhotosCard(props) {
       return;
     } else {
       token_user = window.localStorage.getItem("token");
+      
     }
+    console.log('el evento es este')
+  
 
 
 
     console.log('entro')
     const response = axios.delete('/organizer/event/images', {
       data: {
-        "id": props.id,
-        "event_id": props.event_id
+        "id": props.id, 
+         "event_id":event_id
       },
       headers: {
         'Content-Type': 'application/json',
@@ -72,7 +78,7 @@ export default function PhotosCard(props) {
       const response = await axios.post('organizer/event/cover/pic',
         JSON.stringify({
          "id": props.id, 
-         "event_id":id_event_photo
+         "event_id":event_id
 
         }),
         {

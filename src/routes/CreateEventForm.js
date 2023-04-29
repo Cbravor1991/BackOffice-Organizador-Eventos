@@ -52,6 +52,7 @@ const CreateEventForm = () => {
   let token_user = window.localStorage.getItem("token");
 
   const [errMsg, setErrMsg] = useState('');
+  
 
   const [error, setError] = useState(false);
   const [title, setTitle] = useState(datos == '' ? '' : datos.titulo);

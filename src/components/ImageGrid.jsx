@@ -22,6 +22,7 @@ const ImageGrid = ({setCover, cover}) => {
   } else {
    
     photos = JSON.parse(window.localStorage.getItem("photos_user"));
+    
   
   
   }
@@ -39,8 +40,8 @@ return (
     {photos.map(item => {
       return (
 <Card sx={{ maxWidth: 345 }}>
-  <CardMedia sx={{ height: 200 }} image={item.link} />
-  {item.link === cover && (
+  <CardMedia sx={{ height: 200 }} image={item} />
+  {item === cover && (
     <CardContent>
       <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
         Foto de portada
@@ -49,7 +50,7 @@ return (
   )}
   <CardActions>
     <Button size="small">Eliminar</Button>
-    <Button onClick={() => setCover(item.link)} size="small">
+    <Button onClick={() => setCover(item)} size="small">
       Seleccionar como portada
     </Button>
   </CardActions>
