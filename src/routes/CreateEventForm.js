@@ -1,7 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
 import axios from '../api/axios';
-import { Link, useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import { Select, MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -22,10 +20,6 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useForm, useFieldArray } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Controller } from 'react-hook-form';
 import Galery from '../components/Galery';
 
 
@@ -54,11 +48,11 @@ const CreateEventForm = () => {
   const [errMsg, setErrMsg] = useState('');
 
   const [error, setError] = useState(false);
-  const [title, setTitle] = useState(datos == '' ? '' : datos.titulo);
-  const [category, setCategory] = useState(datos == '' ? '' : datos.categoria);
-  const [date, setDate] = useState(datos == '' ? '' : datos.fecha);
-  const [description, setDescription] = useState(datos == '' ? '' : datos.descripcion);
-  const [capacity, setCapacity] = useState(datos == '' ? '' : datos.tickets);
+  const [title, setTitle] = useState(datos === '' ? '' : datos.titulo);
+  const [category, setCategory] = useState(datos === '' ? '' : datos.categoria);
+  const [date, setDate] = useState(datos === '' ? '' : datos.fecha);
+  const [description, setDescription] = useState(datos === '' ? '' : datos.descripcion);
+  const [capacity, setCapacity] = useState(datos === '' ? '' : datos.tickets);
   const [direction, setDirection] = useState(datos ? datos.direccion : '');
   const [latitude, setLatitude] = useState(-34.599722222222);
   const [longitude, setLongitude] = useState(-58.381944444444);
@@ -77,7 +71,7 @@ const CreateEventForm = () => {
   const mapContainer = useRef(null);
   const [zoom, setZoom] = useState(7);
 
-  const [editorState, setEditorState] = useState(datos == '' || (datos != '' && datos.descripcion == '') ? () => EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion))));
+  const [editorState, setEditorState] = useState(datos === '' || (datos !== '' && datos.descripcion === '') ? () => EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion))));
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
@@ -167,11 +161,11 @@ const CreateEventForm = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-
+    const formData = getValues();
     let photos = window.localStorage.getItem("photos_user");
     console.log(photos)
 
-    if (title != '' && category != '' && date != '' && description != '' && direction != '') {
+    if (title !== '' && category !== '' && date !== '' && description !== '' && direction !== '') {
       const event = {
         "title": title,
         "category": category,
@@ -183,53 +177,18 @@ const CreateEventForm = () => {
           "latitude": latitude,
           "longitude": longitude
         },
-        "agenda": [
-          {
-            "time": "10:00",
-            "description": "Noel Gallagher"
-          }
-        ],
-        "faqs": [
-          {
-            "question": "¿A que hora empieza?",
-            "response": "a las 10"
-          }
-        ],
-        "authorizers": [
-          {
-            "email": "string"
-          }
-        ],
+        "agenda": formData.sections,
+        "faqs": formData.faqs,
+        "authorizers": formData.mails,
         "images": [
           {
             "link": photos
           }
         ]
-      }
-
-
-
-
-
-
-      if (!window.localStorage.getItem("token")) {
-        console.log("no autorizado")
-        window.location.href = "/home";
-        return;
-      } else {
-        token_user = window.localStorage.getItem("token");
-      }
-
-      if (!window.localStorage.getItem("token")) {
-        console.log("no autorizado")
-        window.location.href = "/home";
-        return;
-      } else {
-        token_user = window.localStorage.getItem("token");
-      }
+      };
 
       try {
-        const response = await axios.post('organizer/event',
+        await axios.post('organizer/event',
           JSON.stringify(event),
           {
             headers: {
@@ -240,8 +199,7 @@ const CreateEventForm = () => {
               Authorization: `Bearer ${token_user}`
             }
           }
-
-        ).then((response) => {
+        ).then((_) => {
           window.localStorage.setItem("photos_user", JSON.stringify([]));
           window.location.href = "/showEvents"
         })
@@ -256,10 +214,7 @@ const CreateEventForm = () => {
         } else {
           token_user = window.localStorage.getItem("token");
         }
-
       }
-
-
     } else {
       swal.fire({
         title: "Dejaste campos sin completar",
@@ -268,31 +223,6 @@ const CreateEventForm = () => {
         confirmButtonText: 'Entendido',
       })
     }
-  }
-
-  const loadImages = (files) => {
-    window.localStorage.setItem('úrl', '');
-
-    const data = {
-      "titulo": "",
-      "categoria": "",
-      "descripcion": "",
-      "fecha": "",
-      "tickets": "",
-      "direccion": ""
-    }
-
-    data.titulo = title
-    data.categoria = category
-    data.descripcion = description
-    data.fecha = date
-    data.tickets = capacity
-    data.direccion = direction
-
-    window.localStorage.setItem('cache_datos', JSON.stringify(data));
-
-    window.location.href = "/photoUpload";
-    console.log("entro")
   }
 
   return (
@@ -397,7 +327,7 @@ const CreateEventForm = () => {
                         <TextField
                           {...register(`faqs.${index}.question`, { required: true })}
                           error={errors.faqs && errors.faqs[index]?.question}
-                          placeholder="question" size="small" label="Pregunta" variant="outlined"
+                          size="small" label="Pregunta" variant="outlined"
                           sx={{ mb: 1, marginRight: 1, width: '90%' }}
                         />
 
@@ -408,7 +338,7 @@ const CreateEventForm = () => {
                         <TextField
                           {...register(`faqs.${index}.response`, { required: true })}
                           error={errors.faqs && errors.faqs[index]?.response}
-                          placeholder="response" size="small" label="Respuesta" variant="outlined"
+                          size="small" label="Respuesta" variant="outlined"
                           sx={{ mb: 1, width: '90%' }}
                           multiline rows={2}
                         />
@@ -437,14 +367,14 @@ const CreateEventForm = () => {
                         <TextField
                           {...register(`sections.${index}.time`, { required: true })}
                           error={errors.sections && errors.sections[index]?.time}
-                          placeholder="time" size="small" label="Horario" variant="outlined"
+                          size="small" label="Horario" variant="outlined"
                           sx={{ mb: 1, marginRight: 1, width: '100px' }}
                         />
 
                         <TextField
                           {...register(`sections.${index}.description`, { required: true })}
                           error={errors.sections && errors.sections[index]?.description}
-                          placeholder="description" size="small" label="Descripción" variant="outlined"
+                          size="small" label="Descripción" variant="outlined"
                           sx={{ mb: 1, width: '65%' }}
                         />
 
@@ -473,7 +403,7 @@ const CreateEventForm = () => {
                         <TextField
                           {...register(`mails.${index}.email`, { required: true })}
                           error={errors.mails && errors.mails[index]?.email}
-                          placeholder="email" size="small" label="Mail" variant="outlined"
+                          size="small" label="Mail" variant="outlined"
                           sx={{ mb: 1, marginRight: 1, width: '90%' }}
                         />
 
@@ -524,8 +454,7 @@ const CreateEventForm = () => {
             </Grid>
 
 
-
-            <Grid xs={6} sx={{ width: '100%' }}>
+            <Grid sx={{ width: '100%' }}>
 
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                 <Button variant="contained" onClick={handleCreate} sx={{
