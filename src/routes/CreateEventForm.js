@@ -47,7 +47,7 @@ const CreateEventForm = () => {
 
   const [errMsg, setErrMsg] = useState('');
 
-  const [error, setError] = useState(false);
+  const [error, setError] = useState();
   const [title, setTitle] = useState(datos === '' ? '' : datos.titulo);
   const [category, setCategory] = useState(datos === '' ? '' : datos.categoria);
   const [date, setDate] = useState(datos === '' ? '' : datos.fecha);
@@ -56,7 +56,7 @@ const CreateEventForm = () => {
   const [direction, setDirection] = useState(datos ? datos.direccion : '');
   const [latitude, setLatitude] = useState(-34.599722222222);
   const [longitude, setLongitude] = useState(-58.381944444444);
-  const { register, control, formState: { errors }, getValues } = useForm({
+  const { register, control, formState: { errors }, getValues, setValue } = useForm({
     defaultValues:
     {
       sections: [{ time: "", description: "" }],
@@ -165,7 +165,7 @@ const CreateEventForm = () => {
     let photos = window.localStorage.getItem("photos_user");
     console.log(photos)
 
-    if (title !== '' && category !== '' && date !== '' && description !== '' && direction !== '') {
+    if (1 || title !== '' && category !== '' && date !== '' && description !== '' && direction !== '') {
       const event = {
         "title": title,
         "category": category,
@@ -329,6 +329,7 @@ const CreateEventForm = () => {
                           error={errors.faqs && errors.faqs[index]?.question}
                           size="small" label="Pregunta" variant="outlined"
                           sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                          onChange={(e) => setValue(`faqs.${index}.question`, e.target.value)}
                         />
 
                         <IconButton aria-label="delete" onClick={() => removeFaq(index)}>
@@ -341,6 +342,7 @@ const CreateEventForm = () => {
                           size="small" label="Respuesta" variant="outlined"
                           sx={{ mb: 1, width: '90%' }}
                           multiline rows={2}
+                          onChange={(e) => setValue(`faqs.${index}.response`, e.target.value)}
                         />
 
 
@@ -369,6 +371,7 @@ const CreateEventForm = () => {
                           error={errors.sections && errors.sections[index]?.time}
                           size="small" label="Horario" variant="outlined"
                           sx={{ mb: 1, marginRight: 1, width: '100px' }}
+                          onChange={(e) => setValue(`sections.${index}.time`, e.target.value)}
                         />
 
                         <TextField
@@ -376,6 +379,7 @@ const CreateEventForm = () => {
                           error={errors.sections && errors.sections[index]?.description}
                           size="small" label="Descripción" variant="outlined"
                           sx={{ mb: 1, width: '65%' }}
+                          onChange={(e) => setValue(`sections.${index}.description`, e.target.value)}
                         />
 
                         <IconButton aria-label="delete" onClick={() => removeSection(index)}>
@@ -405,6 +409,7 @@ const CreateEventForm = () => {
                           error={errors.mails && errors.mails[index]?.email}
                           size="small" label="Mail" variant="outlined"
                           sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                          onChange={(e) => setValue(`mails.${index}.email`, e.target.value)}
                         />
 
                         <IconButton aria-label="delete" onClick={() => removeMail(index)}>
