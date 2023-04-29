@@ -78,10 +78,7 @@ const CreateEventForm = () => {
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
 
-  let photos = [];
-
-
-  window.localStorage.setItem("photos_user", JSON.stringify(photos));
+ 
 
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
