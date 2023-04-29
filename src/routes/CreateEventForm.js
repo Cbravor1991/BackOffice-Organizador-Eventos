@@ -430,7 +430,6 @@ const CreateEventForm = () => {
 
               </Grid>
 
-
               <Grid item sx={{ width: '50%', height: '300px' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'right', alignItems: 'center', textAlign: 'center' }}>
                   <div ref={mapContainer} className="map-container"
@@ -438,10 +437,10 @@ const CreateEventForm = () => {
                   />
                 </Box>
               </Grid>
+
               <Box sx={{ width: '100%', marginTop: '200px' }}>
                  <Galery  />
               </Box>
-
 
             </Grid>
 
