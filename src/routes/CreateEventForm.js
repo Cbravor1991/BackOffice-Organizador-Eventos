@@ -154,20 +154,24 @@ const CreateEventForm = () => {
     }
   };
 
+  const requiredFieldsMissing = () => {
+    return title === '' || category === '' || date === '' || description === '' || direction === '';
+  }
+
   const handleCreate = async (e) => {
     e.preventDefault();
     const formData = getValues();
     let photos = JSON.parse(window.localStorage.getItem("photos_user"));
   
-    // if no completo todos los campos
-    // swal.fire({
-    //   title: "Dejaste campos sin completar",
-    //   text: "Recuerda que para cargar imagenes debes llenar los campos previos",
-    //   icon: "warning",
-    //   confirmButtonText: 'Entendido',
-    // })
-    // return
-
+    if (requiredFieldsMissing()) {
+      swal.fire({
+        title: "Dejaste campos sin completar",
+        text: "Recuerda que para cargar imagenes debes llenar los campos previos",
+        icon: "warning",
+        confirmButtonText: 'Entendido',
+      })
+      return;
+    }
 
     const event = {
       "title": title,
