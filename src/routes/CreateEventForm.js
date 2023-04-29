@@ -57,6 +57,7 @@ const CreateEventForm = () => {
   const [direction, setDirection] = useState(datos ? datos.direccion : '');
   const [latitude, setLatitude] = useState(-34.599722222222);
   const [longitude, setLongitude] = useState(-58.381944444444);
+  
   const { register, control, formState: { errors }, getValues, setValue } = useForm({
     defaultValues:
     {
@@ -163,8 +164,8 @@ const CreateEventForm = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     const formData = getValues();
-    let photos = window.localStorage.getItem("photos_user");
-    console.log(photos)
+    let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+    
 
     if (1 || title !== '' && category !== '' && date !== '' && description !== '' && direction !== '') {
       const event = {
@@ -181,11 +182,7 @@ const CreateEventForm = () => {
         "agenda": formData.sections,
         "faqs": formData.faqs,
         "authorizers": formData.mails,
-        "images": [
-          {
-            "link": photos
-          }
-        ]
+        "images": photos
       };
 
       try {
@@ -200,9 +197,33 @@ const CreateEventForm = () => {
               Authorization: `Bearer ${token_user}`
             }
           }
-        ).then((_) => {
+        ).then(async( response) => {
           window.localStorage.setItem("photos_user", JSON.stringify([]));
-          window.location.href = "/showEvents"
+          console.log(response.data)
+     
+          try {
+            const response_2 = await axios.post('organizer/event/cover/pic',
+              JSON.stringify({
+               "link": window.localStorage.getItem('coverPic'), 
+               "event_id": response.data.id
+      
+              }),
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token_user}`
+                }
+              }
+      
+            );
+            console.log('salio');
+            window.location.href = '/showEvents'
+          
+          } catch (err) {
+           
+            console.log('fijate hiciste algo mal')
+      
+          }
         })
       } catch (err) {
         setError(true)
@@ -223,7 +244,7 @@ const CreateEventForm = () => {
         icon: "warning",
         confirmButtonText: 'Entendido',
       })
-    }
+    } 
   }
 
   return (
@@ -453,7 +474,7 @@ const CreateEventForm = () => {
                 </Box>
               </Grid>
               <Box sx={{ width: '100%', marginTop: '200px' }}>
-                 <Galery />
+                 <Galery  />
               </Box>
 
 

@@ -25,18 +25,7 @@ function Galery() {
       setError('Selecciona u archivo que sea una imagen (png or jpg)');
     }};
 
-    const handleEvent = (e) => {
-
-      let photos = JSON.parse(window.localStorage.getItem("photos_user"));
-          photos= [];
-          window.localStorage.setItem("photos_user", JSON.stringify(photos));
-          window.location.href = '/updatePhotoGallery';
-
-
-      
-      
-
-  };
+  
 
   return (
     <div>

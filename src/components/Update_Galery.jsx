@@ -12,11 +12,12 @@ import axios from '../api/axios';
 import { useState, useEffect } from 'react';
 import PhotosCard from '../components/Card_photos';
 import Portada from './Portada';
-import ProgressBar from './ProgressBar';
+import ProgressBar from './ProgessBar_upload';
 import swal from 'sweetalert2';
 import '../routes/swal.css'
 import { Box } from '@mui/material';
 import useStorage from '../hooks/useStorage';
+import '../styles/index.css';
 
 
 
@@ -39,7 +40,7 @@ const theme = createTheme({
 export default function UpdatePhotoGallery() {
 
   const [photos, setPhotos] = useState([]);
-  
+
   const [selectedImg, setSelectedImg] = useState(null);
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
@@ -47,20 +48,20 @@ export default function UpdatePhotoGallery() {
   const [cover, setCover] = useState('');
   const [url, setUrl] = useState('');
   //const{url, progress} = useStorage(file, setFile);
-  
+
   //window.localStorage.setItem('url', url);
   //window.localStorage.setItem('progress', progress);
   //setUrl(window.localStorage.getItem('url'));
-  
 
-  
+
+
   let props = JSON.parse(sessionStorage.getItem("publication_data"))
 
   let id_event = props.id;
 
 
-  
- 
+
+
 
   const handleChange = (e) => {
     let selected = e.target.files[0];
@@ -85,9 +86,9 @@ export default function UpdatePhotoGallery() {
       token_user = window.localStorage.getItem("token");
     }
 
-    
-    
- 
+
+
+
 
 
     const params = new URLSearchParams([['event_id', id_event]]);
@@ -102,114 +103,149 @@ export default function UpdatePhotoGallery() {
 
     axios({ method: 'get', url: '/organizer/event/images', params: params, headers: headers })
       .then((response_photo) => {
-        console.log( response_photo.data[0])
-        setPhotos( JSON.parse(response_photo.data[0]))
-    
-      
-       
-        
-     
-       })
-        .catch((error) => {
-          console.log(error);
-        })
-       
-      }
+   
+        setPhotos(response_photo.data)
+
+
+
+
+
+
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+  }
 
 
 
   useEffect(() => {
 
     loadImages();
-   
+
   }, []);
 
- 
+
 
   const cards = photos.map(item => {
     return (
       <PhotosCard
-        key={item.id }
+        key={item.id}
         {...item}
         setSelectedCover={setCover}
-         
+
       />
     )
   })
-  
-  
-  const saveImages = async () => {
-  
-      let photos = JSON.parse(window.localStorage.getItem("photos_user"));
-      photos.push(url);
-      window.localStorage.setItem("photos_user", JSON.stringify(photos));
 
-      let token_user=window.localStorage.getItem("token"); 
-      let id_event = window.localStorage.getItem("event_id"); 
-     try{    
-       const response= axios.post('/organizer/event/images',
-                 JSON.stringify({ 
-                     'event_id': id_event,
-                     'link': url
-                 }),
-                 {
-                     headers: { 'Content-Type': 'application/json',
-                                'Access-Control-Allow-Origin': '*',
-                                'Access-Control-Allow-Credentials': true,
-                                'Access-Control-Allow-Headers': '*',
-                                'Authorization': 'Bearer ' + token_user,
-                              }
-                  },
- 
-             )
-       .then((response) => {
-       console.log("Imágen cargada");
-       setUrl(window.localStorage.getItem(''));
-       window.history.back();
-     })
-     }catch (err) {console.log(err)}
+
+  const saveImages = async () => {
+
+    let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+    photos.push(url);
+    window.localStorage.setItem("photos_user", JSON.stringify(photos));
+
+    let token_user = window.localStorage.getItem("token");
+    let id_event = window.localStorage.getItem("event_id");
+    try {
+      const response = axios.post('/organizer/event/images',
+        JSON.stringify({
+          'event_id': id_event,
+          'link': url
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': true,
+            'Access-Control-Allow-Headers': '*',
+            'Authorization': 'Bearer ' + token_user,
+          }
+        },
+
+      )
+        .then((response) => {
+          console.log("Imágen cargada");
+          setUrl(window.localStorage.getItem(''));
+          window.history.back();
+        })
+    } catch (err) { console.log(err) }
   }
 
 
   const handleUpload = () => {
-  
+
     window.localStorage.setItem('úrl', '');
     window.location.href = '/photoUpload';
-  
- }
- 
+
+  }
+
 
   return (
 
     (photos && photos.length > 0) ?
       <ThemeProvider theme={theme}>
-   
-         
-        <Box sx={{
-           textAlign: 'center'
-        }}>
-        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2,  textAlign: 'center' }}>
-          Bienvenido a tu galeria
-        </Typography>
-        
-        
+          <div>
+    
+    <div className="Galery">
+
 
         <Box sx={{
-           marginLeft: '590px'
+          textAlign: 'center'
         }}>
-     
-      
-      <CardActions sx={{ display: 'flex', justifyContent: 'left', pt: 0 }}>
-      <Button onClick={()=>{window.location.href = '/photoUpload'}}  variant="contained" component="label">
-          Cargar Imagenes nuevas
-        </Button>
-        
+          <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, textAlign: 'center' }}>
+            Bienvenido a tu galeria
+          </Typography>
+
+
+
+          <Box sx={{
+            marginLeft: '400px'
+          }}>
+
+
+            <CardActions sx={{ display: 'flex', justifyContent: 'left', pt: 0 }}>
+            <Button sx={{
+        backgroundColor: '#1286f7',
+        border: 'none',
+        color: 'white',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        padding: '10px 20px',
+        borderRadius: '30px',
+        marginTop: '20px',
+        cursor: 'pointer',
+        transition: 'background-color 0.2s ease-in-out',
+       
+      }} variant="contained" component="label">
+        Añadir foto
+        <input type="file" onChange={handleChange} />
+      </Button>
    
-    </CardActions>
       
+
+  
+
+            </CardActions>
+
+          </Box>
+          <Box sx={{
+            marginLeft: '0px'
+          }}>
+      <div className="output" >
+        {error && <div className="error">{error}</div>}
+        {file && <div sx={{ color: 'black' }}>{file.name}</div>}
+        {file && <ProgressBar file={file} setFile={setFile} />}
+      </div>
       </Box>
         </Box>
 
+
+       
+
+        </div>
+        </div>
         
         <Box sx={{
           flexWrap: 'wrap',
@@ -225,27 +261,45 @@ export default function UpdatePhotoGallery() {
           {cards}
         </Box>
 
-
-
       </ThemeProvider>
-      : <ThemeProvider theme={theme}>
-
+      :   <div>
+    
+      <div className="Galery">
+        
         <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
-          Bienvenido a tu galeria
+          Selecciona tus fotos para cargar a la galeria
         </Typography>
-        <Button onClick={()=>{window.location.href = '/showEvents'}} variant="contained" component="label">
-          Ir a mis eventos
+  
+        <Button sx={{
+          backgroundColor: '#1286f7',
+          border: 'none',
+          color: 'white',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          padding: '10px 20px',
+          borderRadius: '30px',
+          marginTop: '20px',
+          cursor: 'pointer',
+          transition: 'background-color 0.2s ease-in-out'
+        }} variant="contained" component="label">
+          Añadir foto
+          <input type="file" onChange={handleChange} />
         </Button>
-        <Button onClick={handleUpload}  variant="contained" component="label">
-          Cargar Imagenes nuevas
-        </Button>
-
-
-
-
-
-
-      </ThemeProvider>
+  
+  
+  
+        <div className="output" >
+          {error && <div className="error">{error}</div>}
+          {file && <div sx={{ color: 'black' }}>{file.name}</div>}
+          {file && <ProgressBar file={file} setFile={setFile} />}
+        </div>
+  
+  
+      
+  
+   
+      </div>
+      </div>
 
 
   )

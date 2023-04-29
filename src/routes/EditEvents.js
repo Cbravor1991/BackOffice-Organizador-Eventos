@@ -50,6 +50,7 @@ const EditEvent = () => {
   let props = sessionStorage.getItem("publication_data")
 
   props = (JSON.parse(props))
+  console.log(props)
 
 
 

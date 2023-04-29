@@ -12,6 +12,7 @@ export default function PhotosCard(props) {
 
   let event_id = JSON.parse(sessionStorage.getItem("publication_data")).id;
 
+
  
 
   const coverPhoto = async (props) => {
@@ -54,7 +55,7 @@ export default function PhotosCard(props) {
     })
       .then((response) => {
         console.log("Imagen eliminada");
-        window.location.href = '/updatePhotoGallery'
+        window.location.href = '/editEvent'
       })
   }
 
@@ -78,7 +79,7 @@ export default function PhotosCard(props) {
       const response = await axios.post('organizer/event/cover/pic',
         JSON.stringify({
          "id": props.id, 
-         "event_id":event_id
+         "event_id":props.event_id
 
         }),
         {

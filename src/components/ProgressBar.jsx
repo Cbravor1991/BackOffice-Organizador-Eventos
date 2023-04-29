@@ -11,11 +11,13 @@ const ProgressBar = ({ file, setFile }) => {
     if (url) {
       setFile(null);
       let photos = JSON.parse(window.localStorage.getItem("photos_user"));
-      console.log(url)
+      const photo = {
+        "link": url
+      }
       
      
-      photos.push(url);
-      console.log(photos)
+      photos.push(photo);
+      console.log(typeof photos)
       window.localStorage.setItem("photos_user",  JSON.stringify(photos));
 
   

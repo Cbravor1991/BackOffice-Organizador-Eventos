@@ -88,6 +88,7 @@ export default function ShowsEvents() {
     window.localStorage.setItem("preguntas", vaciar);
     window.localStorage.setItem('cache_datos', vaciar);
     window.localStorage.setItem("photos_user",  JSON.stringify([]));
+    window.localStorage.setItem('coverPic', '')
 
 
     
