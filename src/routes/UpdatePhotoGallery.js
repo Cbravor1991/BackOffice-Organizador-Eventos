@@ -93,9 +93,9 @@ export default function UpdatePhotoGallery() {
 
   const saveImages = async () => {
 
-    let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+    let photos = JSON.parse(window.localStorage.getItem("cache_images"));
     photos.push(url);
-    window.localStorage.setItem("photos_user", JSON.stringify(photos));
+    window.localStorage.setItem("cache_images", JSON.stringify(photos));
 
     let id_event = window.localStorage.getItem("event_id");
     try {

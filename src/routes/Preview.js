@@ -13,9 +13,8 @@ import { Grid } from '@mui/material';
 
 const Preview = () => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
-  let event = JSON.parse(window.localStorage.getItem("cache_event")); // incluye las images
-  let cover = JSON.parse(window.localStorage.getItem("cache_cover"));
-  // let id_event = window.localStorage.getItem("event_id"); // ver donde se setea
+  let event = JSON.parse(window.localStorage.getItem("cache_event"));
+  let cover = window.localStorage.getItem("cache_cover");
   const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
 
   useEffect(() => {
@@ -24,38 +23,24 @@ const Preview = () => {
     setEditorState(EditorState.createWithContent(contentState));
   }, []);
 
-  // const saveImages = async () => {
-
-  //   try {
-  //     api.post('/organizer/event/images',
-  //       JSON.stringify({
-  //         'event_id': id_event,
-  //         'link': cover
-  //       }),
-  //     )
-  //       .then((response) => {
-  //         console.log("Imágen cargada");
-  //         setUrl(window.localStorage.getItem(''));
-  //         window.location.href = "/showEvents"
-  //       })
-  //   } catch (err) { console.log(err) }
-  // }
-
   const handleSubmitEvent = async (e) => {
     e.preventDefault();
-    // save event junto con las images -> agregar imagenes al json de event
     await api
-      .post('organizer/event', JSON.stringify(event))
+      .post('organizer/event', event)
       .then(async(response) => {
-        await api.post(
+        api.post(
           'organizer/event/cover/pic',
           JSON.stringify({
-            "link": window.localStorage.getItem('coverPic'), 
+            "link": cover, 
             "event_id": response.data.id
           })
         );
       })
-    
+      .then(() => {
+        window.localStorage.setItem("cache_event", null);
+        window.localStorage.setItem("cache_cover", null);      
+        window.location.href = '/eventList';
+      })
   }
 
 
@@ -78,7 +63,9 @@ const Preview = () => {
         }}>
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
-            <img src={cover} alt="preview" height="180" style={{ marginTop: '20px', marginLeft: '120px', display: 'flex', justifyContent: 'center' }} />
+            <Grid style={{ display: 'flex', justifyContent: 'center' }}>
+              <img src={cover} alt="preview" height="180"/>
+            </Grid>
             {/* imagen de portada y map para el resto de imagenes */}
             <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
               {event.category}
@@ -111,7 +98,7 @@ const Preview = () => {
             {event.agenda.map(function (item, key) {
               return (
                 <div>
-                  <Card sx={{ border: '0.5px solid grey', borderRadius: 2, backgroundColor: '#fff', color: 'black', }}>
+                  <Card sx={{ border: '0.5px grey', borderRadius: 2, backgroundColor: '#fff', color: 'black', }}>
                     <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'left' }}>
                       {item.time} : {item.description}
                     </Typography>
@@ -127,7 +114,7 @@ const Preview = () => {
             {event.faqs.map(function (item, key) {
               return (
                 <div>
-                  <Card sx={{ border: '0.5px solid grey', borderRadius: 2, backgroundColor: '#fff', color: 'black' }}>
+                  <Card sx={{ border: '0.5px grey', borderRadius: 2, backgroundColor: '#fff', color: 'black' }}>
                     <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 800, mb: 1, display: 'flex', justifyContent: 'left' }}>
                       {item.question}
                     </Typography>
