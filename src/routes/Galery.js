@@ -27,9 +27,9 @@ function Galery() {
 
     const handleEvent = (e) => {
 
-      let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+      let photos = JSON.parse(window.localStorage.getItem("cache_images"));
           photos= [];
-          window.localStorage.setItem("photos_user", JSON.stringify(photos));
+          window.localStorage.setItem("cache_images", JSON.stringify(photos));
           window.location.href = '/updatePhotoGallery';
 
 

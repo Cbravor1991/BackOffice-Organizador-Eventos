@@ -42,7 +42,6 @@ const theme = createTheme({
 
 const CreateEventForm = () => {
   let stored_event = JSON.parse(window.localStorage.getItem('cache_event'));
-  console.log(stored_event)
 
   const [error, setError] = useState();
   const [title, setTitle] = useState(stored_event ? stored_event.title : '');
@@ -158,7 +157,7 @@ const CreateEventForm = () => {
     e.preventDefault();
     const formData = getValues();
     let images = JSON.parse(window.localStorage.getItem("cache_images"));
-  
+    console.log("images: ", images)
     if (requiredFieldsMissing()) {
       swal.fire({
         title: "Dejaste campos sin completar",
@@ -185,9 +184,7 @@ const CreateEventForm = () => {
       "authorizers": formData.mails,
       "images": images
     };
-    console.log(JSON.stringify(event))
     window.localStorage.setItem("cache_event", JSON.stringify(event));
-    // set photos_user se hace en gallery update -> evitar que se guarden en el back todavia y mover esas calls a la preview
     window.location.href = '/preview'
   }
 

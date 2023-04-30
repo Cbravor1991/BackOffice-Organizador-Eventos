@@ -10,16 +10,16 @@ const ProgressBar = ({ file, setFile,loadImages }) => {
   useEffect(() => {
     if (url) {
       setFile(null);
-      let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+      let photos = JSON.parse(window.localStorage.getItem("cache_images"));
       const photo = {
         "link": url
       }
 
       photos.push(photo);
       console.log(typeof photos)
-      window.localStorage.setItem("photos_user", JSON.stringify(photos));
+      window.localStorage.setItem("cache_images", JSON.stringify(photos));
 
-      window.localStorage.setItem("photos_user", JSON.stringify(photos));
+      window.localStorage.setItem("cache_images", JSON.stringify(photos));
 
       let props = sessionStorage.getItem("publication_data")
 

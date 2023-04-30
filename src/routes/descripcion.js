@@ -81,7 +81,7 @@ const CreateEventForm = () => {
   let photos = [];
 
 
-  window.localStorage.setItem("photos_user", JSON.stringify(photos));
+  window.localStorage.setItem("cache_images", JSON.stringify(photos));
 
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
