@@ -12,103 +12,50 @@ import { EditorState, convertFromRaw } from 'draft-js';
 import { Grid } from '@mui/material';
 
 const Preview = () => {
-  const [error, setError] = useState(false);
-  const [errMsg, setErrMsg] = useState('');
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
-
-  let props = JSON.parse(window.localStorage.getItem("event"));
-
-  console.log(props);
-
-  const stringDate = new Date(props.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-
-  const [url, setUrl] = useState('');
-  const [eventId, setEventId] = useState(null);
-
-  let token_user = window.localStorage.getItem("token");
+  let event = JSON.parse(window.localStorage.getItem("cache_event")); // incluye las images
+  let cover = JSON.parse(window.localStorage.getItem("cache_cover"));
+  // let id_event = window.localStorage.getItem("event_id"); // ver donde se setea
+  const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
 
   useEffect(() => {
-    console.log(props.description);
-    const rawContent = JSON.parse(props.description);
-    console.log(rawContent);
+    const rawContent = JSON.parse(event.description);
     const contentState = convertFromRaw(rawContent);
-    console.log(contentState);
     setEditorState(EditorState.createWithContent(contentState));
-    console.log(editorState);
-
-    setUrl(window.localStorage.getItem('url'));
-    console.log(url);
   }, []);
 
-  const saveImages = async () => {
+  // const saveImages = async () => {
 
-    let photos = JSON.parse(window.localStorage.getItem("photos_user"));
-    photos.push(url);
-    window.localStorage.setItem("photos_user", JSON.stringify(photos));
-
-    let id_event = window.localStorage.getItem("event_id");
-    console.log('aca')
-    console.log(url);
-    console.log(id_event);
-
-    try {
-      const response = api.post('/organizer/event/images',
-        JSON.stringify({
-          'event_id': id_event,
-          'link': url
-        }),
-      )
-        .then((response) => {
-          console.log("Imágen cargada");
-          setUrl(window.localStorage.getItem(''));
-          window.location.href = "/showEvents"
-        })
-    } catch (err) { console.log(err) }
-  }
+  //   try {
+  //     api.post('/organizer/event/images',
+  //       JSON.stringify({
+  //         'event_id': id_event,
+  //         'link': cover
+  //       }),
+  //     )
+  //       .then((response) => {
+  //         console.log("Imágen cargada");
+  //         setUrl(window.localStorage.getItem(''));
+  //         window.location.href = "/showEvents"
+  //       })
+  //   } catch (err) { console.log(err) }
+  // }
 
   const handleSubmitEvent = async (e) => {
     e.preventDefault();
-    let photos = [];
-
-    window.localStorage.setItem("photos_user", JSON.stringify(photos));
-
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-    try {
-      const response = await api.post('organizer/event',
-        JSON.stringify(props),
-      ).then((response) => {
-        window.localStorage.setItem("event_id", response.data.id);
-        setEventId(response.data.id);
-        saveImages();
-        console.log(response.status);
+    // save event junto con las images -> agregar imagenes al json de event
+    await api
+      .post('organizer/event', JSON.stringify(event))
+      .then(async(response) => {
+        await api.post(
+          'organizer/event/cover/pic',
+          JSON.stringify({
+            "link": window.localStorage.getItem('coverPic'), 
+            "event_id": response.data.id
+          })
+        );
       })
-    } catch (err) {
-      setError(true)
-      if (!err?.response) {
-        setErrMsg('El servidor no responde');
-      } else if (err.response?.status === 401) {
-        setErrMsg('Contraseña o usuario incorrecto');
-      } else if (err.response?.status === 402) {
-        setErrMsg('No tiene autorización');
-      } else {
-        token_user = window.localStorage.getItem("token");
-      }
-    }
+    
   }
 
 
@@ -131,22 +78,22 @@ const Preview = () => {
         }}>
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
-            <img src={url} alt="preview" height="180" style={{ marginTop: '20px', marginLeft: '120px', display: 'flex', justifyContent: 'center' }} />
-
+            <img src={cover} alt="preview" height="180" style={{ marginTop: '20px', marginLeft: '120px', display: 'flex', justifyContent: 'center' }} />
+            {/* imagen de portada y map para el resto de imagenes */}
             <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-              {props.category}
+              {event.category}
             </Typography>
             <Typography variant="h5" component="div" sx={{ fontSize: 20, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-              {props.title}
+              {event.title}
             </Typography>
             <Typography color="textSecondary" sx={{ fontSize: 14, fontWeight: 400, color: '##1286f7', mb: 1, display: 'flex', justifyContent: 'center' }}>
               {stringDate}
             </Typography>
             <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-              {props.ubication.direction}
+              {event.ubication.direction}
             </Typography>
             <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-              Capacidad: {props.capacity}
+              Capacidad: {event.capacity}
             </Typography>
 
             <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
@@ -161,7 +108,7 @@ const Preview = () => {
               Agenda
             </Typography>
 
-            {props.agenda.map(function (item, key) {
+            {event.agenda.map(function (item, key) {
               return (
                 <div>
                   <Card sx={{ border: '0.5px solid grey', borderRadius: 2, backgroundColor: '#fff', color: 'black', }}>
@@ -177,7 +124,7 @@ const Preview = () => {
               Preguntas frecuentes
             </Typography>
 
-            {props.faqs.map(function (item, key) {
+            {event.faqs.map(function (item, key) {
               return (
                 <div>
                   <Card sx={{ border: '0.5px solid grey', borderRadius: 2, backgroundColor: '#fff', color: 'black' }}>

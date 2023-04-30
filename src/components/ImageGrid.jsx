@@ -10,15 +10,12 @@ import React from 'react';
 const ImageGrid = ({ setCover, cover }) => {
   const changeCover = async (link) => {
     setCover(link)
-    window.localStorage.setItem('coverPic', link)
+    window.localStorage.setItem('cache_cover', link)
   }
 
-  let photos;
-  if (!window.localStorage.getItem("photos_user")) {
-    photos = ["hola"]
+  let photos = JSON.parse(window.localStorage.getItem("cache_images"));
+  if (!photos) {
     return;
-  } else {
-    photos = JSON.parse(window.localStorage.getItem("photos_user"));
   }
 
   return (

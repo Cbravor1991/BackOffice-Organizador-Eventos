@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from 'react';
-import { api } from '../api/axios';
 import { Select, MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -42,24 +41,25 @@ const theme = createTheme({
 
 
 const CreateEventForm = () => {
-  let datos = JSON.parse(window.localStorage.getItem('cache_datos'));
+  let stored_event = JSON.parse(window.localStorage.getItem('cache_event'));
+  console.log(stored_event)
 
   const [error, setError] = useState();
-  const [title, setTitle] = useState(datos === '' ? '' : datos.titulo);
-  const [category, setCategory] = useState(datos === '' ? '' : datos.categoria);
-  const [date, setDate] = useState(datos === '' ? '' : datos.fecha);
-  const [description, setDescription] = useState(datos === '' ? '' : datos.descripcion);
-  const [capacity, setCapacity] = useState(datos === '' ? '' : datos.tickets);
-  const [direction, setDirection] = useState(datos ? datos.direccion : '');
-  const [latitude, setLatitude] = useState(-34.599722222222);
-  const [longitude, setLongitude] = useState(-58.381944444444);
+  const [title, setTitle] = useState(stored_event ? stored_event.title : '');
+  const [category, setCategory] = useState(stored_event ? stored_event.category : '');
+  const [date, setDate] = useState(stored_event ? stored_event.date : '');
+  const [description, setDescription] = useState(stored_event ? stored_event.description : '');
+  const [capacity, setCapacity] = useState(stored_event ? stored_event.capacity : '');
+  const [direction, setDirection] = useState(stored_event ? stored_event.ubication.direction : '');
+  const [latitude, setLatitude] = useState(stored_event ? stored_event.ubication.latitude : -34.599722222222);
+  const [longitude, setLongitude] = useState(stored_event ? stored_event.ubication.longitude : -58.381944444444);
   
   const { register, control, formState: { errors }, getValues, setValue } = useForm({
     defaultValues:
     {
-      sections: [{ time: "", description: "" }],
-      mails: [{ email: "" }],
-      faqs: [{ question: "", response: "" }]
+      sections: stored_event ? stored_event.agenda : [{ time: "", description: "" }],
+      mails: stored_event ? stored_event.authorizers : [{ email: "" }],
+      faqs: stored_event ? stored_event.faqs : [{ question: "", response: "" }]
     }
   });
   const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
@@ -69,12 +69,10 @@ const CreateEventForm = () => {
   const mapContainer = useRef(null);
   const [zoom, setZoom] = useState(7);
 
-  const [editorState, setEditorState] = useState(datos === '' || (datos !== '' && datos.descripcion === '') ? () => EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(datos.descripcion))));
+  const [editorState, setEditorState] = useState(description === '' ? () => EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(description))));
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
-
- 
 
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
@@ -107,8 +105,6 @@ const CreateEventForm = () => {
     });
 
     map.addControl(geocoder);
-
-    map.addControl(new mapboxgl.NavigationControl({ showZoom: true }));
 
     geocoder.on('result', function (event) {
       let coordinates = event.result.center;
@@ -161,7 +157,7 @@ const CreateEventForm = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     const formData = getValues();
-    let photos = JSON.parse(window.localStorage.getItem("photos_user"));
+    let images = JSON.parse(window.localStorage.getItem("cache_images"));
   
     if (requiredFieldsMissing()) {
       swal.fire({
@@ -187,29 +183,12 @@ const CreateEventForm = () => {
       "agenda": formData.sections,
       "faqs": formData.faqs,
       "authorizers": formData.mails,
-      "images": photos
+      "images": images
     };
-
-    await api
-      .post('organizer/event', JSON.stringify(event))
-      .then(async( response) => {
-        window.localStorage.setItem("photos_user", JSON.stringify([]));
-        console.log(response.data)
-  
-        try {
-          await api.post(
-            'organizer/event/cover/pic',
-            JSON.stringify({
-              "link": window.localStorage.getItem('coverPic'), 
-              "event_id": response.data.id
-            }),
-          );
-          window.location.href = '/showEvents'
-        } catch (err) {
-          console.log('fijate hiciste algo mal')
-        }
-      }
-      )
+    console.log(JSON.stringify(event))
+    window.localStorage.setItem("cache_event", JSON.stringify(event));
+    // set photos_user se hace en gallery update -> evitar que se guarden en el back todavia y mover esas calls a la preview
+    window.location.href = '/preview'
   }
 
   return (
