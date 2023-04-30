@@ -96,7 +96,7 @@ const CreateEventForm = () => {
       mapboxgl: mapboxgl,
       marker: {
         color: 'red',
-        offset: [340, -300]
+        offset: [235, -350]
       },
       countries: 'ar',
       placeholder: 'Ingrese una dirección',
