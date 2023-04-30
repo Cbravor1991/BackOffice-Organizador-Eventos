@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import { api } from '../api/axios';
+import Typography from '@mui/material/Typography';
 
 export default function PhotosCard(props) {
 
@@ -19,7 +20,7 @@ export default function PhotosCard(props) {
     })
       .then((response) => {
         console.log("Imagen eliminada");
-        window.location.href = '/editEvent'
+        props.loadImages()
       })
   }
 
@@ -28,7 +29,7 @@ export default function PhotosCard(props) {
     try {
       const response = await api.post('organizer/event/cover/pic',
         JSON.stringify({
-          "id": props.id,
+          "link": props.link, 
           "event_id": props.event_id
         }),
       );
@@ -41,6 +42,19 @@ export default function PhotosCard(props) {
 
   return (
     <Card sx={{ maxWidth: 345 }}>
+           {props.link === props.cover ? (
+      <CardContent>
+        <Typography variant="h6" component="div" sx={{marginLeft: '100px', color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
+          Foto de portada
+        </Typography>
+      </CardContent>
+    ) : (
+      <CardContent>
+        <Typography variant="h6" component="div" sx={{marginLeft: '100px', color: 'white', fontSize: 16, fontWeight: 700, mb: 2 }}>
+          ''
+        </Typography>
+      </CardContent>
+    )}
       <CardMedia
 
         sx={{ height: 200 }}

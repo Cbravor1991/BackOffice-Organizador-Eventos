@@ -3,7 +3,7 @@ import useStorage from '../hooks/useStorage';
 import { api } from '../api/axios';
 
 
-const ProgressBar = ({ file, setFile }) => {
+const ProgressBar = ({ file, setFile,loadImages }) => {
 
   const { url, progress } = useStorage(file, setFile);
 
@@ -33,7 +33,7 @@ const ProgressBar = ({ file, setFile }) => {
           }),
         )
           .then((response) => {
-            window.location.href = '/editEvent';
+            loadImages();
           })
       } catch (err) { console.log(err) }
     }
