@@ -10,6 +10,10 @@ import { api } from '../api/axios';
 import Navbar from '../components/NavBar';
 import { EditorState, convertFromRaw } from 'draft-js';
 import { Grid } from '@mui/material';
+import AgendaDisplay from '../components/AgendaDisplay';
+import FaqsDisplay from '../components/FaqsDisplay';
+import Paper from '@mui/material/Paper';
+import BasicInfoDisplay from '../components/BasicInfoDisplay';
 
 const Preview = () => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
@@ -47,86 +51,54 @@ const Preview = () => {
   return (
 
     <Box sx={{ mb: 4, justifyContent: 'center' }}>
+    
       <Navbar />
 
       <Typography variant="h5" component="div" sx={{ marginTop: '10px', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
-        Crear evento
-      </Typography>
-      <Typography variant="h6" component="div" sx={{ fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
         Confirme los datos del evento
       </Typography>
 
       <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-        <Card variant="outlined" sx={{
-          border: '2px solid black', borderRadius: 2, backgroundColor: '#fff', color: 'black',
-          justifyContent: 'center', width: '700px', height: '1000px'
-        }}>
+        <Paper elevation={5} sx={{width: '600px', background: '#fff'}}>
+
+          <Typography variant="h5" component="div" sx={{ padding: 2, fontSize: 30, fontWeight: 70, display: 'flex', justifyContent: 'center' }}>
+            {event.title}
+          </Typography>
+
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
             <Grid style={{ display: 'flex', justifyContent: 'center' }}>
               <img src={cover} alt="preview" height="180"/>
             </Grid>
-            {/* imagen de portada y map para el resto de imagenes */}
-            <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-              {event.category}
-            </Typography>
-            <Typography variant="h5" component="div" sx={{ fontSize: 20, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-              {event.title}
-            </Typography>
-            <Typography color="textSecondary" sx={{ fontSize: 14, fontWeight: 400, color: '##1286f7', mb: 1, display: 'flex', justifyContent: 'center' }}>
-              {stringDate}
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-              {event.ubication.direction}
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-              Capacidad: {event.capacity}
+
+            <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
+              Información básica
             </Typography>
 
-            <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+            <BasicInfoDisplay event={event} stringDate={stringDate}/>
+
+            <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
               Descripción
             </Typography>
 
-            <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'center' }}>
-              {editorState.getCurrentContent().getPlainText()}
-            </Typography>
+            <Paper elevation={0}>
+              <Typography variant="body2" sx={{ padding:'10px', fontSize: 14, fontWeight: 400, display: 'flex', justifyContent: 'center' }}>
+                {editorState.getCurrentContent().getPlainText()}
+              </Typography>
+            </Paper>
 
-            <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+            <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
               Agenda
             </Typography>
 
-            {event.agenda.map(function (item, key) {
-              return (
-                <div>
-                  <Card sx={{ border: '0.5px grey', borderRadius: 2, backgroundColor: '#fff', color: 'black', }}>
-                    <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'left' }}>
-                      {item.time} : {item.description}
-                    </Typography>
-                  </Card>
-                </div>
-              )
-            })}
+            <AgendaDisplay agenda={event.agenda} />
 
-            <Typography variant="h6" component="div" sx={{ marginTop: '20px', fontSize: 14, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
+            <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
               Preguntas frecuentes
             </Typography>
 
-            {event.faqs.map(function (item, key) {
-              return (
-                <div>
-                  <Card sx={{ border: '0.5px grey', borderRadius: 2, backgroundColor: '#fff', color: 'black' }}>
-                    <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 800, mb: 1, display: 'flex', justifyContent: 'left' }}>
-                      {item.question}
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: 14, fontWeight: 400, mb: 1, display: 'flex', justifyContent: 'left' }}>
-                      {item.response}
-                    </Typography>
-                  </Card>
-                </div>
-
-              )
-            })}
-
+            <FaqsDisplay faqs={event.faqs} />
+            
           </CardContent>
 
           <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
@@ -143,7 +115,7 @@ const Preview = () => {
               Volver
             </Button>
           </CardActions>
-        </Card>
+        </Paper>
       </Grid>
 
     </Box>
