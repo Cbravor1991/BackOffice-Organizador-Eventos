@@ -32,6 +32,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
@@ -42,9 +43,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+
 export default function ShowsEvents() {
 
   const [publications, setPublications] = useState([]);
+  const [event, setEvent] = useState({});
+
+  let token_user = window.localStorage.getItem("token");
+
 
   const loadPublications = () => {
     api.get('/organizer/events')
@@ -70,16 +76,51 @@ export default function ShowsEvents() {
   const [searchText, setSearchText] = React.useState('');
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const handleViewClick = (event, row) => {
-    window.localStorage.setItem("cache_event", JSON.stringify(event));
-    window.location.href = "/preview";
+
+  const loadEvent = (id_event) => {
+  
+     try {   
+      var options = {
+        method: 'GET',
+           url:`/organizer/event?event_id=${id_event}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token_user
+            },
+        };
+  
+      api.request(options)
+        //.then((response) => response.json())
+        .then((response) => {
+            console.log(response);
+            if (response.length === 0) {
+                console.log("No hay evento")
+            }
+            //setEvent(response.data);
+            window.localStorage.setItem("cache_event", JSON.stringify(response.data));
+         })
+                
+       } catch (error) {
+            console.error(error);
+        }
+
+    }
+
+
+  const handleViewClick = (e, row) => {
+    loadEvent(row.id);
+    let result = JSON.parse(window.localStorage.getItem("cache_event"));
+    console.log(result);
+    window.location.href = "/view";
   };
 
+
   const update = async (props) => {
-    window.localStorage.setItem("cache_event", JSON.stringify(props));
+    loadEvent(props.id);
     console.log(props)
     window.location.href = "/editEvent"
   }
+
 
   const deleteEvent = async (props) => {
     swal.fire({
@@ -116,13 +157,16 @@ export default function ShowsEvents() {
     setSearchText(event.target.value);
   };
 
+
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(event.target.value);
   };
 
+
   const filteredData = publications.filter((row) =>
     row.title.toLowerCase().includes(searchText.toLowerCase())
   );
+
 
   return (
       <div>
@@ -181,7 +225,7 @@ export default function ShowsEvents() {
                         {row.direction}
                       </StyledTableCell>
                       <StyledTableCell align="right">
-                        <Button aria-label="ver" onClick={(event) => handleViewClick(event, row)} >
+                        <Button aria-label="ver" onClick={(e) => handleViewClick(e, row)} >
                           VER
                         </Button>
                         <Button aria-label="editar" onClick={() => { update(row) }}>

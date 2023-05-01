@@ -47,7 +47,7 @@ const theme = createTheme({
 
 const EditEvent = () => {
 
-  let props = sessionStorage.getItem("publication_data")
+  let props = sessionStorage.getItem("cache_event")
 
   props = (JSON.parse(props))
   console.log(props)

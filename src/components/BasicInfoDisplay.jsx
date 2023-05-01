@@ -12,7 +12,7 @@ function basicInfoData(event, stringDate) {
     },
     {
       'key': 'Dirección',
-      'value': event.ubication.direction
+      'value': event.direction
     },
     {
       'key': 'Capacidad',
