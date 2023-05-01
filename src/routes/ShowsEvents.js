@@ -54,7 +54,6 @@ export default function ShowsEvents() {
       .catch((error) => {
         console.log(error);
       });
-    console.log(publications)
   }
 
   useEffect(() => {
@@ -72,13 +71,14 @@ export default function ShowsEvents() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleViewClick = (event, row) => {
-    sessionStorage.setItem("cache_event", JSON.stringify(event));
+    window.localStorage.setItem("cache_event", JSON.stringify(event));
     window.location.href = "/preview";
   };
 
   const update = async (props) => {
-    sessionStorage.setItem("publication_data", JSON.stringify(props));
-    window.location.href = "/editEvent/"
+    window.localStorage.setItem("cache_event", JSON.stringify(props));
+    console.log(props)
+    window.location.href = "/editEvent"
   }
 
   const deleteEvent = async (props) => {
@@ -103,7 +103,6 @@ export default function ShowsEvents() {
         };
 
         api.request(options).then(function (response) {
-          console.log(response.data[0].link);
           window.location.href = "/showEvents"
         }).catch(function (error) {
           console.error(error);
@@ -161,7 +160,7 @@ export default function ShowsEvents() {
                 <StyledTableCell align="right">Categoria</StyledTableCell>
                 <StyledTableCell align="right">Fecha</StyledTableCell>
                 <StyledTableCell align="right">Direccion</StyledTableCell>
-                <StyledTableCell align="right">Opciones</StyledTableCell>
+                <StyledTableCell align="center">Opciones</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -180,57 +179,13 @@ export default function ShowsEvents() {
                       {row.direction}
                     </StyledTableCell>
                     <StyledTableCell align="right">
-                      <Button
-                        sx={{
-                          backgroundColor: '#1286f7',
-                          border: 'none',
-                          color: 'white',
-                          fontSize: '16px',
-                          fontWeight: 'bold',
-                          padding: '10px 20px',
-                          borderRadius: '30px',
-                          marginTop: '20px',
-                          cursor: 'pointer',
-                          transition: 'background-color 0.2s ease-in-out'
-                        }}
-                        aria-label="ver"
-                        onClick={(event) => handleViewClick(event, row)}
-                      >
+                      <Button aria-label="ver" onClick={(event) => handleViewClick(event, row)} >
                         VER
                       </Button>
-                      <Button
-                        sx={{
-                          backgroundColor: '#1286f7',
-                          border: 'none',
-                          color: 'white',
-                          fontSize: '16px',
-                          fontWeight: 'bold',
-                          padding: '10px 20px',
-                          borderRadius: '30px',
-                          marginTop: '20px',
-                          cursor: 'pointer',
-                          transition: 'background-color 0.2s ease-in-out'
-                        }}
-                        aria-label="editar"
-                        onClick={() => { update(row) }}
-                      >
+                      <Button aria-label="editar" onClick={() => { update(row) }}>
                         EDITAR
                       </Button>
-                      <IconButton sx={{
-                        backgroundColor: 'red',
-                        border: 'none',
-                        color: 'white',
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        padding: '10px 20px',
-                        borderRadius: '30px',
-                        marginTop: '20px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s ease-in-out'
-                      }}
-                        aria-label="eliminar"
-                        onClick={() => { deleteEvent(row) }}
-                      >
+                      <IconButton aria-label="eliminar" onClick={() => { deleteEvent(row) }}>
                         <DeleteIcon />
                       </IconButton>
                     </StyledTableCell>
@@ -267,10 +222,5 @@ export default function ShowsEvents() {
           </Table>
         </TableContainer>
       </div>
-
-
-
-
-
   );
 }

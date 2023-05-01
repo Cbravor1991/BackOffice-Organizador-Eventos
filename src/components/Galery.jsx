@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import ImageGrid from '../components/ImageGrid';
-import '../styles/index.css';
 import { Button, Typography } from '@mui/material';
 import ProgressBar from './ProgressBar';
-import '../routes/swal.css';
 
 function Galery() {
   const [file, setFile] = useState(null);
@@ -22,8 +20,6 @@ function Galery() {
       setFile(null);
       setError('Selecciona u archivo que sea una imagen (png or jpg)');
     }
-    
-    
   };
 
   return (
@@ -33,16 +29,7 @@ function Galery() {
           Selecciona tus fotos para cargar a la galeria
         </Typography>
 
-        <Button sx={{
-          backgroundColor: '#1286f7',
-          border: 'none',
-          color: 'white',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          borderRadius: '30px',
-          cursor: 'pointer',
-          transition: 'background-color 0.2s ease-in-out'
-        }} variant="contained" component="label">
+        <Button sx={{ borderRadius: '30px' }} variant="outlined" component="label">
           Añadir foto
           <input type="file" onChange={handleChange} />
         </Button>

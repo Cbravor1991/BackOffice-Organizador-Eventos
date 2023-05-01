@@ -153,6 +153,11 @@ const CreateEventForm = () => {
     return title === '' || category === '' || date === '' || description === '' || direction === '';
   }
 
+  const handleCancel = async (e) => {
+    window.localStorage.setItem("cache_event", null);
+    window.location.href = '/eventList'
+  }
+
   const handleCreate = async (e) => {
     e.preventDefault();
     const formData = getValues();
@@ -264,7 +269,7 @@ const CreateEventForm = () => {
                 <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
                   Descripción
                 </Typography>
-                <Box sx={{ border: '1px solid black', height: '300px', overflow: 'auto', borderRadius: '10px' }}>
+                <Box sx={{ border: '0.5px solid black', height: '300px', overflow: 'auto', borderRadius: '10px' }}>
                   <Editor
                     editorState={editorState}
                     onEditorStateChange={handleEditorChange}
@@ -415,15 +420,30 @@ const CreateEventForm = () => {
               </Grid>
 
               <Box sx={{ width: '100%', marginTop: '200px' }}>
-                 <Galery  />
+                <Galery  />
               </Box>
-
             </Grid>
 
 
-            <Grid sx={{ width: '100%' }}>
-
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+            <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+              <Grid item xs={2}>
+                <Button variant="contained" onClick={handleCancel} sx={{
+                  backgroundColor: '#1286f7',
+                  border: 'none',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  padding: '10px 20px',
+                  borderRadius: '30px',
+                  width: '200px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s ease-in-out'
+                }}>
+                  &#10094; Volver
+                </Button>
+              </Grid>
+              
+              <Grid item xs={2}>
                 <Button variant="contained" onClick={handleCreate} sx={{
                   backgroundColor: '#1286f7',
                   border: 'none',
@@ -433,13 +453,12 @@ const CreateEventForm = () => {
                   padding: '10px 20px',
                   borderRadius: '30px',
                   width: '200px',
-                  height: '60px',
-                  marginTop: '100px',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s ease-in-out'
-                }}>Crear</Button>
-              </Box>
-
+                }}>
+                  Continuar &#10095;
+                </Button>
+              </Grid>
             </Grid>
 
 

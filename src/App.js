@@ -30,7 +30,7 @@ export default function App() {
                 <Route path="loadEvent" element={<CreateEventForm />} />
                 <Route path="eventList" element={<ShowsEvents />} />
                 <Route path="showEvents" element={<ShowsEvents />} />
-                <Route path="editEvent" element={<EditEvent />} />
+                <Route path="editEvent" element={<CreateEventForm />} />
                 <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
                 <Route path="ver" element={<Formulario />} />  
                 <Route path="preview" element={<Preview />} />  
