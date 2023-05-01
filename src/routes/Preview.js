@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
+import { Backdrop, CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { api } from '../api/axios';
 import Navbar from '../components/NavBar';
@@ -14,12 +14,14 @@ import AgendaDisplay from '../components/AgendaDisplay';
 import FaqsDisplay from '../components/FaqsDisplay';
 import Paper from '@mui/material/Paper';
 import BasicInfoDisplay from '../components/BasicInfoDisplay';
+import ImageDisplay from '../components/ImageDisplay';
 
 const Preview = () => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   let event = JSON.parse(window.localStorage.getItem("cache_event"));
   let cover = window.localStorage.getItem("cache_cover");
   const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     const rawContent = JSON.parse(event.description);
@@ -28,6 +30,7 @@ const Preview = () => {
   }, []);
 
   const handleSubmitEvent = async (e) => {
+    setLoading(true);
     e.preventDefault();
     await api
       .post('organizer/event', event)
@@ -68,7 +71,9 @@ const Preview = () => {
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
             <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-              <img src={cover} alt="preview" height="180"/>
+              <ImageDisplay images={event.images} />
+
+              {/* <img src={cover} alt="preview" height="180"/> */}
             </Grid>
 
             <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
@@ -98,7 +103,7 @@ const Preview = () => {
             </Typography>
 
             <FaqsDisplay faqs={event.faqs} />
-            
+
           </CardContent>
 
           <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
@@ -108,6 +113,14 @@ const Preview = () => {
             }}>
               Aceptar
             </Button>
+            <Backdrop
+              sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={loading}
+              onClick={() => setLoading(false)}
+              >
+              <CircularProgress color="inherit" />
+            </Backdrop>
+
             <Button onClick={() => { window.history.back() }} sx={{
               fontFamily: "'Circular Std', Arial, sans-serif", justifyContent: 'center',
               fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' }
