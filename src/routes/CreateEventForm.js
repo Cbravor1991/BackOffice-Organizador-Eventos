@@ -157,7 +157,7 @@ const CreateEventForm = () => {
     e.preventDefault();
     const formData = getValues();
     let images = JSON.parse(window.localStorage.getItem("cache_images"));
-    console.log("images: ", images)
+
     if (requiredFieldsMissing()) {
       swal.fire({
         title: "Dejaste campos sin completar",
