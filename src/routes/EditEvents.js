@@ -65,7 +65,7 @@ const EditEvent = () => {
 
 
   const [capacity, setCapacity] = useState(props.capacity);
-  const [vacancies, setVacancies] = useState('');
+  const [vacancies, setVacancies] = useState(props.capacity);
   const [direction, setDirection] = useState(props.direction);
   const [latitude, setLatitude] = useState(props.latitude);
   const [longitude, setLongitude] = useState(props.longitude);
@@ -74,25 +74,25 @@ const EditEvent = () => {
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(description === '' ? () => EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(description))));
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [zoom, setZoom] = useState(7);
   const [faqs, setFaqs] = useState(null);
   //const [agenda, setAgenta] = useState(props.agenda);
   const [preguntas, setPreguntas] = useState([]);
-  /* const { register, control, formState: { errors }, getValues } = useForm({ defaultValues: 
+  const { register, control, formState: { errors }, getValues, setValue } = useForm({ defaultValues: 
      { 
        //sections: [{ time: "", description: "" }],
        //mails: [{ email: "" }],
-       sections: props.agenda,
-       mails: props.authorizers,
-       faqs: props.faqs
+       sections: [],
+       mails: [],
+       faqs: []
      }
     });
-    const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
-    const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
-    const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });*/
+  const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
+  const { fields: fieldsMails, append: appendMail, remove: removeMail } = useFieldArray({ control, name: "mails" });
+  const { fields: fieldsFaqs, append: appendFaq, remove: removeFaq } = useFieldArray({ control, name: "faqs" });
 
 
   let token_user = window.localStorage.getItem("token");
@@ -102,17 +102,14 @@ const EditEvent = () => {
 
 
 
-  useEffect(() => {
+ /* useEffect(() => {
+    
+    loadEvent();
+    //const rawContent = JSON.parse(props.description);
+    //const contentState = convertFromRaw(rawContent);
+    //setEditorState(EditorState.createWithContent(contentState));
 
-    const rawContent = JSON.parse(props.description);
-    const contentState = convertFromRaw(rawContent);
-    setEditorState(EditorState.createWithContent(contentState));
-
-    /*setPreguntas(analizar);
-    console.log(preguntas);*/
-
-    // loadFaqs(); 
-  }, []);
+  }, []); */
 
 
   useEffect(() => {
@@ -128,7 +125,7 @@ const EditEvent = () => {
       mapboxgl: mapboxgl,
       marker: {
         color: 'red',
-        offset: [340, -500]
+        offset: [235, -350]
       },
       countries: 'ar',
       placeholder: 'Ingrese una dirección',
@@ -141,7 +138,6 @@ const EditEvent = () => {
     map.addControl(new mapboxgl.NavigationControl({ showZoom: true }));
 
     geocoder.on('result', function (event) {
-      //let result = JSON.parse(event.result);
       let coordinates = event.result.center;
       setLongitude(coordinates[0]);
       setLatitude(coordinates[1]);
@@ -313,10 +309,13 @@ const EditEvent = () => {
           "date": date,
           "description": description,
           "direction": direction,
-          "latitude": 0,
-          "longitude": 0,
+          "latitude": latitude,
+          "longitude": longitude,
           "capacity": capacity,
-          "vacancies": 0,
+          "agenda" : [],
+          "faqs" : [],
+          "images" : [],
+          "vacancies": vacancies,
         }
       };
 
@@ -347,6 +346,38 @@ const EditEvent = () => {
   }
 
 
+
+  const loadEvent = () => {
+  
+     try {
+     
+      var options = {
+        method: 'GET',
+           url:`/organizer/event?event_id=${id_event}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token_user
+            },
+        };
+  
+      api.request(options)
+        //.then((response) => response.json())
+        .then((response) => {
+            console.log(response);
+            if (response.length === 0) {
+                console.log("No hay evento")
+            }
+            setValue('faqs', response.data.FAQ);
+            setValue('sections', response.data.Diary);
+            setValue('mails', response.data.Authorizers);
+        })
+                
+       } catch (error) {
+            console.error(error);
+        }
+
+    }
+ 
 
 
   /*const saveFAQs = async () => { 
@@ -485,7 +516,6 @@ const EditEvent = () => {
                   Descripción
                 </Typography>
 
-
                 <Box sx={{ border: '1px solid black', height: '200px', overflow: 'auto', marginLeft: '10px', borderRadius: '10px' }}>
                   <Editor
                     editorState={editorState}
@@ -498,121 +528,117 @@ const EditEvent = () => {
                   />
                 </Box>
 
-              </Grid>
-            </Grid>
-
-            {/*  <Grid item xs={6}>
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                FAQs
-              </Typography>              
-
-              <div style={{ mb: 1, display:'flex', justifyContent: 'center' }}>
-                <form style={{width:'100%'}}>
-                  {fieldsFaqs.map((field, index) => (
-                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', display: 'flex'}}>
-                      <TextField 
-                        {...register(`faqs.${index}.question`, { required: true })}
-                        error={errors.faqs && errors.faqs[index]?.question}
-                        placeholder="question" size="small" label="Pregunta" variant="outlined" 
-                        sx={{ mb: 1, marginRight: 1, width: '90%' }}
-                      />
-
-                      <IconButton aria-label="delete" onClick={() => removeFaq(index)}>
-                        <DeleteIcon />
-                      </IconButton>
-
-                      <TextField 
-                        {...register(`faqs.${index}.response`, { required: true })}
-                        error={errors.faqs && errors.faqs[index]?.response}
-                        placeholder="response" size="small" label="Respuesta" variant="outlined" 
-                        sx={{ mb: 1, width: '90%'}}
-                        multiline rows={2}
-                      />
-                      
-
-                    </div>
-                  ))}
-
-                  <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", response: "" })}>Agregar FAQ</Button>
-                </form>
-              </div>
              </Grid>
-            </Grid>
-              
-              <Grid item xs={6} sx={{ width: '50%' }}>
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-                Agenda
-              </Typography>              
 
-              <div style={{ display:'flex', justifyContent: 'center' }}>
-                <form style={{width:'100%'}}>
-                  {fieldsSections.map((field, index) => (
-                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
-                      {/* intento de input con DATEPICKER */}
-            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <TimePicker 
+             <Grid item xs={6}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                  FAQs
+                </Typography>
+
+                <div style={{ mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  <form style={{ width: '100%' }}>
+                    {fieldsFaqs.map((field, index) => (
+                      <div key={field.id} sx={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+                        <TextField
+                          {...register(`faqs.${index}.question`, { required: true })}
+                          error={errors.faqs && errors.faqs[index]?.question}
+                          size="small" label="Pregunta" variant="outlined"
+                          sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                          onChange={(e) => setValue(`faqs.${index}.question`, e.target.value)}
+                        />
+
+                        <IconButton aria-label="delete" onClick={() => removeFaq(index)}>
+                          <DeleteIcon />
+                        </IconButton>
+
+                        <TextField
+                          {...register(`faqs.${index}.response`, { required: true })}
+                          error={errors.faqs && errors.faqs[index]?.response}
+                          size="small" label="Respuesta" variant="outlined"
+                          sx={{ mb: 1, width: '90%' }}
+                          multiline rows={2}
+                          onChange={(e) => setValue(`faqs.${index}.response`, e.target.value)}
+                        />
+
+
+                      </div>
+                    ))}
+
+                    <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", response: "" })}>Agregar FAQ</Button>
+                  </form>
+                </div>
+              </Grid>
+            </Grid> 
+                         
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  Agenda
+                </Typography>
+
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <form style={{ width: '100%' }}>
+                    {fieldsSections.map((field, index) => (
+                      <div key={field.id} sx={{ alignItems: 'center', justifyContent: 'center', mb: 1, display: 'flex' }}>
+
+                        <TextField
                           {...register(`sections.${index}.time`, { required: true })}
                           error={errors.sections && errors.sections[index]?.time}
-                          placeholder="Time" size="small" label="Horario" variant="outlined" 
+                          size="small" label="Horario" variant="outlined"
                           sx={{ mb: 1, marginRight: 1, width: '100px' }}
-                          slotProps={{ textField: { size: 'small' } }}
+                          onChange={(e) => setValue(`sections.${index}.time`, e.target.value)}
                         />
-                      </LocalizationProvider> 
 
-                      <TextField 
-                        {...register(`sections.${index}.time`, { required: true })}
-                        error={errors.sections && errors.sections[index]?.time}
-                        placeholder="time" size="small" label="Horario" variant="outlined" 
-                        sx={{ mb: 1, marginRight: 1, width: '100px' }}
-                      />
+                        <TextField
+                          {...register(`sections.${index}.description`, { required: true })}
+                          error={errors.sections && errors.sections[index]?.description}
+                          size="small" label="Descripción" variant="outlined"
+                          sx={{ mb: 1, width: '65%' }}
+                          onChange={(e) => setValue(`sections.${index}.description`, e.target.value)}
+                        />
 
-                      <TextField 
-                        {...register(`sections.${index}.description`, { required: true })}
-                        error={errors.sections && errors.sections[index]?.description}
-                        placeholder="description" size="small" label="Descripción" variant="outlined" 
-                        sx={{ mb: 1, width: '65%'}}
-                      />
-                      
-                      <IconButton aria-label="delete" onClick={() => removeSection(index)}>
-                        <DeleteIcon />
-                      </IconButton>
+                        <IconButton aria-label="delete" onClick={() => removeSection(index)}>
+                          <DeleteIcon />
+                        </IconButton>
 
-                    </div>
-                  ))}
+                      </div>
+                    ))}
 
-                  <Button variant="outlined" size='small' onClick={() => appendSection({ time: "", description: "" })}>Agregar sección</Button>
-                </form>
-              </div>
-             </Grid>
+                    <Button variant="outlined" size='small' onClick={() => appendSection({ time: "", description: "" })}>Agregar sección</Button>
+                  </form>
+                </div>
+              </Grid>
 
 
-             <Grid item xs={6} sx={{ width: '50%' }}>
-              <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-                Colaboradores autorizados
-              </Typography>              
+              <Grid item xs={6} sx={{ width: '50%' }}>
+                <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
+                  Colaboradores autorizados
+                </Typography>
 
-              <div style={{ display:'flex', justifyContent: 'center' }}>
-                <form style={{width:'100%'}}>
-                  {fieldsMails.map((field, index) => (
-                    <div key={field.id} sx={{alignItems:'center', justifyContent: 'center', mb: 1, display: 'flex'}}>
-                      <TextField 
-                        {...register(`mails.${index}.email`, { required: true })}
-                        error={errors.mails && errors.mails[index]?.email}
-                        placeholder="email" size="small" label="Mail" variant="outlined" 
-                        sx={{ mb: 1, marginRight: 1, width: '90%' }}
-                      />
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <form style={{ width: '100%' }}>
+                    {fieldsMails.map((field, index) => (
+                      <div key={field.id} sx={{ alignItems: 'center', justifyContent: 'center', mb: 1, display: 'flex' }}>
+                        <TextField
+                          {...register(`mails.${index}.email`, { required: true })}
+                          error={errors.mails && errors.mails[index]?.email}
+                          size="small" label="Mail" variant="outlined"
+                          sx={{ mb: 1, marginRight: 1, width: '90%' }}
+                          onChange={(e) => setValue(`mails.${index}.email`, e.target.value)}
+                        />
 
-                      <IconButton aria-label="delete" onClick={() => removeMail(index)}>
-                        <DeleteIcon />
-                      </IconButton>                      
+                        <IconButton aria-label="delete" onClick={() => removeMail(index)}>
+                          <DeleteIcon />
+                        </IconButton>
 
-                    </div>
-                  ))}
+                      </div>
+                    ))}
 
-                  <Button variant="outlined" size='small' onClick={() => appendMail({ email: "" })}>Agregar colaborador</Button>
-                </form>
-              </div>
-             </Grid>*/}
+                    <Button variant="outlined" size='small' onClick={() => appendMail({ email: "" })}>Agregar colaborador</Button>
+                  </form>
+                </div>
+              </Grid>
+            </Grid>
 
             <Grid container spacing={2}>
               <Grid item sx={{ width: '50%', marginTop: '20px' }}>
@@ -628,32 +654,20 @@ const EditEvent = () => {
 
                   <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
                     type="number" label="Cantidad de tickets" value={capacity} variant="outlined" onChange={handleDateChangeTickets} />
-
                 </Box>
-
-
-
               </Grid>
 
-
               <Grid item sx={{ width: '50%', height: '300px' }}>
-
                 <Box sx={{ display: 'flex', justifyContent: 'right', alignItems: 'center', textAlign: 'center' }}>
                   <div ref={mapContainer} className="mapboxgl-ctrl-top-right"
                     style={{ width: 600, height: 350, marginLeft: '50px', marginTop: '20px', marginRight: '100px' }}
                   />
-
                 </Box>
-
-
-
               </Grid>
               <Box sx={{ width: '100%', marginTop: '200px' }}>
                 <Galery />
               </Box>
-
             </Grid>
-
 
             <Grid xs={6} sx={{ width: '100%' }}>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
