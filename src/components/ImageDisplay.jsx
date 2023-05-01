@@ -1,9 +1,13 @@
 import { Grid, Button, InputLabel } from '@mui/material';
 import { useState } from 'react';
 
-export default function BasicInfoDisplay({ images, cover }) {
+export default function BasicInfoDisplay({ images }) {
   const [index, setIndex] = useState(0);
 
+  if (images.length === 0) {
+    return;
+  }
+  
   function goToPrevSlide () {
     setIndex(Math.max(0, index - 1) % images.length);
   }
@@ -13,9 +17,9 @@ export default function BasicInfoDisplay({ images, cover }) {
   }
   
   return(
-    // style={{display: 'flex', direction: 'row', justifyItems: 'space-between'
+    
     <Grid container sx={{display: 'flex', justifyContent: 'center'}} spacing={0}>
-      <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }} >
+      <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right'}} >
         <Button onClick={goToPrevSlide} sx={{height: '150px'}}>&#10094;</Button>
       </Grid>
 

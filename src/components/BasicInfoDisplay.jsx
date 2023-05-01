@@ -23,25 +23,30 @@ function basicInfoData(event, stringDate) {
 
 export default function BasicInfoDisplay({ event, stringDate }) {
   return (
-    <Paper elevation={0}>
-      <Stack divider={<Divider sx={{ marginLeft: '100px', marginRight: '99px' }} />} spacing={1.5} direction="column" useFlexGap flexWrap="wrap" padding='10px'>
-         {basicInfoData(event, stringDate).map((data) => {
-            return (
-              <Grid container justifyContent={'center'} spacing={2}>
-                <Grid item xs={4} sx={{ justifyContent: 'right', display: 'flex' }}>
-                  <Typography variant='body2' sx={{ fontWeight: 100 }} >
-                    {data.key}
-                  </Typography>
+    <div>
+      <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
+        Información básica
+      </Typography>
+      <Paper elevation={0}>
+        <Stack divider={<Divider sx={{ marginLeft: '100px', marginRight: '99px' }} />} spacing={1.5} direction="column" useFlexGap flexWrap="wrap" padding='10px'>
+          {basicInfoData(event, stringDate).map((data) => {
+              return (
+                <Grid container justifyContent={'center'} spacing={2}>
+                  <Grid item xs={4} sx={{ justifyContent: 'right', display: 'flex' }}>
+                    <Typography variant='body2' sx={{ fontWeight: 100 }} >
+                      {data.key}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant='body2'>
+                      {data.value}
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={4}>
-                  <Typography variant='body2'>
-                    {data.value}
-                  </Typography>
-                </Grid>
-              </Grid>
-            )
-          })}
-      </Stack>
-    </Paper>
+              )
+            })}
+        </Stack>
+      </Paper>
+    </div>
   )
 }

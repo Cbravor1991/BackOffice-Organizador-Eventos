@@ -15,6 +15,7 @@ import FaqsDisplay from '../components/FaqsDisplay';
 import Paper from '@mui/material/Paper';
 import BasicInfoDisplay from '../components/BasicInfoDisplay';
 import ImageDisplay from '../components/ImageDisplay';
+import DescriptionDisplay from '../components/DescriptionDisplay';
 
 const Preview = () => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
@@ -70,38 +71,10 @@ const Preview = () => {
 
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
-            <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-              <ImageDisplay images={event.images} />
-
-              {/* <img src={cover} alt="preview" height="180"/> */}
-            </Grid>
-
-            <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
-              Información básica
-            </Typography>
-
+            <ImageDisplay images={event.images} />
             <BasicInfoDisplay event={event} stringDate={stringDate}/>
-
-            <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
-              Descripción
-            </Typography>
-
-            <Paper elevation={0}>
-              <Typography variant="body2" sx={{ padding:'10px', fontSize: 14, fontWeight: 400, display: 'flex', justifyContent: 'center' }}>
-                {editorState.getCurrentContent().getPlainText()}
-              </Typography>
-            </Paper>
-
-            <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
-              Agenda
-            </Typography>
-
+            <DescriptionDisplay text={editorState.getCurrentContent().getPlainText()}/>
             <AgendaDisplay agenda={event.agenda} />
-
-            <Typography variant="h6" component="div" sx={{ marginTop: '20px', marginLeft: '50px', fontSize: 14, fontWeight: 700}}>
-              Preguntas frecuentes
-            </Typography>
-
             <FaqsDisplay faqs={event.faqs} />
 
           </CardContent>
