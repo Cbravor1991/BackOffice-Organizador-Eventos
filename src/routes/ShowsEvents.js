@@ -125,7 +125,6 @@ export default function ShowsEvents() {
   );
 
   return (
-    (publications && publications.length > 0) ?
       <div>
         <Navbar />
         <CardEvent />
@@ -163,62 +162,48 @@ export default function ShowsEvents() {
                 <StyledTableCell align="center">Opciones</StyledTableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {filteredData
-                .slice(0, rowsPerPage)
-                .map((row) => (
-                  <StyledTableRow key={row.name}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.title}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.category}
-                    </StyledTableCell>
-                    <StyledTableCell align="right"> {new Date(row.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.direction}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      <Button aria-label="ver" onClick={(event) => handleViewClick(event, row)} >
-                        VER
-                      </Button>
-                      <Button aria-label="editar" onClick={() => { update(row) }}>
-                        EDITAR
-                      </Button>
-                      <IconButton aria-label="eliminar" onClick={() => { deleteEvent(row) }}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-      : <div>
-        <Navbar />
-        <CardEvent />
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell> Tus eventos</StyledTableCell>
-                <StyledTableCell align="right">Categoria</StyledTableCell>
-                <StyledTableCell align="right">Fecha</StyledTableCell>
-                <StyledTableCell align="right">Direccion</StyledTableCell>
-                <StyledTableCell align="right">Opciones</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
 
+            {(publications && publications.length > 0) ? 
+            (
+              <TableBody>
+                {filteredData
+                  .slice(0, rowsPerPage)
+                  .map((row) => (
+                    <StyledTableRow key={row.name}>
+                      <StyledTableCell component="th" scope="row">
+                        {row.title}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.category}
+                      </StyledTableCell>
+                      <StyledTableCell align="right"> {new Date(row.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.direction}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        <Button aria-label="ver" onClick={(event) => handleViewClick(event, row)} >
+                          VER
+                        </Button>
+                        <Button aria-label="editar" onClick={() => { update(row) }}>
+                          EDITAR
+                        </Button>
+                        <IconButton aria-label="eliminar" onClick={() => { deleteEvent(row) }}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                }
+              </TableBody> 
+            )
+            : 
+            (
               <StyledTableRow >
                 <StyledTableCell component="th" scope="row">
                   NO TIENES EVENTOS CREADOS
                 </StyledTableCell>
-
               </StyledTableRow>
-
-            </TableBody>
+            )}
           </Table>
         </TableContainer>
       </div>

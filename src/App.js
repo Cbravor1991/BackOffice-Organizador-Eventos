@@ -2,7 +2,6 @@ import React from 'react';
 import HomePage from './routes/HomePage';
 import CreateEventForm from './routes/CreateEventForm';
 import ShowsEvents from './routes/ShowsEvents';
-import EditEvent from './routes/EditEvents';
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout';
 import { FileLoaderGallery } from './components/FileLoaderGallery';
@@ -35,8 +34,6 @@ export default function App() {
                 <Route path="ver" element={<Formulario />} />  
                 <Route path="preview" element={<Preview />} />  
                 <Route path="faqs" element={<Faqs />} />  
-               
-               
                 <Route path="photoUpload" element={<Galery />} />
                 <Route path= "updatePhotoGallery" element={<UpdatePhotoGallery />}/>
               </Route>
