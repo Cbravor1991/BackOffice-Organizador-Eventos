@@ -190,6 +190,7 @@ const CreateEventForm = () => {
         "latitude": latitude,
         "longitude": longitude
       },
+      "direction": direction,
       "agenda": formData.sections,
       "faqs": formData.faqs,
       "authorizers": formData.mails,

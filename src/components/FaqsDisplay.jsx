@@ -1,7 +1,7 @@
 import { Typography, Grid, Stack, Divider, Paper } from '@mui/material';
 
 export default function FaqsDisplay({ faqs }) {
-  if (faqs.length === 0) {
+  if (faqs.length === 0 || faqs[0].question === '') {
     return;
   }
   return (

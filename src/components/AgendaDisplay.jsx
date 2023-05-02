@@ -1,7 +1,7 @@
 import { Typography, Grid, Stack, Divider, Paper } from '@mui/material';
 
 export default function AgendaDisplay({ agenda }) {
-  if (agenda.length === 0) {
+  if (agenda.length === 0 || agenda[0].description === '') {
     return;
   }
 

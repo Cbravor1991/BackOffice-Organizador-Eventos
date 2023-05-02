@@ -4,7 +4,7 @@ import { useState } from 'react';
 export default function ImageDisplay({ images }) {
   const [index, setIndex] = useState(0);
   console.log(images)
-  if (images?.length === 0 || images[0].link === '') {
+  if (images?.length === 0 || !images[0].link.startsWith('https')) {
     return;
   }
   
