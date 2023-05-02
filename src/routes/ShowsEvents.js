@@ -19,7 +19,8 @@ import { useEffect, useState } from 'react';
 import { api } from '../api/axios';
 import Navbar from '../components/NavBar';
 import swal from 'sweetalert2';
-import { Button } from '@mui/material';
+import { Button, Grid } from '@mui/material';
+import { Height } from '@material-ui/icons';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -47,7 +48,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function ShowsEvents() {
 
   const [publications, setPublications] = useState([]);
-  const [event, setEvent] = useState({});
 
   let token_user = window.localStorage.getItem("token");
 
@@ -75,7 +75,7 @@ export default function ShowsEvents() {
 
 
   const [searchText, setSearchText] = React.useState('');
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
 
   const handleViewClick = async (e, row) => {
@@ -206,84 +206,93 @@ export default function ShowsEvents() {
       <div>
         <Navbar />
         <CardEvent />
-        <TableContainer component={Paper}>
-          <div>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel id="demo-simple-select-label">Mostrar</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={rowsPerPage}
-                label="Mostrar"
-                onChange={handleRowsPerPageChange}
-              >
-                <MenuItem sx={{ color: 'black' }} value={1}>1</MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={5}>5</MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={10}>10</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              sx={{ m: 1, width: '30ch' }}
-              label="Buscar por evento"
-              variant="outlined"
-              value={searchText}
-              onChange={handleSearchChange}
-            />
-          </div>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell> Tus eventos</StyledTableCell>
-                <StyledTableCell align="right">Categoria</StyledTableCell>
-                <StyledTableCell align="right">Fecha</StyledTableCell>
-                <StyledTableCell align="right">Direccion</StyledTableCell>
-                <StyledTableCell align="center">Opciones</StyledTableCell>
-              </TableRow>
-            </TableHead>
+        <Grid sx={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+          <Paper sx={{  width: '100%' }} elevation={5}>
+            <TableContainer component={Grid}>
+              <div>
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                  <InputLabel id="demo-simple-select-label">Mostrar</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={rowsPerPage}
+                    label="Mostrar"
+                    onChange={handleRowsPerPageChange}
+                  >
+                    <MenuItem sx={{ color: 'black' }} value={5}>5</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value={10}>10</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value={25}>25</MenuItem>
+                  </Select>
+                </FormControl>
+                <TextField
+                  sx={{ m: 1, width: '30ch' }}
+                  label="Buscar por evento"
+                  variant="outlined"
+                  value={searchText}
+                  onChange={handleSearchChange}
+                />
+              </div>
 
-            {(publications && publications.length > 0) ? 
-            (
-              <TableBody>
-                {filteredData
-                  .slice(0, rowsPerPage)
-                  .map((row) => (
-                    <StyledTableRow key={row.name}>
+              <Grid sx={{ maxHeight: '700px', overflowY: 'scroll'}}>
+                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell> Nombre</StyledTableCell>
+                      <StyledTableCell align="right">Categoria</StyledTableCell>
+                      <StyledTableCell align="right">Fecha</StyledTableCell>
+                      <StyledTableCell align="right">Dirección</StyledTableCell>
+                      <StyledTableCell align="center">Opciones</StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+
+                  {(publications && publications.length > 0) ? 
+                  (
+                    <TableBody>
+                      {filteredData
+                        .slice(0, rowsPerPage)
+                        .map((row) => (
+                          <StyledTableRow key={row.name}>
+                            <StyledTableCell component="th" scope="row">
+                              {row.title}
+                            </StyledTableCell>
+                            <StyledTableCell align="right">
+                              {row.category}
+                            </StyledTableCell>
+                            <StyledTableCell align="right"> {new Date(row.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</StyledTableCell>
+                            <StyledTableCell align="right">
+                              {row.direction}
+                            </StyledTableCell>
+                            <StyledTableCell align="right">
+                              <Button aria-label="ver" onClick={(e) => handleViewClick(e, row)} >
+                                VER
+                              </Button>
+                              <Button aria-label="editar" onClick={() => { update(row) }}>
+                                EDITAR
+                              </Button>
+                              <IconButton aria-label="eliminar" onClick={() => { deleteEvent(row) }}>
+                                <DeleteIcon />
+                              </IconButton>
+                            </StyledTableCell>
+                          </StyledTableRow>
+                        ))
+                      }
+                    </TableBody> 
+                  )
+                  : 
+                  (
+                    <StyledTableRow >
                       <StyledTableCell component="th" scope="row">
-                        {row.title}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.category}
-                      </StyledTableCell>
-                      <StyledTableCell align="right"> {new Date(row.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.direction}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        <Button aria-label="ver" onClick={(e) => handleViewClick(e, row)} >
-                          VER
-                        </Button>
-                        <Button aria-label="editar" onClick={() => { update(row) }}>
-                          EDITAR
-                        </Button>
-                        <IconButton aria-label="eliminar" onClick={() => { deleteEvent(row) }}>
-                          <DeleteIcon />
-                        </IconButton>
+                        NO TIENES EVENTOS CREADOS
                       </StyledTableCell>
                     </StyledTableRow>
-                  ))
-                }
-              </TableBody> 
-            )
-            : 
-            (
-              <StyledTableRow >
-                <StyledTableCell component="th" scope="row">
-                  NO TIENES EVENTOS CREADOS
-                </StyledTableCell>
-              </StyledTableRow>
-            )}
-          </Table>
-        </TableContainer>
+                  )}
+                </Table>
+              </Grid>
+
+            </TableContainer>
+          </Paper>
+        </Grid>
       </div>
   );
 }

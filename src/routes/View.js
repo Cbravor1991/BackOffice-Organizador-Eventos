@@ -35,9 +35,8 @@ const View = () => {
   
   
   const handleBack = () => {
-    let vaciar = JSON.stringify('');  
-    //window.localStorage.setItem("cache_event", vaciar);
-    //window.localStorage.setItem("cache_cover", vaciar);  
+    window.localStorage.setItem("cache_event", null);
+    window.localStorage.setItem("cache_cover", null);  
     window.history.back();
   }
 
@@ -48,8 +47,8 @@ const View = () => {
     
       <Navbar />
 
-      <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-        <Paper elevation={5} sx={{width: '600px', background: '#fff'}}>
+      <Grid style={{ display: 'flex', justifyContent: 'center'}}>
+        <Paper elevation={5} sx={{width: '600px', background: '#fff', mt: 6}}>
 
           <Typography variant="h5" component="div" sx={{ padding: 2, fontSize: 30, fontWeight: 70, display: 'flex', justifyContent: 'center' }}>
             {event.Event.title}

@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Select, MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -203,10 +204,12 @@ const CreateEventForm = () => {
     <ThemeProvider theme={theme}>
 
       <Navbar />
-      <Box sx={{ border: '5px solid black', padding: '20px' }}>
-        <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 1, display: 'flex', justifyContent: 'center' }}>
-          Crear evento
-        </Typography>
+
+      <Typography variant="h5" component="div" sx={{ marginTop: '20px', color: 'black', fontSize: 20, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+        Crear evento
+      </Typography>
+
+      <Grid sx={{ display: 'flex', justifyContent: 'center', padding: '100px', paddingTop: '20px', paddingBottom: '30px' }}>
         <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Stack
             direction="column"
@@ -234,7 +237,7 @@ const CreateEventForm = () => {
               </Grid>
 
               <Grid item xs={6}>
-                <FormControl fullWidth sx={{ m: 1 }}>
+                <FormControl sx={{ m: 1, width: '90%' }}>
                   <InputLabel size="small" id="demo-simple-select-label">Categoría</InputLabel>
                   <Select
                     size="small"
@@ -471,7 +474,7 @@ const CreateEventForm = () => {
 
           </Stack>
         </Stack>
-      </Box>
+      </Grid>
     </ThemeProvider>
 
   )

@@ -1,10 +1,10 @@
 import { Grid, Button, InputLabel } from '@mui/material';
 import { useState } from 'react';
 
-export default function BasicInfoDisplay({ images }) {
+export default function ImageDisplay({ images }) {
   const [index, setIndex] = useState(0);
-
-  if (images.length === 0) {
+  console.log(images)
+  if (images?.length === 0 || images[0].link === '') {
     return;
   }
   
