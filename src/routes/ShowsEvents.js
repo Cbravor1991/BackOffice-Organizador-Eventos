@@ -98,6 +98,7 @@ export default function ShowsEvents() {
                 console.log("No hay evento")
             }
             window.localStorage.setItem("cache_view", JSON.stringify(response.data));
+            window.localStorage.setItem("cache_cover_id", JSON.stringify(response.data.Event.pic_id));
             window.location.href = "/view";
          })
                 

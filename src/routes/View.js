@@ -19,15 +19,36 @@ import DescriptionDisplay from '../components/DescriptionDisplay';
 
 
 const View = () => {
+
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   let event = JSON.parse(window.localStorage.getItem("cache_view"));
   console.log(event);
-  let cover = window.localStorage.getItem("cache_cover");
+  let cover_id = window.localStorage.getItem("cache_cover_id");
+  console.log(cover_id);
   const stringDate = new Date(event.Event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   const [loading, setLoading] = React.useState(false);
+  const [images, setImages] = React.useState(event.Images); 
 
 
+  const sortImages = () => {
+   
+     let originalImages = images;
+     
+     console.log(images);
+     
+     const sortedImages = [
+    ...originalImages.filter(({id}) => id == cover_id),
+    ...originalImages.filter(({id}) => id != cover_id)
+    ];
+    
+    console.log(sortedImages);
+    setImages(sortedImages);
+     
+   }
+  
+  
   useEffect(() => {
+    sortImages();
     const rawContent = JSON.parse(event.Event.description);
     const contentState = convertFromRaw(rawContent);
     setEditorState(EditorState.createWithContent(contentState));
@@ -39,7 +60,7 @@ const View = () => {
     window.localStorage.setItem("cache_cover", null);  
     window.history.back();
   }
-
+  
 
   return (
 
@@ -56,7 +77,7 @@ const View = () => {
 
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
-            <ImageDisplay images={event.Images} />
+            <ImageDisplay images={images} />
             <BasicInfoDisplay event={event.Event} stringDate={stringDate}/>
             <DescriptionDisplay description={JSON.parse(event.Event.description)}/>
             <AgendaDisplay agenda={event.Diary} />

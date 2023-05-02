@@ -253,11 +253,15 @@ const EditEvent = () => {
   }
 
 
+  //function filterById(images, cover) {return images.filter(function(images) {return (images['id'] == cover);})[0];}
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     const formData = getValues();
     let images = JSON.parse(window.localStorage.getItem("cache_images"));
+    console.log(images);
     
     try {
       var options = {
@@ -284,8 +288,8 @@ const EditEvent = () => {
         .then(function (response) {
         
          window.localStorage.setItem("event_id", id_event);
-         window.location.href = "/eventList";
          let cover = window.localStorage.getItem("cache_cover");
+         
          api.post(
           'organizer/event/cover/pic',
           JSON.stringify({
@@ -293,6 +297,7 @@ const EditEvent = () => {
             "event_id": id_event
           })
         );
+        window.location.href = "/eventList";
 
         }).catch(function (error) {
           console.error(error);
