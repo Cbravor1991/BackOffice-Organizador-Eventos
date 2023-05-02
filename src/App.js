@@ -1,6 +1,7 @@
 import React from 'react';
 import HomePage from './routes/HomePage';
 import CreateEventForm from './routes/CreateEventForm';
+import EditEvent from './routes/EditEvents';
 import ShowsEvents from './routes/ShowsEvents';
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout';
@@ -30,7 +31,7 @@ export default function App() {
                 <Route path="loadEvent" element={<CreateEventForm />} />
                 <Route path="eventList" element={<ShowsEvents />} />
                 <Route path="showEvents" element={<ShowsEvents />} />
-                <Route path="editEvent" element={<CreateEventForm />} />
+                <Route path="editEvent" element={<EditEvent />} />
                 <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
                 <Route path="ver" element={<Formulario />} />  
                 <Route path="preview" element={<Preview />} />  

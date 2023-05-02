@@ -24,7 +24,7 @@ import useStorage from '../hooks/useStorage';
 import { useForm, useFieldArray } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import Galery from '../components/Update_Galery';
+import Galery from '../components/Galery';
 
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
@@ -96,13 +96,13 @@ const EditEvent = () => {
 
 
 
- /* useEffect(() => {
-    
+  useEffect(() => {
+    sessionStorage.setItem("publication_data",  JSON.stringify(stored_event.Event));
     //const rawContent = JSON.parse(props.description);
     //const contentState = convertFromRaw(rawContent);
     //setEditorState(EditorState.createWithContent(contentState));
 
-  }, []); */
+  }, []); 
 
 
   useEffect(() => {
@@ -146,7 +146,7 @@ const EditEvent = () => {
     return () => map.remove();
   }, []);
 
-
+/*
   const loadFaqs = () => {
 
     let token_user;
@@ -174,7 +174,7 @@ const EditEvent = () => {
         console.log(error);
       })
 
-  }
+  }*/
 
 
   const handleEditorChange = (newEditorState) => {
@@ -229,7 +229,8 @@ const EditEvent = () => {
 
   const handleSubmitEvent = async (e) => {
     e.preventDefault();
-
+    
+    const formData = getValues();
     let token_user;
 
     //const formData = getValues();
@@ -258,8 +259,8 @@ const EditEvent = () => {
           "longitude": longitude,
           "capacity": capacity,
           "vacancies": vacancies,
-          "agenda": sections,
-          "faqs": faqs,
+          "agenda": formData.sections,
+          "faqs": formData.faqs,
           "images": []
         }
       };
@@ -291,6 +292,10 @@ const EditEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const formData = getValues();
+    let images = JSON.parse(window.localStorage.getItem("cache_images"));
+    
     try {
       var options = {
         method: 'PUT',
@@ -305,23 +310,24 @@ const EditEvent = () => {
           "latitude": latitude,
           "longitude": longitude,
           "capacity": capacity,
-          "agenda" : [],
-          "faqs" : [],
-          "images" : [],
+          "agenda" : formData.sections,
+          "faqs" : formData.faqs,
+          "images" : images,
           "vacancies": vacancies,
         }
       };
 
       api.request(options)
         .then(function (response) {
+        
+         window.localStorage.setItem("event_id", id_event);
+         window.location.href = "/eventList";
 
         }).catch(function (error) {
           console.error(error);
         });
 
-      window.localStorage.setItem("event_id", id_event);
 
-      window.location.href = "/photoUpload";
 
     } catch (err) {
       setError(true)
@@ -343,7 +349,11 @@ const EditEvent = () => {
 
     window.localStorage.setItem("event_id", id_event);
 
-    const event = { "Event": {
+    const formData = getValues();
+
+    const event = {
+     "id": id_event, 
+     "Event": {
       "title": title,
       "category": category,
       "date": date,
@@ -353,14 +363,14 @@ const EditEvent = () => {
       "latitude": latitude,
       "longitude": longitude 
       },
-      "Diary": formData.sections,
-      "FAQ": formData.faqs,
-      "Authorizers": formData.mails,
-      "Images": images
+     "Diary": formData.sections,
+     "FAQ": formData.faqs,
+     "Authorizers": formData.mails,
+     "Images": []
     };
 
     window.localStorage.setItem("cache_edit", JSON.stringify(event));
-
+    
     window.location.href = "/updatePhotoGallery";
 
   }

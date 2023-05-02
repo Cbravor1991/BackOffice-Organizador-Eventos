@@ -39,9 +39,10 @@ export default function UpdatePhotoGallery() {
   const [cover, setCover] = useState('');
   const [url, setUrl] = useState('');
 
-  let props = JSON.parse(sessionStorage.getItem("publication_data"))
+  let props = JSON.parse(window.localStorage.getItem("cache_edit"))
+  console.log(props);
 
-  let id_event = props.id;
+  let id_event = props.Event.id;
 
   const handleChange = (e) => {
     let selected = e.target.files[0];
