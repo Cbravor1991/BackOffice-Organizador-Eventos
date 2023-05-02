@@ -59,7 +59,7 @@ const View = () => {
 
             <ImageDisplay images={event.Images} />
             <BasicInfoDisplay event={event.Event} stringDate={stringDate}/>
-            <DescriptionDisplay text={editorState.getCurrentContent().getPlainText()}/>
+            <DescriptionDisplay description={JSON.parse(event.Event.description)}/>
             <AgendaDisplay agenda={event.Diary} />
             <FaqsDisplay faqs={event.FAQ} />
 
