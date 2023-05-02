@@ -49,9 +49,9 @@ const CreateEventForm = () => {
   const [date, setDate] = useState(stored_event ? stored_event.date : '');
   const [description, setDescription] = useState(stored_event ? stored_event.description : '');
   const [capacity, setCapacity] = useState(stored_event ? stored_event.capacity : '');
-  const [direction, setDirection] = useState(stored_event ? stored_event.direction : '');
-  const [latitude, setLatitude] = useState(stored_event ? stored_event.latitude : -34.599722222222);
-  const [longitude, setLongitude] = useState(stored_event ? stored_event.longitude : -58.381944444444);
+  const [direction, setDirection] = useState(stored_event ? stored_event.ubication.direction : '');
+  const [latitude, setLatitude] = useState(stored_event ? stored_event.ubication.latitude : -34.599722222222);
+  const [longitude, setLongitude] = useState(stored_event ? stored_event.ubication.longitude : -58.381944444444);
   
   const { register, control, formState: { errors }, getValues, setValue } = useForm({
     defaultValues:
@@ -111,6 +111,11 @@ const CreateEventForm = () => {
       setLatitude(coordinates[1]);
       setDirection(event.result.place_name);
     })
+    
+    map.on('load', () => {
+      geocoder.query(direction);
+    });
+    
     return () => map.remove();
   }, []);
 
