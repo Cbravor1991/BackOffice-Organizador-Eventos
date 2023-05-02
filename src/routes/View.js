@@ -35,9 +35,8 @@ const View = () => {
   
   
   const handleBack = () => {
-    let vaciar = JSON.stringify('');  
-    //window.localStorage.setItem("cache_event", vaciar);
-    //window.localStorage.setItem("cache_cover", vaciar);  
+    window.localStorage.setItem("cache_event", null);
+    window.localStorage.setItem("cache_cover", null);  
     window.history.back();
   }
 
