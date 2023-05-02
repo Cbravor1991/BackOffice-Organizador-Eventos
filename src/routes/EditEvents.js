@@ -47,47 +47,41 @@ const theme = createTheme({
 
 const EditEvent = () => {
 
-  let props = sessionStorage.getItem("cache_event")
+  let stored_event = JSON.parse(window.localStorage.getItem("cache_edit"));
+  let cover = window.localStorage.getItem("cache_cover");
 
-  props = (JSON.parse(props))
-  console.log(props)
-
-
+  console.log(stored_event);
 
   const userRef = useRef();
   const errRef = useRef();
   const [error, setError] = useState(false);
-  const [id_event, setEventID] = useState(props.id);
-  const [title, setTitle] = useState(props.title)
-  const [category, setCategory] = useState(props.category);
-  const [date, setDate] = useState(props.date);
-  const [description, setDescription] = useState(props.description);
-
-
-  const [capacity, setCapacity] = useState(props.capacity);
-  const [vacancies, setVacancies] = useState(props.capacity);
-  const [direction, setDirection] = useState(props.direction);
-  const [latitude, setLatitude] = useState(props.latitude);
-  const [longitude, setLongitude] = useState(props.longitude);
+  const [id_event, setEventID] = useState(stored_event.Event.id);
+  const [title, setTitle] = useState(stored_event ? stored_event.Event.title : '');
+  const [category, setCategory] = useState(stored_event ? stored_event.Event.category : '');
+  const [date, setDate] = useState(stored_event ? stored_event.Event.date : '');
+  const [description, setDescription] = useState(stored_event ? stored_event.Event.description : '');
+  const [capacity, setCapacity] = useState(stored_event ? stored_event.Event.capacity : '');
+  const [vacancies, setVacancies] = useState(stored_event.Event.capacity);
+  const [direction, setDirection] = useState(stored_event ? stored_event.Event.direction : '');
+  const [latitude, setLatitude] = useState(stored_event ? stored_event.Event.latitude : -34.599722222222);
+  const [longitude, setLongitude] = useState(stored_event ? stored_event.Event.longitude : -58.381944444444);
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
-  const [editorState, setEditorState] = useState(description === '' ? () => EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(description))));
+ const [editorState, setEditorState] = useState(description === '' ? () => EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(description))));
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [zoom, setZoom] = useState(7);
-  const [faqs, setFaqs] = useState(null);
+  //const [faqs, setFaqs] = useState(null);
   //const [agenda, setAgenta] = useState(props.agenda);
   const [preguntas, setPreguntas] = useState([]);
   const { register, control, formState: { errors }, getValues, setValue } = useForm({ defaultValues: 
      { 
-       //sections: [{ time: "", description: "" }],
-       //mails: [{ email: "" }],
-       sections: [],
-       mails: [],
-       faqs: []
+       sections: stored_event ? stored_event.Diary : [{ time: "", description: "" }],
+      mails: stored_event ? stored_event.Authorizers : [{ email: "" }],
+      faqs: stored_event ? stored_event.FAQ : [{ question: "", response: "" }]
      }
     });
   const { fields: fieldsSections, append: appendSection, remove: removeSection } = useFieldArray({ control, name: "sections" });
@@ -104,7 +98,6 @@ const EditEvent = () => {
 
  /* useEffect(() => {
     
-    loadEvent();
     //const rawContent = JSON.parse(props.description);
     //const contentState = convertFromRaw(rawContent);
     //setEditorState(EditorState.createWithContent(contentState));
@@ -238,7 +231,6 @@ const EditEvent = () => {
     e.preventDefault();
 
     let token_user;
-    // window.localStorage.setItem("token", 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaHJpc3RpYW4uZml1YmFAZ21haWwuY29tIiwiZXhwIjoxNjgxMDc2MDQyfQ.Wh-28x-wKNO3P6QJ3rt2wq8fLb4C6XSB4TJF3NFPRDE' )
 
     //const formData = getValues();
 
@@ -262,12 +254,13 @@ const EditEvent = () => {
           "date": date,
           "description": description,
           "direction": direction,
-          "latitude": 0,
-          "longitude": 0,
+          "latitude": latitude,
+          "longitude": longitude,
           "capacity": capacity,
-          "vacancies": 0,
-          "agenda": "string",
-          "faqs": "string"
+          "vacancies": vacancies,
+          "agenda": sections,
+          "faqs": faqs,
+          "images": []
         }
       };
 
@@ -346,97 +339,28 @@ const EditEvent = () => {
   }
 
 
-
-  const loadEvent = () => {
-  
-     try {
-     
-      var options = {
-        method: 'GET',
-           url:`/organizer/event?event_id=${id_event}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token_user
-            },
-        };
-  
-      api.request(options)
-        //.then((response) => response.json())
-        .then((response) => {
-            console.log(response);
-            if (response.length === 0) {
-                console.log("No hay evento")
-            }
-            setValue('faqs', response.data.FAQ);
-            setValue('sections', response.data.Diary);
-            setValue('mails', response.data.Authorizers);
-        })
-                
-       } catch (error) {
-            console.error(error);
-        }
-
-    }
- 
-
-
-  /*const saveFAQs = async () => { 
- 
-     let id_event = window.localStorage.getItem("event_id");      
-     //const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
-     //let analizar = JSON.parse(preguntasRecuperadasJSON);     
-     
-     if(preguntas.length>0){
-       console.log('ejecutando las preguntas')
-
-       for (const [index, pregunta] of analizar.entries()) {
-          if (pregunta.response !== '') {
-          
-                try {
-                  const response_faqs = axios.post(
-                    '/organizer/event/faq',
-                    JSON.stringify({
-                      "event_id": id_event,
-                      "question": pregunta.question,
-                      "response": pregunta.response
-                    }),
-                    {
-                      headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Credentials': true,
-                        'Access-Control-Allow-Headers': '*',
-                        Authorization: `Bearer ${token_user}`
-                      }
-                    }
-                  );
-
-                } catch (err) {
-                  setError(true);
-                  if (!err?.response_faqs) {
-                    setErrMsg('El servidor no responde');
-                  } else if (err.response_faqs?.status === 401) {
-                    setErrMsg('Contraseña o usuario incorrecto');
-                  } else if (err.response_faqs?.status === 402) {
-                    setErrMsg('No tiene autorización');
-                  } else {
-                    token_user = window.localStorage.getItem('token');
-                  }
-                }
-              }
-            }} else{}
-
-            let vaciar = JSON.stringify('');
-            window.localStorage.setItem("preguntas", vaciar);
-            window.localStorage.setItem('cache_datos', vaciar);
-            window.location.href = "/showEvents"
- 
-  }*/
-
-
   const handleEditPhotos = () => {
 
     window.localStorage.setItem("event_id", id_event);
+
+    const event = { "Event": {
+      "title": title,
+      "category": category,
+      "date": date,
+      "description": description,
+      "capacity": capacity,
+      "direction": direction,
+      "latitude": latitude,
+      "longitude": longitude 
+      },
+      "Diary": formData.sections,
+      "FAQ": formData.faqs,
+      "Authorizers": formData.mails,
+      "Images": images
+    };
+
+    window.localStorage.setItem("cache_edit", JSON.stringify(event));
+
     window.location.href = "/updatePhotoGallery";
 
   }
@@ -450,7 +374,7 @@ const EditEvent = () => {
       <Navbar />
       <Box sx={{ border: '5px solid black', padding: '20px' }}>
         <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
-          Crear evento
+          Editar evento
         </Typography>
         <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Stack
@@ -528,7 +452,7 @@ const EditEvent = () => {
                   />
                 </Box>
 
-             </Grid>
+             </Grid> 
 
              <Grid item xs={6}>
                 <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>

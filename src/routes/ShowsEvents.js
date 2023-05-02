@@ -64,10 +64,11 @@ export default function ShowsEvents() {
 
   useEffect(() => {
     let vaciar = JSON.stringify('');
-    window.localStorage.setItem("preguntas", vaciar);
-    window.localStorage.setItem('cache_datos', vaciar);
-    window.localStorage.setItem("cache_images", JSON.stringify([]));
-    window.localStorage.setItem('coverPic', '')
+    //window.localStorage.setItem("preguntas", vaciar);
+    //window.localStorage.setItem('cache_datos', vaciar);
+    //window.localStorage.setItem('cache_event', vaciar);
+    //window.localStorage.setItem("cache_images", JSON.stringify([]));
+    //window.localStorage.setItem('coverPic', vaciar)
 
     loadPublications();
   }, []);
@@ -77,12 +78,12 @@ export default function ShowsEvents() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
 
-  const loadEvent = (id_event) => {
+  const handleViewClick = async (e, row) => {
   
      try {   
       var options = {
         method: 'GET',
-           url:`/organizer/event?event_id=${id_event}`,
+           url:`/organizer/event?event_id=${row.id}`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token_user
@@ -96,8 +97,8 @@ export default function ShowsEvents() {
             if (response.length === 0) {
                 console.log("No hay evento")
             }
-            //setEvent(response.data);
-            window.localStorage.setItem("cache_event", JSON.stringify(response.data));
+            window.localStorage.setItem("cache_view", JSON.stringify(response.data));
+            window.location.href = "/view";
          })
                 
        } catch (error) {
@@ -107,20 +108,53 @@ export default function ShowsEvents() {
     }
 
 
-  const handleViewClick = (e, row) => {
-    loadEvent(row.id);
-    let result = JSON.parse(window.localStorage.getItem("cache_event"));
-    console.log(result);
-    window.location.href = "/view";
+    const update = async (props) => {
+  
+     try {   
+      var options = {
+        method: 'GET',
+           url:`/organizer/event?event_id=${props.id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token_user
+            },
+        };
+  
+      api.request(options)
+        //.then((response) => response.json())
+        .then((response) => {
+            console.log(response);
+            if (response.length === 0) {
+                console.log("No hay evento")
+            }
+            window.localStorage.setItem("cache_edit", JSON.stringify(response.data));
+            const result = JSON.parse(window.localStorage.getItem("cache_edit"));
+            console.log(result);
+            window.location.href = "/editEvent"
+         })
+                
+       } catch (error) {
+            console.error(error);
+        }
+
+    }
+
+
+/*  const handleViewClick = async (e, row) => {
+      const response = await loadEvent(row.id)
+      .then((response) => {const result = JSON.parse(window.localStorage.getItem("cache_event"));
+      console.log(result);})
+      window.location.href = "/view";
   };
 
 
   const update = async (props) => {
-    loadEvent(props.id);
-    console.log(props)
+    const response = await loadEvent(props.id);
+    let result = JSON.parse(window.localStorage.getItem("cache_edit"));
+    console.log(result);
     window.location.href = "/editEvent"
   }
-
+*/
 
   const deleteEvent = async (props) => {
     swal.fire({

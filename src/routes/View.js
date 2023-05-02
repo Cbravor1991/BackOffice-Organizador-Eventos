@@ -20,7 +20,7 @@ import DescriptionDisplay from '../components/DescriptionDisplay';
 
 const View = () => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
-  let event = JSON.parse(window.localStorage.getItem("cache_event"));
+  let event = JSON.parse(window.localStorage.getItem("cache_view"));
   console.log(event);
   let cover = window.localStorage.getItem("cache_cover");
   const stringDate = new Date(event.Event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
@@ -35,11 +35,10 @@ const View = () => {
   
   
   const handleBack = () => {
-  
-    window.localStorage.setItem("cache_event", null);
-    window.localStorage.setItem("cache_cover", null);  
+    let vaciar = JSON.stringify('');  
+    //window.localStorage.setItem("cache_event", vaciar);
+    //window.localStorage.setItem("cache_cover", vaciar);  
     window.history.back();
-  
   }
 
 
