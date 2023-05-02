@@ -47,8 +47,8 @@ const View = () => {
     
       <Navbar />
 
-      <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-        <Paper elevation={5} sx={{width: '600px', background: '#fff'}}>
+      <Grid style={{ display: 'flex', justifyContent: 'center'}}>
+        <Paper elevation={5} sx={{width: '600px', background: '#fff', mt: 6}}>
 
           <Typography variant="h5" component="div" sx={{ padding: 2, fontSize: 30, fontWeight: 70, display: 'flex', justifyContent: 'center' }}>
             {event.Event.title}
