@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -8,7 +7,6 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { api } from '../api/axios';
 import Navbar from '../components/NavBar';
-import { EditorState, convertFromRaw } from 'draft-js';
 import { Grid } from '@mui/material';
 import AgendaDisplay from '../components/AgendaDisplay';
 import FaqsDisplay from '../components/FaqsDisplay';
@@ -18,17 +16,10 @@ import ImageDisplay from '../components/ImageDisplay';
 import DescriptionDisplay from '../components/DescriptionDisplay';
 
 const Preview = () => {
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   let event = JSON.parse(window.localStorage.getItem("cache_event"));
   let cover = window.localStorage.getItem("cache_cover");
   const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   const [loading, setLoading] = React.useState(false);
-
-  useEffect(() => {
-    const rawContent = JSON.parse(event.description);
-    const contentState = convertFromRaw(rawContent);
-    setEditorState(EditorState.createWithContent(contentState));
-  }, []);
 
   const handleSubmitEvent = async (e) => {
     setLoading(true);
@@ -73,7 +64,7 @@ const Preview = () => {
 
             <ImageDisplay images={event.images} />
             <BasicInfoDisplay event={event} stringDate={stringDate}/>
-            <DescriptionDisplay text={editorState.getCurrentContent().getPlainText()}/>
+            <DescriptionDisplay description={JSON.parse(event.description)}/>
             <AgendaDisplay agenda={event.agenda} />
             <FaqsDisplay faqs={event.faqs} />
 
