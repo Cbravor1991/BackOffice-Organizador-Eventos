@@ -285,6 +285,14 @@ const EditEvent = () => {
         
          window.localStorage.setItem("event_id", id_event);
          window.location.href = "/eventList";
+         let cover = window.localStorage.getItem("cache_cover");
+         api.post(
+          'organizer/event/cover/pic',
+          JSON.stringify({
+            "link": cover, 
+            "event_id": id_event
+          })
+        );
 
         }).catch(function (error) {
           console.error(error);
