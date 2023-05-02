@@ -67,7 +67,7 @@ export default function ShowsEvents() {
     //window.localStorage.setItem("preguntas", vaciar);
     //window.localStorage.setItem('cache_datos', vaciar);
     //window.localStorage.setItem('cache_event', vaciar);
-    //window.localStorage.setItem("cache_images", JSON.stringify([]));
+    window.localStorage.setItem("cache_images", JSON.stringify([]));
     //window.localStorage.setItem('coverPic', vaciar)
 
     loadPublications();
@@ -129,6 +129,7 @@ export default function ShowsEvents() {
             }
             window.localStorage.setItem("cache_edit", JSON.stringify(response.data));
             const result = JSON.parse(window.localStorage.getItem("cache_edit"));
+            window.localStorage.setItem("cache_images", JSON.stringify(response.data.Images));
             console.log(result);
             window.location.href = "/editEvent"
          })

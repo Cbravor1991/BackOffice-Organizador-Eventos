@@ -74,8 +74,6 @@ const EditEvent = () => {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [zoom, setZoom] = useState(7);
-  //const [faqs, setFaqs] = useState(null);
-  //const [agenda, setAgenta] = useState(props.agenda);
   const [preguntas, setPreguntas] = useState([]);
   const { register, control, formState: { errors }, getValues, setValue } = useForm({ defaultValues: 
      { 
@@ -91,17 +89,9 @@ const EditEvent = () => {
 
   let token_user = window.localStorage.getItem("token");
 
-  /*const preguntasRecuperadasJSON = window.localStorage.getItem("preguntas");
-  let analizar = JSON.parse(preguntasRecuperadasJSON);   */
-
-
-
+ 
   useEffect(() => {
-    sessionStorage.setItem("publication_data",  JSON.stringify(stored_event.Event));
-    //const rawContent = JSON.parse(props.description);
-    //const contentState = convertFromRaw(rawContent);
-    //setEditorState(EditorState.createWithContent(contentState));
-
+    window.localStorage.setItem("cache_images", JSON.stringify(stored_event.Images));
   }, []); 
 
 
@@ -145,36 +135,6 @@ const EditEvent = () => {
 
     return () => map.remove();
   }, []);
-
-/*
-  const loadFaqs = () => {
-
-    let token_user;
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-    let id_event = sessionStorage.getItem("event_id");
-
-    console.log(id_event)
-
-    const params = new URLSearchParams([['event_id', id_event]]);
-
-
-    api.get('/organizer/event/faq', { params: params })
-      .then((response) => {
-        setFaqs(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-
-  }*/
 
 
   const handleEditorChange = (newEditorState) => {
@@ -225,15 +185,12 @@ const EditEvent = () => {
 
   sessionStorage.setItem("event_id", id_event);
 
-  //console.log(length);
 
   const handleSubmitEvent = async (e) => {
     e.preventDefault();
     
     const formData = getValues();
     let token_user;
-
-    //const formData = getValues();
 
     if (!window.localStorage.getItem("token")) {
       console.log("no autorizado")
@@ -287,6 +244,12 @@ const EditEvent = () => {
       }
 
     }
+  }
+
+
+  const handleCancel = async (e) => {
+    //window.localStorage.setItem("cache_event", null);
+    window.location.href = '/eventList'
   }
 
 
@@ -603,8 +566,26 @@ const EditEvent = () => {
               </Box>
             </Grid>
 
-            <Grid xs={6} sx={{ width: '100%' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+           <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+            
+              <Grid item xs={2}>
+                <Button variant="contained" onClick={handleCancel} sx={{
+                  backgroundColor: '#1286f7',
+                  border: 'none',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  padding: '10px 20px',
+                  borderRadius: '30px',
+                  width: '200px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s ease-in-out'
+                }}>
+                  &#10094; Volver
+                </Button>
+              </Grid>
+                    
+              <Grid item xs={2}>
                 <Button variant="contained" onClick={handleSubmit} sx={{
                   backgroundColor: '#1286f7',
                   border: 'none',
@@ -614,15 +595,13 @@ const EditEvent = () => {
                   padding: '10px 20px',
                   borderRadius: '30px',
                   width: '200px',
-                  height: '60px',
-                  marginTop: '100px',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s ease-in-out'
-                }}>Guardar</Button>
-              </Box>
+                }}>Guardar
+               </Button>
+              </Grid>
 
             </Grid>
-
 
             <Divider />
           </Stack>
