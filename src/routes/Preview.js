@@ -18,8 +18,33 @@ import DescriptionDisplay from '../components/DescriptionDisplay';
 const Preview = () => {
   let event = JSON.parse(window.localStorage.getItem("cache_event"));
   let cover = window.localStorage.getItem("cache_cover");
+  console.log(cover);
   const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   const [loading, setLoading] = React.useState(false);
+  const [images, setImages] = React.useState(event.images); 
+  
+
+  const sortImages = () => {
+   
+     let originalImages = images;
+     
+     console.log(images);
+     
+     const sortedImages = [
+    ...originalImages.filter(({link}) => link == cover),
+    ...originalImages.filter(({link}) => link != cover)
+    ];
+    
+    console.log(sortedImages);
+    setImages(sortedImages);
+     
+   }
+
+
+  React.useEffect(() => {
+    sortImages();
+  }, []);
+
 
   const handleSubmitEvent = async (e) => {
     setLoading(true);
@@ -62,7 +87,7 @@ const Preview = () => {
 
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
-            <ImageDisplay images={event.images} />
+            <ImageDisplay images={images} />
             <BasicInfoDisplay event={event} stringDate={stringDate}/>
             <DescriptionDisplay description={JSON.parse(event.description)}/>
             <AgendaDisplay agenda={event.agenda} />
