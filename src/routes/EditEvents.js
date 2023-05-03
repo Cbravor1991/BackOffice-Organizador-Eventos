@@ -183,78 +183,13 @@ const EditEvent = () => {
     }
   };
 
-
   sessionStorage.setItem("event_id", id_event);
-
-
-  const handleSubmitEvent = async (e) => {
-    e.preventDefault();
-    
-    const formData = getValues();
-    let token_user;
-
-    if (!window.localStorage.getItem("token")) {
-      console.log("no autorizado")
-      window.location.href = "/home";
-      return;
-    } else {
-      token_user = window.localStorage.getItem("token");
-    }
-
-    try {
-
-      var options = {
-        method: 'PUT',
-        url: '/organizer/event',
-        data: {
-          "id": id_event,
-          "title": title,
-          "category": category,
-          "date": date,
-          "description": description,
-          "direction": direction,
-          "latitude": latitude,
-          "longitude": longitude,
-          "capacity": capacity,
-          "vacancies": vacancies,
-          "agenda": formData.sections,
-          "faqs": formData.faqs,
-          "images": []
-        }
-      };
-
-      api.request(options).then(function (response) {
-        console.log(response.data);
-      }).catch(function (error) {
-        console.error(error);
-      });
-
-      window.localStorage.setItem("event_id", id_event);
-      window.location.href = "/showEvents";
-
-    } catch (err) {
-      setError(true)
-      if (!err?.response) {
-        setErrMsg('El servidor no responde');
-      } else if (err.response?.status === 401) {
-        setErrMsg('Contraseña o usuario incorrecto');
-      } else if (err.response?.status === 402) {
-        setErrMsg('No tiene autorización');
-      } else {
-        setErrMsg('El ingreso ha fallado');
-      }
-
-    }
-  }
 
 
   const handleCancel = async (e) => {
     //window.localStorage.setItem("cache_event", null);
     window.location.href = '/eventList'
   }
-
-
-  //function filterById(images, cover) {return images.filter(function(images) {return (images['id'] == cover);})[0];}
 
   
   const handleSubmit = async (e) => {
@@ -306,8 +241,6 @@ const EditEvent = () => {
         }).catch(function (error) {
           console.error(error);
         });
-
-
 
     } catch (err) {
       setError(true)

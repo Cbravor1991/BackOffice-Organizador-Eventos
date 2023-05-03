@@ -122,7 +122,6 @@ export default function ShowsEvents() {
         };
   
       api.request(options)
-        //.then((response) => response.json())
         .then((response) => {
             console.log(response);
             if (response.length === 0) {
@@ -142,22 +141,6 @@ export default function ShowsEvents() {
 
     }
 
-
-/*  const handleViewClick = async (e, row) => {
-      const response = await loadEvent(row.id)
-      .then((response) => {const result = JSON.parse(window.localStorage.getItem("cache_event"));
-      console.log(result);})
-      window.location.href = "/view";
-  };
-
-
-  const update = async (props) => {
-    const response = await loadEvent(props.id);
-    let result = JSON.parse(window.localStorage.getItem("cache_edit"));
-    console.log(result);
-    window.location.href = "/editEvent"
-  }
-*/
 
   const deleteEvent = async (props) => {
     swal.fire({
