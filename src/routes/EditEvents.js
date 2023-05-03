@@ -261,9 +261,12 @@ const EditEvent = () => {
     e.preventDefault();
     
     const formData = getValues();
+    
     let images = JSON.parse(window.localStorage.getItem("cache_images"));
     console.log(images);
-    
+    images = images.filter(photo => photo.link !== null);    
+    window.localStorage.setItem("cache_images", JSON.stringify(images));
+
     try {
       var options = {
         method: 'PUT',

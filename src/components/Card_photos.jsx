@@ -38,9 +38,10 @@ export default function PhotosCard(props) {
           "link": props.link, 
           "event_id": props.event_id
         }),
-      );
+      ).then((response) => {
       console.log(response.data);
-
+      window.localStorage.setItem("cache_cover", props.link);
+     })
     } catch (err) {
       console.log('fijate hiciste algo mal')
     }
