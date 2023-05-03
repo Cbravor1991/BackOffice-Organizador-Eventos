@@ -24,7 +24,8 @@ import useStorage from '../hooks/useStorage';
 import { useForm, useFieldArray } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import Galery from '../components/Galery';
+//import Galery from '../components/Galery';
+import Galery from '../components/Update_Galery';
 
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
@@ -48,7 +49,7 @@ const theme = createTheme({
 const EditEvent = () => {
 
   let stored_event = JSON.parse(window.localStorage.getItem("cache_edit"));
-  let cover = window.localStorage.getItem("cache_cover");
+  let cover_id = window.localStorage.getItem("cache_cover_id");
 
   console.log(stored_event);
 

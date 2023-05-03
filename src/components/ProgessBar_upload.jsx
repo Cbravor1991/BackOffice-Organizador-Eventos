@@ -21,9 +21,9 @@ const ProgressBar = ({ file, setFile,loadImages }) => {
 
       window.localStorage.setItem("cache_images", JSON.stringify(photos));
 
-      let props = sessionStorage.getItem("publication_data")
+      let props = window.localStorage.getItem("cache_edit");
 
-      let id_event = (JSON.parse(props)).id
+      let id_event = (JSON.parse(props)).Event.id
 
       try {
         api.post('/organizer/event/images',

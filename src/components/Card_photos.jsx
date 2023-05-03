@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 
 export default function PhotosCard(props) {
 
-  let event_id = JSON.parse(sessionStorage.getItem("publication_data")).id;
+  let event_id = JSON.parse(window.localStorage.getItem("cache_edit")).Event.id;
 
   const deletePublication = async (props) => {
     api.delete('/organizer/event/images', {
@@ -20,6 +20,12 @@ export default function PhotosCard(props) {
     })
       .then((response) => {
         console.log("Imagen eliminada");
+     
+        let photos = JSON.parse(window.localStorage.getItem("cache_images"));
+        console.log(photos);
+        photos = photos.filter(photo => photo.link !== props.link);    
+        window.localStorage.setItem("cache_images", JSON.stringify(photos));
+
         props.loadImages()
       })
   }

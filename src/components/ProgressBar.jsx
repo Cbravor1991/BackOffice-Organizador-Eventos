@@ -8,7 +8,9 @@ const ProgressBar = ({ file, setFile }) => {
     if (url) {
       setFile(null);
       let photos = JSON.parse(window.localStorage.getItem("cache_images")) || [];
-      photos.push({ "link": url });
+      if (url != null) {
+        photos.push({ "link": url });
+      }
       window.localStorage.setItem("cache_images",  JSON.stringify(photos));
     }
   }, [url, setFile]);
