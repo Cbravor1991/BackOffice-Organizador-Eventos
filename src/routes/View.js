@@ -16,6 +16,7 @@ import Paper from '@mui/material/Paper';
 import BasicInfoDisplay from '../components/BasicInfoDisplay';
 import ImageDisplay from '../components/ImageDisplay';
 import DescriptionDisplay from '../components/DescriptionDisplay';
+import mapboxgl from 'mapbox-gl';
 
 
 const View = () => {
@@ -28,6 +29,7 @@ const View = () => {
   const stringDate = new Date(event.Event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   const [loading, setLoading] = React.useState(false);
   const [images, setImages] = React.useState(event.Images); 
+  const mapContainer = React.useRef(null);
 
 
   const sortImages = () => {
@@ -52,6 +54,24 @@ const View = () => {
     const rawContent = JSON.parse(event.Event.description);
     const contentState = convertFromRaw(rawContent);
     setEditorState(EditorState.createWithContent(contentState));
+  }, []);
+  
+  
+  React.useEffect(() => {
+   
+    const map = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [event.Event.longitude, event.Event.latitude],
+      zoom: 14
+    });
+
+    const marker = new mapboxgl.Marker({
+         color: "red",
+         offset: [125, -315]
+      }).setLngLat([event.Event.longitude, event.Event.latitude]).addTo(map);
+   
+    return () => map.remove();
   }, []);
   
   
@@ -81,6 +101,15 @@ const View = () => {
             <BasicInfoDisplay event={event.Event} stringDate={stringDate}/>
             <DescriptionDisplay description={JSON.parse(event.Event.description)}/>
             <AgendaDisplay agenda={event.Diary} />
+            
+            <Grid item sx={{ width: '50%', height: '300px' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                  <div ref={mapContainer} className="map-container"
+                    style={{ width: 400, height: 250, justifyContent: 'center', marginLeft: '250px', marginRight: '10px' }}
+                  />
+                </Box>
+            </Grid>            
+            
             <FaqsDisplay faqs={event.FAQ} />
 
           </CardContent>
