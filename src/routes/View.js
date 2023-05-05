@@ -30,6 +30,8 @@ const View = () => {
   const [loading, setLoading] = React.useState(false);
   const [images, setImages] = React.useState(event.Images); 
   const mapContainer = React.useRef(null);
+  const [latitude, setLatitude] = useState(event ? event.Event.latitude : -34.599722222222);
+  const [longitude, setLongitude] = useState(event ? event.Event.longitude : -58.381944444444);
 
 
   const sortImages = () => {
@@ -62,14 +64,15 @@ const View = () => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v12',
-      center: [event.Event.longitude, event.Event.latitude],
-      zoom: 14
+      center: [longitude, latitude],
+      zoom: 14,
+      attributionControl: false
     });
 
     const marker = new mapboxgl.Marker({
          color: "red",
-         offset: [125, -315]
-      }).setLngLat([event.Event.longitude, event.Event.latitude]).addTo(map);
+         offset: [25, -330]
+      }).setLngLat([longitude, latitude]).addTo(map);
    
     return () => map.remove();
   }, []);
@@ -105,7 +108,7 @@ const View = () => {
             <Grid item sx={{ width: '50%', height: '300px' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                   <div ref={mapContainer} className="map-container"
-                    style={{ width: 400, height: 250, justifyContent: 'center', marginLeft: '250px', marginRight: '10px' }}
+                    style={{ width: 400, height: 250, justifyContent: 'center', marginTop: '10px', marginBotton: '5px', marginLeft: '250px', marginRight: '10px' }}
                   />
                 </Box>
             </Grid>            

@@ -88,7 +88,8 @@ const CreateEventForm = () => {
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v12',
       center: [longitude, latitude],
-      zoom: zoom
+      zoom: zoom,
+      attributionControl: false
     });
 
     const geocoder = new MapboxGeocoder({
