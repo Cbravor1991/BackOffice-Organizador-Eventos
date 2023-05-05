@@ -248,23 +248,25 @@ const CreateEventForm = () => {
                     label="Tipo de evento"
                     onChange={(e) => setCategory(e.target.value)}
                   >
-                    <MenuItem sx={{ color: 'black' }} value="Evento deportivo">Evento deportivo</MenuItem>
+                    
                     <MenuItem sx={{ color: 'black' }} value="Cena o gala">Cena o gala</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Clase, curso o taller">Clase, curso o taller</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Performance">Performance</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Competencia">Competencia</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Conferencia">Conferencia</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Encuentro">Encuentro</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Networking">Networking</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Evento deportivo">Evento deportivo</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Feria">Feria</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Festival">Festival</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Fiesta" >Fiesta</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Competencia">Competencia</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Networking">Networking</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Performance">Performance</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Promoción">Promoción"</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Seminario">Seminario</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Show">Show</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Torneo">Torneo</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Visita">Visita</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
+                    
                   </Select>
                 </FormControl>
               </Grid>
