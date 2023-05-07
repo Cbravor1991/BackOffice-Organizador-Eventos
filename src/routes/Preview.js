@@ -15,6 +15,7 @@ import BasicInfoDisplay from '../components/BasicInfoDisplay';
 import ImageDisplay from '../components/ImageDisplay';
 import DescriptionDisplay from '../components/DescriptionDisplay';
 import mapboxgl from 'mapbox-gl';
+import swal from 'sweetalert2';
 
 
 const Preview = () => {
@@ -70,33 +71,12 @@ const Preview = () => {
   }, []);
 
 
+
   const handleSubmitPublished = async (e) => {
+    
     setLoading(true);
     e.preventDefault();
     event.state = "published"
-    await api
-      .post('organizer/event', event)
-      .then(async(response) => {
-        api.post(
-          'organizer/event/cover/pic',
-          JSON.stringify({
-            "link": cover, 
-            "event_id": response.data.id
-          })
-        );
-      })
-      .then(() => {
-        window.localStorage.setItem("cache_event", null);
-        window.localStorage.setItem("cache_cover", null);      
-        window.location.href = '/eventList';
-      })
-  }
-
-
-  const handleSubmitDraft = async (e) => {
-    setLoading(true);
-    e.preventDefault();
-    event.state = "draft";
     await api
       .post('organizer/event', event)
       .then(async(response) => {
@@ -153,19 +133,6 @@ const Preview = () => {
           </CardContent>
 
           <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
-            <Button onClick={handleSubmitDraft} sx={{
-              fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'center',
-              color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' }
-            }}>
-              Guardar borrador
-            </Button>
-            <Backdrop
-              sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-              open={loading}
-              onClick={() => setLoading(false)}
-              >
-              <CircularProgress color="inherit" />
-            </Backdrop>
             
             <Button onClick={handleSubmitPublished} sx={{
               fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'center',

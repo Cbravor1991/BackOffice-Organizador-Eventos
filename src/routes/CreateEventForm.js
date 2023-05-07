@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { api } from '../api/axios';
 import { useRef, useState, useEffect } from 'react';
 import { Select, MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
@@ -7,6 +9,8 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { Button, Divider, Typography, TextField } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+import CardActions from '@mui/material/CardActions';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material';
 import swal from 'sweetalert2';
@@ -53,7 +57,10 @@ const CreateEventForm = () => {
   const [direction, setDirection] = useState(stored_event ? stored_event.ubication.direction : '');
   const [latitude, setLatitude] = useState(stored_event ? stored_event.ubication.latitude : -34.599722222222);
   const [longitude, setLongitude] = useState(stored_event ? stored_event.ubication.longitude : -58.381944444444);
+  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState(stored_event ? stored_event.state : 'draft');
   
+    
   const { register, control, formState: { errors }, getValues, setValue } = useForm({
     defaultValues:
     {
@@ -74,14 +81,19 @@ const CreateEventForm = () => {
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
   let minDate = tomorrow.toISOString().split('T')[0];
 
+  let cover = window.localStorage.getItem("cache_cover");
+
+
   const handleEditorChange = (newEditorState) => {
     setEditorState(newEditorState);
     setDescription(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
   };
 
+
   const toolbarOptions = {
 
   };
+
 
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -156,29 +168,21 @@ const CreateEventForm = () => {
     }
   };
 
-  const requiredFieldsMissing = () => {
-    return title === '' || category === '' || date === '' || description === '' || direction === '';
-  }
 
   const handleCancel = async (e) => {
     window.localStorage.setItem("cache_event", null);
     window.location.href = '/eventList'
   }
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
+
+  const requiredFieldsMissing = () => {
+    return title === '' || category === '' || date === '' || description === '' || direction === '';
+  }
+  
+  
+  const prepareEvent = () => {
     const formData = getValues();
     let images = JSON.parse(window.localStorage.getItem("cache_images"));
-
-    if (requiredFieldsMissing()) {
-      swal.fire({
-        title: "Dejaste campos sin completar",
-        text: "Recuerda que para cargar imagenes debes llenar los campos previos",
-        icon: "warning",
-        confirmButtonText: 'Entendido',
-      })
-      return;
-    }
 
     const event = {
       "title": title,
@@ -191,15 +195,63 @@ const CreateEventForm = () => {
         "latitude": latitude,
         "longitude": longitude
       },
-      "state": "",
+      "state": state,
       "agenda": formData.sections,
       "faqs": formData.faqs,
       "authorizers": formData.mails,
       "images": images
     };
+   
+   return event;  
+  }
+  
+  
+  const handleSubmitDraft = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+    setState("draft");
+    
+    const event = prepareEvent(); 
+
+    await api
+      .post('organizer/event', event)
+      .then(async(response) => {
+        api.post(
+          'organizer/event/cover/pic',
+          JSON.stringify({
+            "link": cover, 
+            "event_id": response.data.id
+          })
+        );
+      })
+      .then(() => {
+        window.localStorage.setItem("cache_event", null);
+        window.localStorage.setItem("cache_cover", null);      
+        window.location.href = '/eventList';
+      })
+  }
+
+
+  const handleCreate = async (e) => {
+  
+  if (requiredFieldsMissing()) {
+      swal.fire({
+        title: "Dejaste campos sin completar",
+        text: "Recuerda que para cargar imagenes debes llenar los campos previos",
+        icon: "warning",
+        confirmButtonText: 'Entendido',
+      })
+      return;
+    }
+  
+    e.preventDefault();
+
+    const event = prepareEvent(); 
+
     window.localStorage.setItem("cache_event", JSON.stringify(event));
     window.location.href = '/preview'
   }
+
 
   return (
 
@@ -438,7 +490,8 @@ const CreateEventForm = () => {
 
 
             <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-              <Grid item xs={2}>
+             <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
+              <Grid item xs={2}  sx={{ display: 'flex', justifyContent: 'left'}}>
                 <Button variant="contained" onClick={handleCancel} sx={{
                   backgroundColor: '#1286f7',
                   border: 'none',
@@ -455,7 +508,32 @@ const CreateEventForm = () => {
                 </Button>
               </Grid>
               
-              <Grid item xs={2}>
+               <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center'}}>
+                <Button variant="contained" onClick={handleSubmitDraft} sx={{
+                  backgroundColor: '#1286f7',
+                  border: 'none',
+                  color: 'white',
+                  fontSize: '15px',
+                  fontWeight: 'bold',
+                  padding: '10px 20px',
+                  borderRadius: '30px',
+                  width: '200px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s ease-in-out'
+                }}>
+                  Guardar borrador
+                </Button>
+              </Grid>
+              
+              <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+                onClick={() => setLoading(false)}
+                >
+               <CircularProgress color="inherit" />
+             </Backdrop>
+
+              <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'right'}}>
                 <Button variant="contained" onClick={handleCreate} sx={{
                   backgroundColor: '#1286f7',
                   border: 'none',
@@ -468,9 +546,10 @@ const CreateEventForm = () => {
                   cursor: 'pointer',
                   transition: 'background-color 0.2s ease-in-out'
                 }}>
-                  Continuar &#10095;
+                  &#10095; Continuar
                 </Button>
               </Grid>
+             </CardActions> 
             </Grid>
 
 
