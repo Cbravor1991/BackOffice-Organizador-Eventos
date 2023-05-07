@@ -191,7 +191,7 @@ const CreateEventForm = () => {
         "latitude": latitude,
         "longitude": longitude
       },
-      "direction": direction,
+      "state": "",
       "agenda": formData.sections,
       "faqs": formData.faqs,
       "authorizers": formData.mails,
@@ -260,13 +260,13 @@ const CreateEventForm = () => {
                     <MenuItem sx={{ color: 'black' }} value="Festival">Festival</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Fiesta" >Fiesta</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Networking">Networking</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Performance">Performance</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Promoción">Promoción"</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Seminario">Seminario</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Show">Show</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Torneo">Torneo</MenuItem>
                     <MenuItem sx={{ color: 'black' }} value="Visita">Visita</MenuItem>
+                    <MenuItem sx={{ color: 'black' }} value="Otro">Otro</MenuItem>
                     
                   </Select>
                 </FormControl>
