@@ -3,6 +3,7 @@ import HomePage from './routes/HomePage';
 import CreateEventForm from './routes/CreateEventForm';
 import EditEvent from './routes/EditEvents';
 import ShowsEvents from './routes/ShowsEvents';
+import ShowsDrafts from './routes/ShowsDrafts';
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout';
 import { FileLoaderGallery } from './components/FileLoaderGallery';
@@ -31,6 +32,7 @@ export default function App() {
                 <Route path="loadEvent" element={<CreateEventForm />} />
                 <Route path="eventList" element={<ShowsEvents />} />
                 <Route path="showEvents" element={<ShowsEvents />} />
+                <Route path="loadDrafts" element={<ShowsDrafts />} />
                 <Route path="editEvent" element={<EditEvent />} />
                 <Route path="fileLoaderGallery" element={<FileLoaderGallery />} />   
                 <Route path="ver" element={<Formulario />} />  
