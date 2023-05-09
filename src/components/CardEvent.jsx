@@ -15,9 +15,12 @@ export default function CardEvent() {
          justifyContent: 'left', backgroundColor: '#1286f7', borderRadius: 2, px: 4, py: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
           Crear evento
         </Button>
-        <Button href={'/loadDrafts'} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, color: '#fff',
-         justifyContent: 'right', backgroundColor: '#1286f7', borderRadius: 2, px: 4, py: 1, '&:hover': { backgroundColor: '#1286f7' } }}>
-          Cargar borrador
+      </Grid>  
+      <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+        <Button href={'/loadDrafts'} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 12, fontWeight: 600, color: '#fff',
+         justifyContent: 'right', marginTop: '20px', backgroundColor: 'grey', borderRadius: 2, px: 4, py: 1,
+          '&:hover': { backgroundColor: '#1286f7' } }}>
+          Mis borradores
         </Button>
       </Grid>
     </Box>

@@ -180,6 +180,11 @@ const CreateEventForm = () => {
   }
   
   
+  const requiredFieldsMissingDraft = () => {
+    return title === '' || capacity === '' || date === '';
+  }
+  
+  
   const prepareEvent = () => {
     const formData = getValues();
     let images = JSON.parse(window.localStorage.getItem("cache_images"));
@@ -207,6 +212,16 @@ const CreateEventForm = () => {
   
   
   const handleSubmitDraft = async (e) => {
+     if (requiredFieldsMissingDraft()) {
+      swal.fire({
+        title: "Dejaste campos sin completar",
+        text: "Para guardar el borrador debes completar como mínimo título, fecha y capacidad",
+        icon: "warning",
+        confirmButtonText: 'Entendido',
+      })
+      return;
+    }
+  
     setLoading(true);
     e.preventDefault();
     setState("draft");

@@ -76,7 +76,7 @@ const EditEvent = () => {
   const map = useRef(null);
   const [zoom, setZoom] = useState(7);
   const [preguntas, setPreguntas] = useState([]);
-  const [state, setState] = window.localStorage.getItem("state");
+  const [state, setState] = useState(stored_event ? stored_event.Event.state : '');
   const { register, control, formState: { errors }, getValues, setValue } = useForm({ defaultValues: 
      { 
        sections: stored_event ? stored_event.Diary : [{ time: "", description: "" }],
