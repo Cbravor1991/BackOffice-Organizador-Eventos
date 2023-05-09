@@ -131,6 +131,7 @@ export default function ShowsDrafts() {
             const result = JSON.parse(window.localStorage.getItem("cache_edit"));
             window.localStorage.setItem("cache_images", JSON.stringify(response.data.Images));
             window.localStorage.setItem("cache_cover_id", JSON.stringify(response.data.Event.pic_id));
+            window.localStorage.setItem("state", JSON.stringify("draft"));
             console.log(result);
             window.location.href = "/editEvent"
          })

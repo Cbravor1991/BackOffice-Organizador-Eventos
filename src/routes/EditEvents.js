@@ -76,6 +76,7 @@ const EditEvent = () => {
   const map = useRef(null);
   const [zoom, setZoom] = useState(7);
   const [preguntas, setPreguntas] = useState([]);
+  const [state, setState] = window.localStorage.getItem("state");
   const { register, control, formState: { errors }, getValues, setValue } = useForm({ defaultValues: 
      { 
        sections: stored_event ? stored_event.Diary : [{ time: "", description: "" }],
@@ -259,6 +260,57 @@ const EditEvent = () => {
   }
 
 
+  const requiredFieldsMissing = () => {
+    return title === '' || category === '' || date === '' || description === '' || direction === '';
+  }
+
+
+  const prepareEvent = () => {
+    const formData = getValues();
+    let images = JSON.parse(window.localStorage.getItem("cache_images"));
+
+    const event = {
+      "title": title,
+      "category": category,
+      "date": date,
+      "description": description,
+      "capacity": capacity,
+      "ubication": {
+        "direction": direction,
+        "latitude": latitude,
+        "longitude": longitude
+      },
+      "state": state,
+      "agenda": formData.sections,
+      "faqs": formData.faqs,
+      "authorizers": formData.mails,
+      "images": images
+    };
+   
+   return event;  
+  }
+  
+  
+  const handlePublished = () => {
+  
+    if (requiredFieldsMissing()) {
+      swal.fire({
+        title: "Dejaste campos sin completar",
+        text: "Recuerda que para cargar imagenes debes llenar los campos previos",
+        icon: "warning",
+        confirmButtonText: 'Entendido',
+      })
+      return;
+    }
+    
+    const event = prepareEvent();
+  
+    window.localStorage.setItem("cache_edit", JSON.stringify(event));
+    window.location.href = '/previewDraft'
+  
+  }
+
+
   const handleEditPhotos = () => {
 
     window.localStorage.setItem("event_id", id_event);
@@ -288,7 +340,7 @@ const EditEvent = () => {
     window.location.href = "/updatePhotoGallery";
 
   }
-
+  
 
   /*------------------------------------------------------------------------------------------------------------------------*/
   return (
@@ -551,6 +603,25 @@ const EditEvent = () => {
                 }}>Guardar
                </Button>
               </Grid>
+              
+              <Grid item xs={2}>
+                <Button variant="contained" onClick={handlePublished} 
+                 disabled={state==="published"}
+                 sx={{
+                  backgroundColor: '#1286f7',
+                  border: 'none',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  padding: '10px 20px',
+                  borderRadius: '30px',
+                  width: '200px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s ease-in-out'
+                }}> Publicar &#10095;
+               </Button>
+              </Grid>
+
 
             </Grid>
 

@@ -28,7 +28,6 @@ const theme = createTheme({
 });
 
 
-
 export default function UpdatePhotoGallery() {
 
   const [photos, setPhotos] = useState([]);
@@ -104,9 +103,11 @@ export default function UpdatePhotoGallery() {
      })
   }
 
+
   useEffect(() => {
     loadImages();
   }, []);
+
 
   const cards = photos.map(item => {
     return (
@@ -241,7 +242,7 @@ export default function UpdatePhotoGallery() {
           <div className="output" >
             {error && <div className="error">{error}</div>}
             {file && <div sx={{ color: 'black' }}>{file.name}</div>}
-            {file && <ProgressBar file={file} setFile={setFile} />}
+            {file && <ProgressBar file={file} setFile={setFile} loadImages={loadImages} />}
           </div>
         </div>
       </div>

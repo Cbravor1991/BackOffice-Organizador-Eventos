@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 export default function CardEvent() {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '10%', py: 4 }}>
-      <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
+      <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 20, fontWeight: 700, mb: 2 }}>
         Bienvenido a tus eventos
       </Typography>
       <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>

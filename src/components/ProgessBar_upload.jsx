@@ -3,7 +3,7 @@ import useStorage from '../hooks/useStorage';
 import { api } from '../api/axios';
 
 
-const ProgressBar = ({ file, setFile,loadImages }) => {
+const ProgressBar = ({ file, setFile, loadImages }) => {
 
   const { url, progress } = useStorage(file, setFile);
 

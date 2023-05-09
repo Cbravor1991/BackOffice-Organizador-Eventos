@@ -234,7 +234,7 @@ const CreateEventForm = () => {
 
   const handleCreate = async (e) => {
   
-  if (requiredFieldsMissing()) {
+    if (requiredFieldsMissing()) {
       swal.fire({
         title: "Dejaste campos sin completar",
         text: "Recuerda que para cargar imagenes debes llenar los campos previos",
@@ -546,7 +546,7 @@ const CreateEventForm = () => {
                   cursor: 'pointer',
                   transition: 'background-color 0.2s ease-in-out'
                 }}>
-                  &#10095; Continuar
+                  &#10095; Publicar
                 </Button>
               </Grid>
              </CardActions> 
