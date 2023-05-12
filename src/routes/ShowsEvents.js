@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
+import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -171,6 +172,40 @@ export default function ShowsEvents() {
       }
     })
   }
+  
+  
+  const cancelEvent = async (props) => {
+     swal.fire({
+      title: "Confirmar",
+      text: "¿Confirmas que deseas cancelar el evento? Se enviará una notificación a los usuarios.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: 'Si, cancelar!',
+      cancelButtonText: 'No',
+      dangerMode: true
+    }).then(function (result) {
+
+      if (result['isConfirmed']) {
+
+        var options = {
+          method: 'PUT',
+          url: '/organizer/event',
+          data: {
+          "id": props.id,
+          "state": "canceled"
+         }
+        };
+
+        api.request(options).then(function (response) {
+          window.location.href = "/showEvents"
+        }).catch(function (error) {
+          console.error(error);
+        });
+      }
+    })
+
+  
+  }
 
 
   const handleSearchChange = (event) => {
@@ -256,9 +291,14 @@ export default function ShowsEvents() {
                               <Button aria-label="editar" onClick={() => { update(row) }}>
                                 EDITAR
                               </Button>
+                              
+                              <IconButton aria-label="cancelar" onClick={() => { cancelEvent(row) }}>
+                               <CancelIcon />
+                              </IconButton>
                               <IconButton aria-label="eliminar" onClick={() => { deleteEvent(row) }}>
                                 <DeleteIcon />
                               </IconButton>
+
                             </StyledTableCell>
                           </StyledTableRow>
                         ))
