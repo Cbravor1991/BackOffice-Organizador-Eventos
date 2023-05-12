@@ -26,6 +26,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 //import Galery from '../components/Galery';
 import Galery from '../components/Update_Galery';
+import { format } from 'date-fns';
 
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
@@ -70,7 +71,7 @@ const EditEvent = () => {
   const [success, setSuccess] = useState(false);
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-  let minDate = tomorrow.toISOString().split('T')[0];
+  let minDate = tomorrow.toISOString();
  const [editorState, setEditorState] = useState(description === '' ? () => EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(description))));
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -164,7 +165,7 @@ const EditEvent = () => {
       })
 
     } else {
-      setDate(selectedDate.toISOString().split('T')[0]);
+      setDate(format(selectedDate, 'yyyy-MM-dd hh:mm'));
     }
   };
 
@@ -544,10 +545,10 @@ const EditEvent = () => {
               <Grid item sx={{ width: '50%', marginTop: '20px' }}>
                 <Box sx={{ height: '250px', overflow: 'auto', marginLeft: '200px', borderRadius: '10px' }}>
                   <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                    Fecha del evento
+                    Fecha y hora del evento
                   </Typography>
-                  <TextField fullWidth sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
-                    type="date" id="date" name="date" onChange={handleDateChange} value={date || ' '} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
+                  <TextField fullWidth sx={{ width: '70%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+                    type="datetime-local" id="date" name="date" onChange={handleDateChange} value={date || ''} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
                   <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                     Cantidad de tickets
                   </Typography>
