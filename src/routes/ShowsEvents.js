@@ -49,6 +49,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function ShowsEvents() {
 
   const [publications, setPublications] = useState([]);
+  const [notification, setNotification] = useState("");
 
   let token_user = window.localStorage.getItem("token");
 
@@ -177,13 +178,16 @@ export default function ShowsEvents() {
   const cancelEvent = async (props) => {
      swal.fire({
       title: "Confirmar",
-      text: "¿Confirmas que deseas cancelar el evento? Se enviará una notificación a los usuarios.",
+      type: "input",
+      text: "¿Confirmas que deseas cancelar el evento? Se enviará la siguiente notificación a los usuarios.",
       icon: "warning",
+      animation: "slide-from-top",
       showCancelButton: true,
       confirmButtonText: 'Si, cancelar!',
       cancelButtonText: 'No',
-      dangerMode: true
-    }).then(function (result) {
+      dangerMode: true,
+      inputPlaceholder: "Mensaje"
+    }).then(function (result, inputValue) {
 
       if (result['isConfirmed']) {
 
@@ -196,8 +200,9 @@ export default function ShowsEvents() {
          }
         };
 
+        setNotification(inputValue);
         api.request(options).then(function (response) {
-          window.location.href = "/showEvents"
+          window.location.href = "/notification"
         }).catch(function (error) {
           console.error(error);
         });
