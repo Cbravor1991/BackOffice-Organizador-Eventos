@@ -278,9 +278,18 @@ const CreateEventForm = () => {
 
       <Navbar />
 
-      <Typography variant="h5" component="div" sx={{ marginTop: '20px', color: 'black', fontSize: 20, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-        Crear evento
-      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={2}>
+          <Button href={'/eventList'} sx={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+              &#10094; Volver
+            </Button>
+        </Grid>
+        <Grid item xs={8}>
+          <Typography variant="h5" component="div" sx={{ marginTop: '20px', color: 'black', fontSize: 20, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+            Crear evento
+          </Typography>
+        </Grid>
+      </Grid>
 
       <Grid sx={{ display: 'flex', justifyContent: 'center', padding: '100px', paddingTop: '20px', paddingBottom: '30px' }}>
         <Stack direction="row" spacing={15} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
