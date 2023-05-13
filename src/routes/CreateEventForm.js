@@ -561,11 +561,11 @@ const CreateEventForm = () => {
                   fontWeight: 'bold',
                   padding: '10px 20px',
                   borderRadius: '30px',
-                  width: '200px',
+                  width: '300px',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s ease-in-out'
                 }}>
-                  &#10095; Publicar
+                  &#10095; Continuar
                 </Button>
               </Grid>
              </CardActions> 

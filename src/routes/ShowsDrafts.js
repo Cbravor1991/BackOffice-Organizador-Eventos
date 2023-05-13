@@ -193,7 +193,11 @@ export default function ShowsDrafts() {
       <div>
         <Navbar />
          <Grid item xs={6} sx={{justifyContent: 'center', marginTop: '20px', marginLeft: '20px'}}>
-          <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 18, fontWeight: 700, justifyContent: 'center', mb: 2 }}>
+          <Button href={'/eventList'}>
+            &#10094; Volver
+          </Button>
+
+          <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 18, fontWeight: 700, justifyContent: 'center', mb: 2, padding: '15px'}}>
               Borradores
           </Typography> 
          </Grid>
