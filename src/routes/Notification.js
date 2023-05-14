@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import {Button, Row, Col, Toast} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { firebaseConfig, getTokenFirebase, onMessageListener,
-         onForegroundMessage, getOrRegisterServiceWorker } from '../firebase/config-notification';
+         onForegroundMessage, getOrRegisterServiceWorker, getAccessToken } from '../firebase/config-notification';
 import { ToastContainer, toast } from 'react-toastify';
 
 
@@ -15,7 +15,8 @@ export default function  Notification() {
   /*let token_user = window.localStorage.getItem("token");
   console.log(token_user);*/
   
-  const token = getTokenFirebase()
+  //const token = getTokenFirebase()
+  const token = getAccessToken()
   .then(() => {
   console.log(token);
   setTokenFound(true);
