@@ -177,17 +177,15 @@ export default function ShowsEvents() {
   
   const cancelEvent = async (props) => {
      swal.fire({
-      title: "Confirmar",
-      type: "input",
-      text: "¿Confirmas que deseas cancelar el evento? Se enviará la siguiente notificación a los usuarios.",
+      title: "Confirmar cancelación",
+      input: "text",
+      text: "¿Confirmas que deseas cancelar el evento? Se enviará una notificación a los usuarios.",
       icon: "warning",
-      animation: "slide-from-top",
       showCancelButton: true,
       confirmButtonText: 'Si, cancelar!',
       cancelButtonText: 'No',
-      dangerMode: true,
-      inputPlaceholder: "Mensaje"
-    }).then(function (result, inputValue) {
+      inputPlaceholder: "Mensaje (máximo 50 caracteres)"
+    }).then(function (result) {
 
       if (result['isConfirmed']) {
 
@@ -200,7 +198,7 @@ export default function ShowsEvents() {
          }
         };
 
-        setNotification(inputValue);
+        console.log(result.value);
         api.request(options).then(function (response) {
           window.location.href = "/notification"
         }).catch(function (error) {

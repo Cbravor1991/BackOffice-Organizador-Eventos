@@ -1,5 +1,4 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { serverTimestamp } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
@@ -29,7 +28,7 @@ const messaging = getMessaging(firebaseapp);
 
     
 export const getTokenFirebase = (setTokenFound) => {
-  return getToken(messaging, {vapidKey: 'GENERATED_MESSAGING_KEY'}).then((currentToken) => {
+  return getToken(messaging, {vapidKey: "BBj4VkejOn6Id2GfXe1u9fQrzYxoxLOkHnBxHGXKA8DXmrTMasukIX-p4XiyzdkxrGxS_HpqtUOYxP4-E0zZQCA"}).then((currentToken) => {
     if (currentToken) {
       console.log('current token for client: ', currentToken);
       setTokenFound(true);
@@ -53,7 +52,4 @@ export const onMessageListener = () =>
       resolve(payload);
     });
 });  
- 
- 
-export { serverTimestamp };
- 
+

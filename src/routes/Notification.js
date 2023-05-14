@@ -9,8 +9,11 @@ export default function  Notification() {
   const [show, setShow] = useState(false);
   const [notification, setNotification] = useState({title: '', body: ''});
   const [isTokenFound, setTokenFound] = useState(false);
-  getTokenFirebase(setTokenFound);
   
+  const token = getTokenFirebase(setTokenFound)
+  .then(() => {
+  console.log(token);
+  });
   
   onMessageListener().then(payload => {
     setShow(true);
