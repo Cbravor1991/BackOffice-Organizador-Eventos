@@ -22,7 +22,7 @@ const Preview = () => {
   let event = JSON.parse(window.localStorage.getItem("cache_event"));
   let cover = window.localStorage.getItem("cache_cover");
   console.log(cover);
-  const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+  const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' });
   const [loading, setLoading] = React.useState(false);
   const [images, setImages] = React.useState(event.images); 
   const mapContainer = React.useRef(null);

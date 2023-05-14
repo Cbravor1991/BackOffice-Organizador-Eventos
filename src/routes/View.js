@@ -26,7 +26,7 @@ const View = () => {
   console.log(event);
   let cover_id = window.localStorage.getItem("cache_cover_id");
   console.log(cover_id);
-  const stringDate = new Date(event.Event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+  const stringDate = new Date(event.Event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' });
   const [loading, setLoading] = React.useState(false);
   const [images, setImages] = React.useState(event.Images); 
   const mapContainer = React.useRef(null);

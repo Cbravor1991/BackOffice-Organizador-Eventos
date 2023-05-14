@@ -179,6 +179,10 @@ export default function ShowsEvents() {
      swal.fire({
       title: "Confirmar cancelación",
       input: "text",
+      inputAttributes: {
+        maxlength: 50, 
+        size: 50
+       },
       text: "¿Confirmas que deseas cancelar el evento? Se enviará una notificación a los usuarios.",
       icon: "warning",
       showCancelButton: true,

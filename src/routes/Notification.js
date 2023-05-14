@@ -1,7 +1,7 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Button, Row, Col, Toast} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { firebaseConfig, getTokenFirebase, onMessageListener } from '../firebase/config-notification';
+import { firebaseConfig, getTokenFirebase, onMessageListener, onForegroundMessage } from '../firebase/config-notification';
 
 
 export default function  Notification() {
@@ -10,10 +10,25 @@ export default function  Notification() {
   const [notification, setNotification] = useState({title: '', body: ''});
   const [isTokenFound, setTokenFound] = useState(false);
   
+  let token_user = window.localStorage.getItem("token");
+  console.log(token_user);
+  
   const token = getTokenFirebase(setTokenFound)
   .then(() => {
   console.log(token);
   });
+  
+ 
+  useEffect(() => {
+    onForegroundMessage()
+      .then((payload) => {
+        console.log('Received foreground message: ', payload);
+        const { notification: { title, body } } = payload;
+        return (<Toast title={title} body={body} />);
+      })
+      .catch(err => console.log('An error occured while retrieving foreground message. ', err));
+  }, []);
+
   
   onMessageListener().then(payload => {
     setShow(true);
