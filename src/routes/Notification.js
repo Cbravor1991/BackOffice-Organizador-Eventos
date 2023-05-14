@@ -1,7 +1,9 @@
 import {useState, useEffect} from 'react';
 import {Button, Row, Col, Toast} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { firebaseConfig, getTokenFirebase, onMessageListener, onForegroundMessage } from '../firebase/config-notification';
+import { firebaseConfig, getTokenFirebase, onMessageListener,
+         onForegroundMessage, getOrRegisterServiceWorker } from '../firebase/config-notification';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 export default function  Notification() {
@@ -10,12 +12,13 @@ export default function  Notification() {
   const [notification, setNotification] = useState({title: '', body: ''});
   const [isTokenFound, setTokenFound] = useState(false);
   
-  let token_user = window.localStorage.getItem("token");
-  console.log(token_user);
+  /*let token_user = window.localStorage.getItem("token");
+  console.log(token_user);*/
   
-  const token = getTokenFirebase(setTokenFound)
+  const token = getTokenFirebase()
   .then(() => {
   console.log(token);
+  setTokenFound(true);
   });
   
  
@@ -36,8 +39,17 @@ export default function  Notification() {
     console.log(payload);
   }).catch(err => console.log('failed: ', err));
 
+
+  const ToastifyNotification = ({ title, body }) => (
+    <div className="push-notification">
+      <h2 className="push-notification-title">{title}</h2>
+      <p className="push-notification-text">{body}</p>
+    </div>
+  );
+
   
   return (
+   <>
     <div className="Notification">
         <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide animation style={{
           position: 'absolute',
@@ -61,5 +73,18 @@ export default function  Notification() {
         <Button onClick={() => setShow(true)}>Mostrar notificación</Button>
       </header>
     </div>
+    <br/>
+    <div className="app">
+
+      <button
+        className="btn-primary"
+        onClick={() => toast(<ToastifyNotification title="New Message" body="Hi there!" />)}
+      >
+        Show toast notification
+      </button>
+
+      <ToastContainer hideProgressBar />
+    </div>
+  </>  
 )}
 

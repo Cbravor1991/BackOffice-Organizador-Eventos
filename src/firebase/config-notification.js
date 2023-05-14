@@ -26,8 +26,29 @@ const analytics = getAnalytics(firebaseapp);
   
 const messaging = getMessaging(firebaseapp);
 
+
+export const getOrRegisterServiceWorker = () => {
+  if ('serviceWorker' in navigator) {
+    return window.navigator.serviceWorker
+      .getRegistration('/firebase-push-notification-scope')
+      .then((serviceWorker) => {
+        if (serviceWorker) return serviceWorker;
+        return window.navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+          scope: '/firebase-push-notification-scope',
+        });
+      });
+  }
+  throw new Error('The browser doesn`t support service worker.');
+};
+
+
+export const getTokenFirebase = () =>
+  getOrRegisterServiceWorker()
+    .then((serviceWorkerRegistration) =>
+      getToken(messaging, { vapidKey: "BBj4VkejOn6Id2GfXe1u9fQrzYxoxLOkHnBxHGXKA8DXmrTMasukIX-p4XiyzdkxrGxS_HpqtUOYxP4-E0zZQCA", serviceWorkerRegistration }));
     
-export const getTokenFirebase = (setTokenFound) => {
+    
+/*export const getTokenFirebase = (setTokenFound) => {
   return getToken(messaging, {vapidKey: "BBj4VkejOn6Id2GfXe1u9fQrzYxoxLOkHnBxHGXKA8DXmrTMasukIX-p4XiyzdkxrGxS_HpqtUOYxP4-E0zZQCA"}).then((currentToken) => {
     if (currentToken) {
       console.log('current token for client: ', currentToken);
@@ -43,7 +64,7 @@ export const getTokenFirebase = (setTokenFound) => {
     console.log('An error occurred while retrieving token. ', err);
     // catch error while creating client token
   });
-}  
+} */ 
 
 
 export const onMessageListener = () =>
