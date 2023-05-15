@@ -650,8 +650,8 @@ const EditEvent = () => {
                       ¿Desea enviar una <strong>notificación</strong> de los cambios a los usuarios inscriptos?
                     </Typography>
                     
-                    <TextField error={error} fullWidth sx={{ m: 1 }} label="Titulo" value={notificationTitle} onChange={(e) => setNotificationTitle(e.target.value)} />
-                    <TextField error={error} fullWidth sx={{ m: 1 }} label="Descripción" value={notificationDescription} onChange={(e) => setNotificationDescription(e.target.value)} />
+                    <TextField inputProps={{ maxLength: 50 }} error={error} fullWidth sx={{ m: 1 }} label="Titulo" value={notificationTitle} onChange={(e) => setNotificationTitle(e.target.value)} />
+                    <TextField inputProps={{ maxLength: 200 }} error={error} fullWidth sx={{ m: 1 }} label="Descripción" value={notificationDescription} onChange={(e) => setNotificationDescription(e.target.value)} />
                     <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                       <Grid item xs={7}>
                       <Button onClick={handleSubmit}>Guardar sin notificación</Button>
