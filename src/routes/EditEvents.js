@@ -27,7 +27,8 @@ import IconButton from '@mui/material/IconButton';
 //import Galery from '../components/Galery';
 import Galery from '../components/Update_Galery';
 import { format } from 'date-fns';
-
+import Modal from '@mui/material/Modal';
+import AddAlertIcon from '@mui/icons-material/AddAlert';
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic2FoaWx0aGFrYXJlNTIxIiwiYSI6ImNrbjVvMTkzNDA2MXQydnM2OHJ6aHJvbXEifQ.z5aEqRBTtDMWoxVzf3aGsg";
 
@@ -56,6 +57,12 @@ const EditEvent = () => {
 
   const userRef = useRef();
   const errRef = useRef();
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const [notificationTitle, setNotificationTitle] = useState('');
+  const [notificationDescription, setNotificationDescription] = useState('');
+
   const [error, setError] = useState(false);
   const [id_event, setEventID] = useState(stored_event.Event.id);
   const [title, setTitle] = useState(stored_event ? stored_event.Event.title : '');
@@ -194,7 +201,24 @@ const EditEvent = () => {
     window.location.href = '/eventList'
   }
 
-  
+  const sendNotification = async (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams([['event_id', id_event]]);
+    var options = {
+      method: 'POST',
+      url: 'organizer/event/notify',
+      params: params,
+      data: {
+        "title": notificationTitle, 
+        "description": notificationDescription
+      }
+    };
+    api.request(options).then(response => {
+      handleSubmit(e);
+    })
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -466,6 +490,7 @@ const EditEvent = () => {
                     ))}
 
                     <Button variant="outlined" size='small' onClick={() => appendFaq({ question: "", response: "" })}>Agregar FAQ</Button>
+
                   </form>
                 </div>
               </Grid>
@@ -590,7 +615,7 @@ const EditEvent = () => {
               </Grid>
                     
               <Grid item xs={2}>
-                <Button variant="contained" onClick={handleSubmit} sx={{
+                <Button variant="contained" onClick={handleOpenModal} sx={{
                   backgroundColor: '#1286f7',
                   border: 'none',
                   color: 'white',
@@ -603,6 +628,40 @@ const EditEvent = () => {
                   transition: 'background-color 0.2s ease-in-out'
                 }}>Guardar
                </Button>
+               <Modal
+                  open={openModal}
+                  onClose={handleCloseModal}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={{  
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 500,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    p: 4,
+                  }}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                      <AddAlertIcon sx={{ m:1 }} />
+                      ¿Desea enviar una <strong>notificación</strong> de los cambios a los usuarios inscriptos?
+                    </Typography>
+                    
+                    <TextField error={error} fullWidth sx={{ m: 1 }} label="Titulo" value={notificationTitle} onChange={(e) => setNotificationTitle(e.target.value)} />
+                    <TextField error={error} fullWidth sx={{ m: 1 }} label="Descripción" value={notificationDescription} onChange={(e) => setNotificationDescription(e.target.value)} />
+                    <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                      <Grid item xs={7}>
+                      <Button onClick={handleSubmit}>Guardar sin notificación</Button>
+                      </Grid>
+                      <Grid item xs={5}>
+                      <Button onClick={sendNotification}>Enviar y guardar</Button>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Modal>
               </Grid>
               
               <Grid item xs={2}>
