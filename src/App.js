@@ -16,7 +16,6 @@ import Preview from './routes/Preview';
 import PreviewDraft from './routes/PreviewDraft';
 import Faqs from './routes/Faqs';
 import View from './routes/View';
-import Notification from './routes/Notification';
 
 
 export default function App() {
@@ -41,7 +40,6 @@ export default function App() {
                 <Route path="preview" element={<Preview />} />  
                 <Route path="previewDraft" element={<PreviewDraft />} />
                 <Route path="view" element={<View />} />
-                <Route path="notification" element={<Notification />} />
                 <Route path="faqs" element={<Faqs />} />  
                 <Route path="photoUpload" element={<Galery />} />
                 <Route path= "updatePhotoGallery" element={<UpdatePhotoGallery />}/>

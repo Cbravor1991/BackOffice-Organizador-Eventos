@@ -93,7 +93,6 @@ export default function ShowsEvents() {
         };
   
       api.request(options)
-        //.then((response) => response.json())
         .then((response) => {
             console.log(response);
             if (response.length === 0) {
@@ -204,13 +203,12 @@ export default function ShowsEvents() {
 
         console.log(result.value);
         api.request(options).then(function (response) {
-          window.location.href = "/notification"
+          window.location.href = "/eventList"
         }).catch(function (error) {
           console.error(error);
         });
       }
     })
-
   
   }
 
