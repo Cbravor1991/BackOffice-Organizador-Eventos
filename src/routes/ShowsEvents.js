@@ -49,7 +49,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function ShowsEvents() {
 
   const [publications, setPublications] = useState([]);
-  const [notification, setNotification] = useState("");
+
 
   let token_user = window.localStorage.getItem("token");
 
@@ -203,7 +203,22 @@ export default function ShowsEvents() {
 
         console.log(result.value);
         api.request(options).then(function (response) {
+          const params = {"event_id": props.id}
+          
+          var options2 = {
+          method: 'POST',
+          url: '/organizer/event/notify',
+          params: params,
+          data: {
+          "title": "Cancelación de evento",
+          "description": result.value
+         }
+        };
+
+        console.log(result.value);
+        api.request(options2).then(function (response){ 
           window.location.href = "/eventList"
+         }) 
         }).catch(function (error) {
           console.error(error);
         });
