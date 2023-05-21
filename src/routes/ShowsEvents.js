@@ -239,7 +239,7 @@ export default function ShowsEvents() {
 
 
   const filteredData = publications.filter((row) =>
-    row.title.toLowerCase().includes(searchText.toLowerCase())
+    row.title.toLowerCase().includes(searchText.toLowerCase() && row.state === "published")
   );
 
 
