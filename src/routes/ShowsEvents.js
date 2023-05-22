@@ -22,6 +22,7 @@ import Navbar from '../components/NavBar';
 import swal from 'sweetalert2';
 import { Button, Grid } from '@mui/material';
 import { Height } from '@material-ui/icons';
+import Tooltip from '@mui/material/Tooltip';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -311,14 +312,19 @@ export default function ShowsEvents() {
                               <Button aria-label="editar" onClick={() => { update(row) }}>
                                 EDITAR
                               </Button>
+                               
+                               <Tooltip title="Cancelar" text="Cancelar">
+                                <IconButton aria-label="cancelar" tooltip="Add bold text" tooltipDirection="sw" tooltipAlign="left" onClick={() => { cancelEvent(row) }}>
+                                  <CancelIcon />
+                                </IconButton>
+                               </Tooltip>
                               
-                              <IconButton aria-label="cancelar" onClick={() => { cancelEvent(row) }}>
-                               <CancelIcon />
-                              </IconButton>
-                              <IconButton aria-label="eliminar" onClick={() => { deleteEvent(row) }}>
-                                <DeleteIcon />
-                              </IconButton>
-
+                               <Tooltip title="Eliminar" text="Eliminar">
+                                <IconButton aria-label="eliminar" onClick={() => { deleteEvent(row) }}>
+                                  <DeleteIcon />
+                                </IconButton>
+                               </Tooltip>
+                              
                             </StyledTableCell>
                           </StyledTableRow>
                         ))
