@@ -48,7 +48,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function ShowsDrafts() {
 
-  const [drafts, setDrafts] = useState([]);
+  const [canceled, setCanceled] = useState([]);
 
   let token_user = window.localStorage.getItem("token");
 
@@ -56,7 +56,7 @@ export default function ShowsDrafts() {
   const loadPublications = () => {
     api.get('/organizer/events')
       .then((response) => {
-        setDrafts(response.data);
+        setCanceled(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -185,8 +185,8 @@ export default function ShowsDrafts() {
   };
 
 
-  const filteredData = drafts.filter((row) =>
-    row.state === "draft"
+  const filteredData = canceled.filter((row) =>
+    row.state === "canceled"
   );
 
 
@@ -199,7 +199,7 @@ export default function ShowsDrafts() {
           </Button>
 
           <Typography variant="h6" component="div" sx={{ color: 'black', fontSize: 18, fontWeight: 700, justifyContent: 'center', mb: 2, padding: '15px'}}>
-              Borradores
+              Eventos cancelados
           </Typography> 
          </Grid>
         <Grid sx={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>          
@@ -221,7 +221,7 @@ export default function ShowsDrafts() {
                     </TableRow>
                   </TableHead>
 
-                  {(drafts && drafts.length > 0) ? 
+                  {(canceled && canceled.length > 0) ? 
                   (
                     <TableBody>
                       {filteredData

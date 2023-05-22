@@ -18,10 +18,16 @@ export default function CardEvent() {
       </Grid>  
       <Grid container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
         <Button href={'/loadDrafts'} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 12, fontWeight: 600, color: '#fff',
+         justifyContent: 'left', marginTop: '20px', backgroundColor: 'grey', borderRadius: 2, px: 4, py: 1,
+          '&:hover': { backgroundColor: '#1286f7' } }}>
+          Borradores
+        </Button>
+        <Button href={'/showsCanceled'} sx={{ fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 12, fontWeight: 600, color: '#fff',
          justifyContent: 'right', marginTop: '20px', backgroundColor: 'grey', borderRadius: 2, px: 4, py: 1,
           '&:hover': { backgroundColor: '#1286f7' } }}>
-          Mis borradores
+          Cancelados
         </Button>
+
       </Grid>
     </Box>
   );
