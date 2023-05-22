@@ -260,7 +260,7 @@ export default function ShowsDrafts() {
                   (
                     <StyledTableRow >
                       <StyledTableCell component="th" scope="row">
-                        NO TIENES BORRADORES GUARDADOS
+                        NO TIENES EVENTOS CANCELADOS 
                       </StyledTableCell>
                     </StyledTableRow>
                   )}
