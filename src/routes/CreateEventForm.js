@@ -150,8 +150,8 @@ const CreateEventForm = () => {
 
     } else {
       console.log(selectedDate.toISOString());
-      console.log(format(selectedDate, 'yyyy-MM-dd hh:mm'));
-      setDate(format(selectedDate, 'yyyy-MM-dd hh:mm'));
+      console.log(format(selectedDate, 'yyyy-MM-dd HH:mm'));
+      setDate(format(selectedDate, 'yyyy-MM-dd HH:mm'));
     }
   };
 

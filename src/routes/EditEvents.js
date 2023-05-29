@@ -172,7 +172,7 @@ const EditEvent = () => {
       })
 
     } else {
-      setDate(format(selectedDate, 'yyyy-MM-dd hh:mm'));
+      setDate(format(selectedDate, 'yyyy-MM-dd HH:mm'));
     }
   };
 
