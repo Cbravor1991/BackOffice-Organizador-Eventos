@@ -32,7 +32,6 @@ const useStorage = (file) => { // remove setFile parameter
         const url = await getDownloadURL(storageRef);
         console.log(url);
         const createdAt = serverTimestamp();
-        await addDoc(collectionRef, { url, createdAt });
         setUrl(url);
     
        
