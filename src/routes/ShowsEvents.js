@@ -50,6 +50,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function ShowsEvents() {
 
   const [publications, setPublications] = useState([]);
+  const [data, setData] = useState(null)
 
 
   let token_user = window.localStorage.getItem("token");
@@ -177,57 +178,105 @@ export default function ShowsEvents() {
   
   
   const cancelEvent = async (props) => {
-     swal.fire({
-      title: "Confirmar cancelación",
-      input: "text",
-      inputAttributes: {
-        maxlength: 50, 
-        size: 50
-       },
-      text: "¿Confirmas que deseas cancelar el evento? Se enviará una notificación a los usuarios.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: 'Si, cancelar!',
-      cancelButtonText: 'No',
-      inputPlaceholder: "Mensaje (máximo 50 caracteres)"
-    }).then(function (result) {
-
-      if (result['isConfirmed']) {
-
-        var options = {
-          method: 'PUT',
-          url: '/organizer/event',
-          data: {
-          "id": props.id,
-          "state": "canceled"
-         }
+ 
+    
+    try {   
+      var options = {
+        method: 'GET',
+           url:`/organizer/event?event_id=${props.id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token_user
+            },
         };
-
-        console.log(result.value);
-        api.request(options).then(function (response) {
-          const params = {"event_id": props.id}
-          
-          var options2 = {
-          method: 'POST',
-          url: '/organizer/event/notify',
-          params: params,
-          data: {
-          "title": "Cancelación de evento",
-          "description": result.value
-         }
-        };
-
-        console.log(result.value);
-        api.request(options2).then(function (response){ 
-          window.location.href = "/eventList"
-         }) 
-        }).catch(function (error) {
-          console.error(error);
-        });
-      }
-    })
   
-  }
+     await api.request(options)
+        .then((response) => {
+          console.log(response.data.Event.pic_id)
+           swal.fire({
+            title: "Confirmar cancelación",
+            input: "text",
+            inputAttributes: {
+              maxlength: 50, 
+              size: 50
+             },
+            text: "¿Confirmas que deseas cancelar el evento? Se enviará una notificación a los usuarios.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: 'Si, cancelar!',
+            cancelButtonText: 'No',
+            inputPlaceholder: "Mensaje (máximo 50 caracteres)"
+          }).then(function (result) {
+      
+            if (result['isConfirmed']) {
+      
+              var options = {
+                method: 'PUT',
+                url: '/organizer/event',
+                data: {
+                "id": props.id,
+                "title": response.data.Event.title,
+                "category": response.data.Event.category,
+                "date": response.data.Event.date,
+                "description": response.data.Event.description,
+                "direction": response.data.Event.direction,
+                "latitude": response.data.Event.latitude,
+                "longitude": response.data.Event.longitude,
+                "capacity": response.data.Event.capacity,
+                "agenda" : response.data.Event.agenda,
+                "faqs" : response.data.Event.faqs,
+                "images" : response.data.Images,
+                "vacancies": response.data.Event.vacancies,
+                "state": "canceled"}
+              };
+      
+              console.log(result.value);
+              api.request(options).then(function (response__) {
+                const params = {"event_id": props.id}
+                
+                var options2 = {
+                method: 'POST',
+                url: '/organizer/event/notify',
+                params: params,
+                data: {
+                "title": "Cancelación de evento",
+                "description": result.value
+               }
+              };
+      
+              console.log(result.value);
+              api.request(options2).then(function (response_){
+                if (response.data.Event.pic_id!= null) {
+                  console.log('fijate=>', response.data)
+                  response.data.Images.map(item => {
+                    console.log('item_id=>', item.id)
+                    console.log('cover_id=>', response.data.Event.pic_id)
+                    if (response.data.Event.pic_id == item.id) {
+                      api.post(
+                        'organizer/event/cover/pic',
+                        JSON.stringify({
+                          "link": item.link, 
+                          "event_id": props.id
+                        })
+                      );}
+                  })
+                } else {
+                  console.log('fallo')
+                  window.location.href = "/eventList"
+                  
+                }
+                window.location.href = "/eventList"
+               }) 
+              }).catch(function (error) {
+                console.error(error);
+              });
+            }
+          })})
+                
+       } catch (error) {
+            console.error(error);
+        }
+}
 
 
   const handleSearchChange = (event) => {
