@@ -51,7 +51,6 @@ const theme = createTheme({
 const EditEvent = () => {
 
   let stored_event = JSON.parse(window.localStorage.getItem("cache_edit"));
-
   let cover_id = window.localStorage.getItem("cache_cover_id");
 
   console.log(stored_event);
@@ -303,22 +302,23 @@ const EditEvent = () => {
     const formData = getValues();
     let images = JSON.parse(window.localStorage.getItem("cache_images"));
 
-    const event ={ Event: {
-      "id": id_event,
+    const event = {
       "title": title,
       "category": category,
       "date": date,
       "description": description,
       "capacity": capacity,
-      "direction": direction,
-      "latitude": latitude,
-      "longitude": longitude,
+      "ubication": {
+        "direction": direction,
+        "latitude": latitude,
+        "longitude": longitude
+      },
       "state": state,
       "agenda": formData.sections,
       "faqs": formData.faqs,
       "authorizers": formData.mails,
       "images": images
-    }};
+    };
    
    return event;  
   }
@@ -338,7 +338,7 @@ const EditEvent = () => {
     
     const event = prepareEvent();
   
-    window.localStorage.setItem("cache_edit", JSON.stringify(event));
+    window.localStorage.setItem("cache_edit_draft", JSON.stringify(event));
     window.location.href = '/previewDraft'
   
   }

@@ -19,15 +19,16 @@ import swal from 'sweetalert2';
 
 
 const PreviewDraft = () => {
-  let event = JSON.parse(window.localStorage.getItem("cache_edit"));
+  let event = JSON.parse(window.localStorage.getItem("cache_edit_draft"));
   let cover = window.localStorage.getItem("cache_cover");
-  console.log('event =>', event)
+  console.log('cover =>', cover)
+  console.log(cover);
   const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   const [loading, setLoading] = React.useState(false);
-  const [images, setImages] = React.useState(event.Event.images); 
+  const [images, setImages] = React.useState(event.images); 
   const mapContainer = React.useRef(null);
-  const [latitude, setLatitude] = React.useState(event ? event.Event.latitude : -34.599722222222);
-  const [longitude, setLongitude] = React.useState(event ? event.Event.longitude : -58.381944444444);
+  const [latitude, setLatitude] = React.useState(event ? event.ubication.latitude : -34.599722222222);
+  const [longitude, setLongitude] = React.useState(event ? event.ubication.longitude : -58.381944444444);
   
 
   const sortImages = () => {
@@ -103,18 +104,18 @@ const PreviewDraft = () => {
     
     const event_update = {
         "id": sessionStorage.getItem("event_id"),
-        "title": event.Event.title,
+        "title": event.title,
         "category": event.category,
-        "date": event.Event.date,
-        "description": event.Event.description,
-        "direction": event.Event.direction,
-        "latitude": event.Event.latitude,
-        "longitude": event.Event.longitude,
-        "capacity": event.Event.capacity,
-        "agenda" : event.Event.agenda,
-        "faqs" : event.Event.faqs,
-        "images" : event.Event.images,
-        "vacancies": event.Event.vacancies,
+        "date": event.date,
+        "description": event.description,
+        "direction": event.ubication.direction,
+        "latitude": event.ubication.latitude,
+        "longitude": event.ubication.longitude,
+        "capacity": event.capacity,
+        "agenda" : event.agenda,
+        "faqs" : event.faqs,
+        "images" : event.images,
+        "vacancies": event.vacancies,
         "state" : "published"
         };
         
@@ -131,6 +132,7 @@ const PreviewDraft = () => {
       })
       .then(() => {
         window.localStorage.setItem("cache_event", null);
+        window.localStorage.setItem("cache_event_draft", null);
         window.localStorage.setItem("cache_cover", null);      
         window.location.href = '/eventList';
       })
@@ -151,15 +153,15 @@ const PreviewDraft = () => {
         <Paper elevation={5} sx={{width: '600px', background: '#fff'}}>
 
           <Typography variant="h5" component="div" sx={{ padding: 2, fontSize: 30, fontWeight: 70, display: 'flex', justifyContent: 'center' }}>
-            {event.Event.title}
+            {event.title}
           </Typography>
 
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
             <ImageDisplay images={images} />
-            <BasicInfoDisplay event={event.Event} stringDate={stringDate}/>
-            <DescriptionDisplay description={JSON.parse(event.Event.description)}/>
-            <AgendaDisplay agenda={event.Event.agenda} />
+            <BasicInfoDisplay event={event} stringDate={stringDate}/>
+            <DescriptionDisplay description={JSON.parse(event.description)}/>
+            <AgendaDisplay agenda={event.agenda} />
                         
             <Grid item sx={{ width: '50%', height: '300px' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
@@ -169,7 +171,7 @@ const PreviewDraft = () => {
                 </Box>
             </Grid>
             
-            <FaqsDisplay faqs={event.Event.faqs} />
+            <FaqsDisplay faqs={event.faqs} />
 
           </CardContent>
 
@@ -194,6 +196,7 @@ const PreviewDraft = () => {
               fontFamily: "'Circular Std', Arial, sans-serif", justifyContent: 'center',
               fontSize: 14, fontWeight: 700, color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, '&:hover': { backgroundColor: '#1c1c1c' }
             }}>
+
               Volver
             </Button>
           </CardActions>
