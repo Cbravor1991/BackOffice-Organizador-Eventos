@@ -20,11 +20,17 @@ export default function PhotosCard(props) {
     })
       .then((response) => {
         console.log("Imagen eliminada");
-     
+
         let photos = JSON.parse(window.localStorage.getItem("cache_images"));
         console.log(photos);
-        photos = photos.filter(photo => photo.link !== props.link);    
+        photos = photos.filter(photo => photo.link !== props.link);
         window.localStorage.setItem("cache_images", JSON.stringify(photos));
+
+        if (props.link === props.cover) {
+
+          window.localStorage.setItem("cache_cover", null);
+        }
+
 
         props.loadImages()
       })
@@ -35,13 +41,13 @@ export default function PhotosCard(props) {
     try {
       const response = await api.post('organizer/event/cover/pic',
         JSON.stringify({
-          "link": props.link, 
+          "link": props.link,
           "event_id": props.event_id
         }),
       ).then((response) => {
-      console.log(response.data);
-      window.localStorage.setItem("cache_cover", props.link);
-     })
+        console.log(response.data);
+        window.localStorage.setItem("cache_cover", props.link);
+      })
     } catch (err) {
       console.log('fijate hiciste algo mal')
     }
@@ -49,19 +55,23 @@ export default function PhotosCard(props) {
 
   return (
     <Card sx={{ maxWidth: 345 }}>
-           {props.link === props.cover ? (
-      <CardContent>
-        <Typography variant="h6" component="div" sx={{marginLeft: '100px', color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
-          Foto de portada
-        </Typography>
-      </CardContent>
-    ) : (
-      <CardContent>
-        <Typography variant="h6" component="div" sx={{marginLeft: '100px', color: 'white', fontSize: 16, fontWeight: 700, mb: 2 }}>
-          ''
-        </Typography>
-      </CardContent>
-    )}
+      {props.link === props.cover ? (
+
+        <CardContent>
+          {window.localStorage.setItem("cache_cover", props.cover)}
+
+          <Typography variant="h6" component="div" sx={{ marginLeft: '100px', color: 'black', fontSize: 16, fontWeight: 700, mb: 2 }}>
+            Foto de portada
+          </Typography>
+        </CardContent>
+      ) : (
+        <CardContent>
+          {console.log('este es el props =>', props.cover)}
+          <Typography variant="h6" component="div" sx={{ marginLeft: '100px', color: 'white', fontSize: 16, fontWeight: 700, mb: 2 }}>
+            ''
+          </Typography>
+        </CardContent>
+      )}
       <CardMedia
 
         sx={{ height: 200 }}

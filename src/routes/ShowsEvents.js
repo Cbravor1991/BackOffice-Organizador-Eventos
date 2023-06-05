@@ -66,6 +66,7 @@ export default function ShowsEvents() {
   }
 
   useEffect(() => {
+    window.localStorage.setItem('cache_cover', null)
     let vaciar = JSON.stringify('');
     //window.localStorage.setItem("preguntas", vaciar);
     //window.localStorage.setItem('cache_datos', vaciar);

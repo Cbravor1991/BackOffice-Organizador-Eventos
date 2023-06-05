@@ -21,13 +21,13 @@ import swal from 'sweetalert2';
 const PreviewDraft = () => {
   let event = JSON.parse(window.localStorage.getItem("cache_edit"));
   let cover = window.localStorage.getItem("cache_cover");
-  console.log(cover);
+  console.log('event =>', event)
   const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   const [loading, setLoading] = React.useState(false);
-  const [images, setImages] = React.useState(event.images); 
+  const [images, setImages] = React.useState(event.Event.images); 
   const mapContainer = React.useRef(null);
-  const [latitude, setLatitude] = React.useState(event ? event.ubication.latitude : -34.599722222222);
-  const [longitude, setLongitude] = React.useState(event ? event.ubication.longitude : -58.381944444444);
+  const [latitude, setLatitude] = React.useState(event ? event.Event.latitude : -34.599722222222);
+  const [longitude, setLongitude] = React.useState(event ? event.Event.longitude : -58.381944444444);
   
 
   const sortImages = () => {
@@ -70,38 +70,62 @@ const PreviewDraft = () => {
     return () => map.remove();
   }, []);
 
+  const coverPicValidation = () => {
+    let images = JSON.parse(window.localStorage.getItem("cache_images"));
+    console.log(images)
+    console.log('fotos =>', images.length)
+    console.log('cover =>', cover)
+
+
+    if ((cover == 'null' && images.length > 0)) {
+      console.log('entro')
+
+      cover = images[0].link
+
+
+
+    } else {
+      if (cover == 'null') {
+
+        cover = 'https://firebasestorage.googleapis.com/v0/b/ticketapp-64209.appspot.com/o/44444.png?alt=media&token=d07be113-b878-4529-a5e3-29f0af4fe576'
+      }
+    }
+
+  }
+
 
 
   const handleSubmitPublished = async (e) => {
+    coverPicValidation()
     
     setLoading(true);
     e.preventDefault();
     
     const event_update = {
         "id": sessionStorage.getItem("event_id"),
-        "title": event.title,
+        "title": event.Event.title,
         "category": event.category,
-        "date": event.date,
-        "description": event.description,
-        "direction": event.ubication.direction,
-        "latitude": event.ubication.latitude,
-        "longitude": event.ubication.longitude,
-        "capacity": event.capacity,
-        "agenda" : event.agenda,
-        "faqs" : event.faqs,
-        "images" : event.images,
-        "vacancies": event.vacancies,
+        "date": event.Event.date,
+        "description": event.Event.description,
+        "direction": event.Event.direction,
+        "latitude": event.Event.latitude,
+        "longitude": event.Event.longitude,
+        "capacity": event.Event.capacity,
+        "agenda" : event.Event.agenda,
+        "faqs" : event.Event.faqs,
+        "images" : event.Event.images,
+        "vacancies": event.Event.vacancies,
         "state" : "published"
         };
         
     await api
       .put('organizer/event', event_update)
-      .then(async(response) => {
+      .then(() => {
         api.post(
           'organizer/event/cover/pic',
           JSON.stringify({
             "link": cover, 
-            "event_id": response.data.id
+            "event_id": sessionStorage.getItem("event_id")
           })
         );
       })
@@ -127,15 +151,15 @@ const PreviewDraft = () => {
         <Paper elevation={5} sx={{width: '600px', background: '#fff'}}>
 
           <Typography variant="h5" component="div" sx={{ padding: 2, fontSize: 30, fontWeight: 70, display: 'flex', justifyContent: 'center' }}>
-            {event.title}
+            {event.Event.title}
           </Typography>
 
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
             <ImageDisplay images={images} />
-            <BasicInfoDisplay event={event} stringDate={stringDate}/>
-            <DescriptionDisplay description={JSON.parse(event.description)}/>
-            <AgendaDisplay agenda={event.agenda} />
+            <BasicInfoDisplay event={event.Event} stringDate={stringDate}/>
+            <DescriptionDisplay description={JSON.parse(event.Event.description)}/>
+            <AgendaDisplay agenda={event.Event.agenda} />
                         
             <Grid item sx={{ width: '50%', height: '300px' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
@@ -145,7 +169,7 @@ const PreviewDraft = () => {
                 </Box>
             </Grid>
             
-            <FaqsDisplay faqs={event.faqs} />
+            <FaqsDisplay faqs={event.Event.faqs} />
 
           </CardContent>
 

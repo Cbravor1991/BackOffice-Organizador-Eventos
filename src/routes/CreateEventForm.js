@@ -98,6 +98,7 @@ const CreateEventForm = () => {
 
 
   useEffect(() => {
+    window.localStorage.setItem('cache_cover', null)
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v12',
@@ -213,6 +214,28 @@ const CreateEventForm = () => {
    
    return event;  
   }
+
+  const coverPicValidation = () => {
+    let images = JSON.parse(window.localStorage.getItem("cache_images"));
+    console.log(images)
+    console.log('fotos =>', images.length)
+    console.log('cover =>', cover)
+  
+
+    if((cover == 'null' && images.length > 0)){
+      console.log('entro')
+      
+      cover = images[0].link
+    
+     
+      
+    } else {
+      if (cover == 'null'){
+     
+      cover = 'https://firebasestorage.googleapis.com/v0/b/ticketapp-64209.appspot.com/o/44444.png?alt=media&token=d07be113-b878-4529-a5e3-29f0af4fe576'
+    }}
+   
+  }
   
   
   const handleSubmitDraft = async (e) => {
@@ -235,6 +258,7 @@ const CreateEventForm = () => {
     await api
       .post('organizer/event', event)
       .then(async(response) => {
+        coverPicValidation()
         api.post(
           'organizer/event/cover/pic',
           JSON.stringify({

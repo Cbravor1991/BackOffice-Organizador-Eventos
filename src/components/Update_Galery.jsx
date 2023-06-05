@@ -48,7 +48,7 @@ export default function UpdatePhotoGallery() {
     if (selected && types.includes(selected.type)) {
       setFile(selected);
       setError('');
-      
+
     } else {
       setFile(null);
       setError('Selecciona un archivo que sea una imagen (png or jpg)');
@@ -63,44 +63,48 @@ export default function UpdatePhotoGallery() {
       .then((response_photo) => {
         setPhotos(response_photo.data)
 
-        let token_user;  
-        if (!window.localStorage.getItem("token")){
+        let token_user;
+        if (!window.localStorage.getItem("token")) {
           console.log("no autorizado")
           window.location.href = "/home";
           return;
         } else {
           token_user = window.localStorage.getItem("token");
         }
-      
-         const params = new URLSearchParams([['event_id', id_event]]);
-                                 
-         const headers = {'accept': 'application/json',
-                                   'Access-Control-Allow-Origin': '*',
-                                   'Access-Control-Allow-Credentials': true,
-                                   'Access-Control-Allow-Headers': '*',
-                                   'Authorization': 'Bearer ' + token_user
-                                 }  
-                                
-        api.get('/organizer/event', {params: params}, {headers: headers})
-           .then((response) => {
-            if (response.data.Event.pic_id!= null) {
+
+        const params = new URLSearchParams([['event_id', id_event]]);
+
+        const headers = {
+          'accept': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': true,
+          'Access-Control-Allow-Headers': '*',
+          'Authorization': 'Bearer ' + token_user
+        }
+
+        api.get('/organizer/event', { params: params }, { headers: headers })
+          .then((response) => {
+            if (response.data.Event.pic_id != null) {
               response_photo.data.map(item => {
-                if (response.data.Event.pic_id == item.id){
+                console.log('item_id=>', item.id)
+                console.log('cover_id=>', response.data.Event.pic_id)
+                if (response.data.Event.pic_id == item.id) {
                   console.log('esta es la foto de portada', item.link)
                   setCover(item.link)
                 }
-               })
-              }else {
-                console.log('fallo')
-                setCover ('')}
-           })
-        .catch((error) => {
-          console.log(error);
-        })
+              })
+            } else {
+              console.log('fallo')
+              setCover('')
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          })
       })
       .catch((error) => {
         console.log(error);
-     })
+      })
   }
 
 
@@ -116,7 +120,7 @@ export default function UpdatePhotoGallery() {
         {...item}
         setSelectedCover={setCover}
         cover={cover}
-        loadImages = {loadImages}
+        loadImages={loadImages}
       />
     )
   })
@@ -193,7 +197,7 @@ export default function UpdatePhotoGallery() {
                 <div className="output" >
                   {error && <div className="error">{error}</div>}
                   {file && <div sx={{ color: 'black' }}>{file.name}</div>}
-                  {file && <ProgressBar file={file} setFile={setFile} loadImages ={loadImages} />}
+                  {file && <ProgressBar file={file} setFile={setFile} loadImages={loadImages} />}
                 </div>
               </Box>
             </Box>

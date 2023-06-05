@@ -51,6 +51,7 @@ const theme = createTheme({
 const EditEvent = () => {
 
   let stored_event = JSON.parse(window.localStorage.getItem("cache_edit"));
+
   let cover_id = window.localStorage.getItem("cache_cover_id");
 
   console.log(stored_event);
@@ -255,6 +256,14 @@ const EditEvent = () => {
         
          window.localStorage.setItem("event_id", id_event);
          let cover = window.localStorage.getItem("cache_cover");
+
+         if(cover == 'null'){
+          if (images.length>0){
+            cover = images[0].link
+          }else {
+            cover = 'https://firebasestorage.googleapis.com/v0/b/ticketapp-64209.appspot.com/o/44444.png?alt=media&token=d07be113-b878-4529-a5e3-29f0af4fe576'
+          }
+         }
          
          api.post(
           'organizer/event/cover/pic',
@@ -294,23 +303,22 @@ const EditEvent = () => {
     const formData = getValues();
     let images = JSON.parse(window.localStorage.getItem("cache_images"));
 
-    const event = {
+    const event ={ Event: {
+      "id": id_event,
       "title": title,
       "category": category,
       "date": date,
       "description": description,
       "capacity": capacity,
-      "ubication": {
-        "direction": direction,
-        "latitude": latitude,
-        "longitude": longitude
-      },
+      "direction": direction,
+      "latitude": latitude,
+      "longitude": longitude,
       "state": state,
       "agenda": formData.sections,
       "faqs": formData.faqs,
       "authorizers": formData.mails,
       "images": images
-    };
+    }};
    
    return event;  
   }

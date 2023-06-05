@@ -24,15 +24,15 @@ const Preview = () => {
   console.log(cover);
   const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' });
   const [loading, setLoading] = React.useState(false);
-  const [images, setImages] = React.useState(event.images); 
+  const [images, setImages] = React.useState(event.images);
   const mapContainer = React.useRef(null);
   const [latitude, setLatitude] = React.useState(event ? event.ubication.latitude : -34.599722222222);
   const [longitude, setLongitude] = React.useState(event ? event.ubication.longitude : -58.381944444444);
-  
+
 
   const sortImages = () => {
-   
-     let originalImages = images;
+
+    /* let originalImages = images;
      
      console.log(images);
      
@@ -42,9 +42,32 @@ const Preview = () => {
     ];
     
     console.log(sortedImages);
-    setImages(sortedImages);
-     
-   }
+    setImages(sortedImages);*/
+
+  }
+
+  const coverPicValidation = () => {
+    let images = JSON.parse(window.localStorage.getItem("cache_images"));
+    console.log(images)
+    console.log('fotos =>', images.length)
+    console.log('cover =>', cover)
+
+
+    if ((cover == 'null' && images.length > 0)) {
+      console.log('entro')
+
+      cover = images[0].link
+
+
+
+    } else {
+      if (cover == 'null') {
+
+        cover = 'https://firebasestorage.googleapis.com/v0/b/ticketapp-64209.appspot.com/o/44444.png?alt=media&token=d07be113-b878-4529-a5e3-29f0af4fe576'
+      }
+    }
+
+  }
 
 
   React.useEffect(() => {
@@ -53,7 +76,8 @@ const Preview = () => {
 
 
   React.useEffect(() => {
-   
+
+
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/streets-v12',
@@ -63,34 +87,35 @@ const Preview = () => {
     });
 
     const marker = new mapboxgl.Marker({
-         color: "red",
-         offset: [25, -330]
-      }).setLngLat([longitude, latitude]).addTo(map);
-   
+      color: "red",
+      offset: [25, -330]
+    }).setLngLat([longitude, latitude]).addTo(map);
+
     return () => map.remove();
   }, []);
 
 
 
   const handleSubmitPublished = async (e) => {
-    
+    coverPicValidation()
+
     setLoading(true);
     e.preventDefault();
     event.state = "published"
     await api
       .post('organizer/event', event)
-      .then(async(response) => {
+      .then(async (response) => {
         api.post(
           'organizer/event/cover/pic',
           JSON.stringify({
-            "link": cover, 
+            "link": cover,
             "event_id": response.data.id
           })
         );
       })
       .then(() => {
         window.localStorage.setItem("cache_event", null);
-        window.localStorage.setItem("cache_cover", null);      
+        window.localStorage.setItem("cache_cover", null);
         window.location.href = '/eventList';
       })
   }
@@ -99,7 +124,7 @@ const Preview = () => {
   return (
 
     <Box sx={{ mb: 4, justifyContent: 'center' }}>
-    
+
       <Navbar />
 
       <Typography variant="h5" component="div" sx={{ marginTop: '10px', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center' }}>
@@ -107,7 +132,7 @@ const Preview = () => {
       </Typography>
 
       <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-        <Paper elevation={5} sx={{width: '600px', background: '#fff'}}>
+        <Paper elevation={5} sx={{ width: '600px', background: '#fff' }}>
 
           <Typography variant="h5" component="div" sx={{ padding: 2, fontSize: 30, fontWeight: 70, display: 'flex', justifyContent: 'center' }}>
             {event.title}
@@ -116,24 +141,24 @@ const Preview = () => {
           <CardContent sx={{ pb: 2, justifyContent: 'center' }}>
 
             <ImageDisplay images={images} />
-            <BasicInfoDisplay event={event} stringDate={stringDate}/>
-            <DescriptionDisplay description={JSON.parse(event.description)}/>
+            <BasicInfoDisplay event={event} stringDate={stringDate} />
+            <DescriptionDisplay description={JSON.parse(event.description)} />
             <AgendaDisplay agenda={event.agenda} />
-                        
+
             <Grid item sx={{ width: '50%', height: '300px' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <div ref={mapContainer} className="map-container"
-                    style={{ width: 400, height: 250, justifyContent: 'center', marginTop: '10px', marginBotton: '5px', marginLeft: '250px', marginRight: '10px' }}
-                  />
-                </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                <div ref={mapContainer} className="map-container"
+                  style={{ width: 400, height: 250, justifyContent: 'center', marginTop: '10px', marginBotton: '5px', marginLeft: '250px', marginRight: '10px' }}
+                />
+              </Box>
             </Grid>
-            
+
             <FaqsDisplay faqs={event.faqs} />
 
           </CardContent>
 
           <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
-            
+
             <Button onClick={handleSubmitPublished} sx={{
               fontFamily: "'Circular Std', Arial, sans-serif", fontSize: 14, fontWeight: 700, justifyContent: 'center',
               color: '#fff', backgroundColor: '#1286f7', borderRadius: 2, px: 2, py: 1, mr: 1, '&:hover': { backgroundColor: '#1286f7' }
@@ -144,7 +169,7 @@ const Preview = () => {
               sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
               open={loading}
               onClick={() => setLoading(false)}
-              >
+            >
               <CircularProgress color="inherit" />
             </Backdrop>
 

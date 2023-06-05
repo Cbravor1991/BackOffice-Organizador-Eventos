@@ -18,6 +18,9 @@ const ImageGrid = ({ setCover, cover }) => {
     // Guarda el nuevo array en el localStorage
     window.localStorage.setItem("cache_images", JSON.stringify(photos));
     setDeleteCount(deleteCount + 1);
+    if(window.localStorage.getItem("cache_cover") == link){
+      window.localStorage.setItem("cache_cover", null)
+    }
   }
 
   const changeCover = async (link) => {
