@@ -67,7 +67,8 @@ const EditEvent = () => {
   const [id_event, setEventID] = useState(stored_event.Event.id);
   const [title, setTitle] = useState(stored_event ? stored_event.Event.title : '');
   const [category, setCategory] = useState(stored_event ? stored_event.Event.category : '');
-  const [date, setDate] = useState(stored_event ? stored_event.Event.date : '');
+  const [initDate, setInitDate] = useState(stored_event ? stored_event.Event.date : '');
+  const [endDate, setEndDate] = useState(stored_event ? stored_event.Event.date : '');
   const [description, setDescription] = useState(stored_event ? stored_event.Event.description : '');
   const [capacity, setCapacity] = useState(stored_event ? stored_event.Event.capacity : '');
   const [vacancies, setVacancies] = useState(stored_event.Event.capacity);
@@ -159,7 +160,7 @@ const EditEvent = () => {
   };
 
 
-  const handleDateChange = (e) => {
+  const handleInitDateChange = (e) => {
     const selectedDate = new Date(e.target.value);
     const currentDate = new Date();
 
@@ -172,10 +173,27 @@ const EditEvent = () => {
       })
 
     } else {
-      setDate(format(selectedDate, 'yyyy-MM-dd HH:mm'));
+      setInitDate(format(selectedDate, 'yyyy-MM-dd HH:mm'));
     }
   };
 
+
+  const handleEndDateChange = (e) => {
+    const selectedDate = new Date(e.target.value);
+    const currentDate = new Date();
+
+    if (selectedDate < currentDate) {
+      swal.fire({
+        title: "Elegui otra fecha",
+        text: "Recuerda que la proxima fecha disponible es el " + new Date(minDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }),
+        icon: "warning",
+        confirmButtonText: 'Entendido',
+      })
+
+    } else {
+      setEndDate(format(selectedDate, 'yyyy-MM-dd HH:mm'));
+    }
+  };
 
   const handleDateChangeTickets = (e) => {
     const numberOfTickets = e.target.value;
@@ -237,7 +255,8 @@ const EditEvent = () => {
           "id": id_event,
           "title": title,
           "category": category,
-          "date": date,
+          "init_date": initDate,
+          "end_date": endDate,
           "description": description,
           "direction": direction,
           "latitude": latitude,
@@ -294,7 +313,7 @@ const EditEvent = () => {
 
 
   const requiredFieldsMissing = () => {
-    return title === '' || category === '' || date === '' || description === '' || direction === '';
+    return title === '' || category === '' || initDate === '' || description === '' || direction === '';
   }
 
 
@@ -305,7 +324,8 @@ const EditEvent = () => {
     const event = {
       "title": title,
       "category": category,
-      "date": date,
+      "init_date": initDate,
+      "end_date": endDate,
       "description": description,
       "capacity": capacity,
       "ubication": {
@@ -355,7 +375,8 @@ const EditEvent = () => {
      "Event": {
       "title": title,
       "category": category,
-      "date": date,
+      "init_date": initDate,
+      "end_date": endDate,
       "description": description,
       "capacity": capacity,
       "direction": direction,
@@ -577,11 +598,21 @@ const EditEvent = () => {
             <Grid container spacing={2}>
               <Grid item sx={{ width: '50%', marginTop: '20px' }}>
                 <Box sx={{ height: '250px', overflow: 'auto', marginLeft: '200px', borderRadius: '10px' }}>
+                  
                   <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
-                    Fecha y hora del evento
+                    Fecha y hora de inicio del evento
                   </Typography>
+                  
                   <TextField fullWidth sx={{ width: '70%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
-                    type="datetime-local" id="date" name="date" onChange={handleDateChange} value={date || ''} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
+                    type="datetime-local" id="date" name="date" onChange={handleInitDateChange} value={initDate || ''} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
+                  
+                  <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center' }}>
+                    Fecha y hora de fin del evento
+                  </Typography>
+                  
+                  <TextField fullWidth sx={{ width: '70%', color: 'black', fontSize: 16, fontWeight: 700, mb: 2, display: 'flex', justifyContent: 'center', marginTop: '20px' }}
+                    type="datetime-local" id="date" name="date" onChange={handleEndDateChange} value={endDate || ''} min={minDate = new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]} />
+                  
                   <Typography variant="h6" component="div" sx={{ width: '50%', color: 'black', fontSize: 16, fontWeight: 700, display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                     Cantidad de tickets
                   </Typography>
