@@ -234,7 +234,7 @@ export default function ShowsDrafts() {
                             <StyledTableCell align="right">
                               {row.category}
                             </StyledTableCell>
-                            <StyledTableCell align="right"> {new Date(row.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</StyledTableCell>
+                            <StyledTableCell align="right"> {new Date(row.init_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</StyledTableCell>
                             <StyledTableCell align="right">
                               {row.direction}
                             </StyledTableCell>

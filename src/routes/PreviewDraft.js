@@ -21,8 +21,7 @@ import swal from 'sweetalert2';
 const PreviewDraft = () => {
   let event = JSON.parse(window.localStorage.getItem("cache_edit_draft"));
   let cover = window.localStorage.getItem("cache_cover");
-  console.log('cover =>', cover)
-  console.log(cover);
+  console.log('datos_eventos =>', event)
   const stringDate = new Date(event.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   const [loading, setLoading] = React.useState(false);
   const [images, setImages] = React.useState(event.images); 
@@ -106,7 +105,8 @@ const PreviewDraft = () => {
         "id": sessionStorage.getItem("event_id"),
         "title": event.title,
         "category": event.category,
-        "date": event.date,
+        "init_date": event.initDate,
+        "end_date": event.endDate,
         "description": event.description,
         "direction": event.ubication.direction,
         "latitude": event.ubication.latitude,

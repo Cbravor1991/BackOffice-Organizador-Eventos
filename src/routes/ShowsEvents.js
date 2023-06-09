@@ -59,6 +59,7 @@ export default function ShowsEvents() {
   const loadPublications = () => {
     api.get('/organizer/events')
       .then((response) => {
+        console.log('estos son los datos =>', response.data)
         setPublications(response.data);
       })
       .catch((error) => {
@@ -84,66 +85,66 @@ export default function ShowsEvents() {
 
 
   const handleViewClick = async (e, row) => {
-  
-     try {   
+
+    try {
       var options = {
         method: 'GET',
-           url:`/organizer/event?event_id=${row.id}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token_user
-            },
-        };
-  
+        url: `/organizer/event?event_id=${row.id}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token_user
+        },
+      };
+
       api.request(options)
         .then((response) => {
-            console.log(response);
-            if (response.length === 0) {
-                console.log("No hay evento")
-            }
-            window.localStorage.setItem("cache_view", JSON.stringify(response.data));
-            window.localStorage.setItem("cache_cover_id", JSON.stringify(response.data.Event.pic_id));
-            window.location.href = "/view";
-         })
-                
-       } catch (error) {
-            console.error(error);
-        }
+          console.log(response);
+          if (response.length === 0) {
+            console.log("No hay evento")
+          }
+          window.localStorage.setItem("cache_view", JSON.stringify(response.data));
+          window.localStorage.setItem("cache_cover_id", JSON.stringify(response.data.Event.pic_id));
+          window.location.href = "/view";
+        })
 
+    } catch (error) {
+      console.error(error);
     }
 
+  }
 
-    const update = async (props) => {
-  
-     try {   
+
+  const update = async (props) => {
+
+    try {
       var options = {
         method: 'GET',
-           url:`/organizer/event?event_id=${props.id}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token_user
-            },
-        };
-  
+        url: `/organizer/event?event_id=${props.id}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token_user
+        },
+      };
+
       api.request(options)
         .then((response) => {
-            console.log(response);
-            if (response.length === 0) {
-                console.log("No hay evento")
-            }
-            window.localStorage.setItem("cache_edit", JSON.stringify(response.data));
-            const result = JSON.parse(window.localStorage.getItem("cache_edit"));
-            window.localStorage.setItem("cache_images", JSON.stringify(response.data.Images));
-            window.localStorage.setItem("cache_cover_id", JSON.stringify(response.data.Event.pic_id));
-            console.log(result);
-            window.location.href = "/editEvent"
-         })
-                
-       } catch (error) {
-            console.error(error);
-        }
+          console.log(response);
+          if (response.length === 0) {
+            console.log("No hay evento")
+          }
+          window.localStorage.setItem("cache_edit", JSON.stringify(response.data));
+          const result = JSON.parse(window.localStorage.getItem("cache_edit"));
+          window.localStorage.setItem("cache_images", JSON.stringify(response.data.Images));
+          window.localStorage.setItem("cache_cover_id", JSON.stringify(response.data.Event.pic_id));
+          console.log(result);
+          window.location.href = "/editEvent"
+        })
 
+    } catch (error) {
+      console.error(error);
     }
+
+  }
 
 
   const deleteEvent = async (props) => {
@@ -175,31 +176,31 @@ export default function ShowsEvents() {
       }
     })
   }
-  
-  
+
+
   const cancelEvent = async (props) => {
- 
-    
-    try {   
+
+
+    try {
       var options = {
         method: 'GET',
-           url:`/organizer/event?event_id=${props.id}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token_user
-            },
-        };
-  
-     await api.request(options)
+        url: `/organizer/event?event_id=${props.id}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token_user
+        },
+      };
+
+      await api.request(options)
         .then((response) => {
-          console.log(response.data.Event.pic_id)
-           swal.fire({
+          console.log(response)
+          swal.fire({
             title: "Confirmar cancelación",
             input: "text",
             inputAttributes: {
-              maxlength: 50, 
+              maxlength: 50,
               size: 50
-             },
+            },
             text: "¿Confirmas que deseas cancelar el evento? Se enviará una notificación a los usuarios.",
             icon: "warning",
             showCancelButton: true,
@@ -207,76 +208,81 @@ export default function ShowsEvents() {
             cancelButtonText: 'No',
             inputPlaceholder: "Mensaje (máximo 50 caracteres)"
           }).then(function (result) {
-      
+
             if (result['isConfirmed']) {
-      
+
               var options = {
                 method: 'PUT',
                 url: '/organizer/event',
                 data: {
-                "id": props.id,
-                "title": response.data.Event.title,
-                "category": response.data.Event.category,
-                "date": response.data.Event.date,
-                "description": response.data.Event.description,
-                "direction": response.data.Event.direction,
-                "latitude": response.data.Event.latitude,
-                "longitude": response.data.Event.longitude,
-                "capacity": response.data.Event.capacity,
-                "agenda" : response.data.Event.agenda,
-                "faqs" : response.data.Event.faqs,
-                "images" : response.data.Images,
-                "vacancies": response.data.Event.vacancies,
-                "state": "canceled"}
+                  "id": props.id,
+                  "title": response.data.Event.title,
+                  "category": response.data.Event.category,
+                  "init_date": response.data.Event.init_date,
+                  "end_date": response.data.Event.end_date,
+                  "date": response.data.Event.date,
+                  "description": response.data.Event.description,
+                  "direction": response.data.Event.direction,
+                  "latitude": response.data.Event.latitude,
+                  "longitude": response.data.Event.longitude,
+                  "capacity": response.data.Event.capacity,
+                  "agenda": response.data.Event.agenda,
+                  "faqs": response.data.Event.faqs,
+                  "images": response.data.Images,
+                  "vacancies": response.data.Event.vacancies,
+                  "state": "canceled"
+                }
               };
-      
+
               console.log(result.value);
               api.request(options).then(function (response__) {
-                const params = {"event_id": props.id}
-                
+                const params = { "event_id": props.id }
+
                 var options2 = {
-                method: 'POST',
-                url: '/organizer/event/notify',
-                params: params,
-                data: {
-                "title": "Cancelación de evento",
-                "description": result.value
-               }
-              };
-      
-              console.log(result.value);
-              api.request(options2).then(function (response_){
-                if (response.data.Event.pic_id!= null) {
-                  console.log('fijate=>', response.data)
-                  response.data.Images.map(item => {
-                    console.log('item_id=>', item.id)
-                    console.log('cover_id=>', response.data.Event.pic_id)
-                    if (response.data.Event.pic_id == item.id) {
-                      api.post(
-                        'organizer/event/cover/pic',
-                        JSON.stringify({
-                          "link": item.link, 
-                          "event_id": props.id
-                        })
-                      );}
-                  })
-                } else {
-                  console.log('fallo')
+                  method: 'POST',
+                  url: '/organizer/event/notify',
+                  params: params,
+                  data: {
+                    "title": "Cancelación de evento",
+                    "description": result.value
+                  }
+                };
+
+                console.log(result.value);
+                api.request(options2).then(function (response_) {
+                  if (response.data.Event.pic_id != null) {
+                    console.log('fijate=>', response.data)
+                    response.data.Images.map(item => {
+                      console.log('item_id=>', item.id)
+                      console.log('cover_id=>', response.data.Event.pic_id)
+                      if (response.data.Event.pic_id == item.id) {
+                        api.post(
+                          'organizer/event/cover/pic',
+                          JSON.stringify({
+                            "link": item.link,
+                            "event_id": props.id
+                          })
+                        );
+                      }
+                    })
+                  } else {
+                    console.log('fallo')
+                    window.location.href = "/eventList"
+
+                  }
                   window.location.href = "/eventList"
-                  
-                }
-                window.location.href = "/eventList"
-               }) 
+                })
               }).catch(function (error) {
                 console.error(error);
               });
             }
-          })})
-                
-       } catch (error) {
-            console.error(error);
-        }
-}
+          })
+        })
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 
   const handleSearchChange = (event) => {
@@ -290,55 +296,55 @@ export default function ShowsEvents() {
 
 
   const filteredData = publications.filter((row) =>
-    row.title.toLowerCase().includes(searchText.toLowerCase() && row.state === "published")
+    row.title.toLowerCase().includes(searchText.toLowerCase()) && row.state === "published"
   );
 
 
   return (
-      <div>
-        <Navbar />
-        <CardEvent />
-        <Grid sx={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
-          <Paper sx={{  width: '100%' }} elevation={5}>
-            <TableContainer component={Grid}>
-              <div>
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="demo-simple-select-label">Mostrar</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={rowsPerPage}
-                    label="Mostrar"
-                    onChange={handleRowsPerPageChange}
-                  >
-                    <MenuItem sx={{ color: 'black' }} value={5}>5</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value={10}>10</MenuItem>
-                    <MenuItem sx={{ color: 'black' }} value={25}>25</MenuItem>
-                  </Select>
-                </FormControl>
-                <TextField
-                  sx={{ m: 1, width: '30ch' }}
-                  label="Buscar por evento"
-                  variant="outlined"
-                  value={searchText}
-                  onChange={handleSearchChange}
-                />
-              </div>
+    <div>
+      <Navbar />
+      <CardEvent />
+      <Grid sx={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+        <Paper sx={{ width: '100%' }} elevation={5}>
+          <TableContainer component={Grid}>
+            <div>
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">Mostrar</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={rowsPerPage}
+                  label="Mostrar"
+                  onChange={handleRowsPerPageChange}
+                >
+                  <MenuItem sx={{ color: 'black' }} value={5}>5</MenuItem>
+                  <MenuItem sx={{ color: 'black' }} value={10}>10</MenuItem>
+                  <MenuItem sx={{ color: 'black' }} value={25}>25</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                sx={{ m: 1, width: '30ch' }}
+                label="Buscar por evento"
+                variant="outlined"
+                value={searchText}
+                onChange={handleSearchChange}
+              />
+            </div>
 
-              <Grid sx={{ maxHeight: '700px', overflowY: 'scroll'}}>
-                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <Grid sx={{ maxHeight: '700px', overflowY: 'scroll' }}>
+              <Table sx={{ minWidth: 700 }} aria-label="customized table">
 
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell> Nombre</StyledTableCell>
-                      <StyledTableCell align="right">Categoria</StyledTableCell>
-                      <StyledTableCell align="right">Fecha</StyledTableCell>
-                      <StyledTableCell align="right">Dirección</StyledTableCell>
-                      <StyledTableCell align="center">Opciones</StyledTableCell>
-                    </TableRow>
-                  </TableHead>
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell> Nombre</StyledTableCell>
+                    <StyledTableCell align="right">Categoria</StyledTableCell>
+                    <StyledTableCell align="right">Fecha</StyledTableCell>
+                    <StyledTableCell align="right">Dirección</StyledTableCell>
+                    <StyledTableCell align="center">Opciones</StyledTableCell>
+                  </TableRow>
+                </TableHead>
 
-                  {(publications && publications.length > 0) ? 
+                {(publications && publications.length > 0) ?
                   (
                     <TableBody>
                       {filteredData
@@ -351,7 +357,7 @@ export default function ShowsEvents() {
                             <StyledTableCell align="right">
                               {row.category}
                             </StyledTableCell>
-                            <StyledTableCell align="right"> {new Date(row.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</StyledTableCell>
+                            <StyledTableCell align="right"> {new Date(row.init_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</StyledTableCell>
                             <StyledTableCell align="right">
                               {row.direction}
                             </StyledTableCell>
@@ -362,26 +368,26 @@ export default function ShowsEvents() {
                               <Button aria-label="editar" onClick={() => { update(row) }}>
                                 EDITAR
                               </Button>
-                               
-                               <Tooltip title="Cancelar" text="Cancelar">
+
+                              <Tooltip title="Cancelar" text="Cancelar">
                                 <IconButton aria-label="cancelar" tooltip="Add bold text" tooltipDirection="sw" tooltipAlign="left" onClick={() => { cancelEvent(row) }}>
                                   <CancelIcon />
                                 </IconButton>
-                               </Tooltip>
-                              
-                               <Tooltip title="Eliminar" text="Eliminar">
+                              </Tooltip>
+
+                              <Tooltip title="Eliminar" text="Eliminar">
                                 <IconButton aria-label="eliminar" onClick={() => { deleteEvent(row) }}>
                                   <DeleteIcon />
                                 </IconButton>
-                               </Tooltip>
-                              
+                              </Tooltip>
+
                             </StyledTableCell>
                           </StyledTableRow>
                         ))
                       }
-                    </TableBody> 
+                    </TableBody>
                   )
-                  : 
+                  :
                   (
                     <StyledTableRow >
                       <StyledTableCell component="th" scope="row">
@@ -389,12 +395,12 @@ export default function ShowsEvents() {
                       </StyledTableCell>
                     </StyledTableRow>
                   )}
-                </Table>
-              </Grid>
+              </Table>
+            </Grid>
 
-            </TableContainer>
-          </Paper>
-        </Grid>
-      </div>
+          </TableContainer>
+        </Paper>
+      </Grid>
+    </div>
   );
 }

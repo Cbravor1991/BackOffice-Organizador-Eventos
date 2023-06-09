@@ -51,6 +51,7 @@ const theme = createTheme({
 const EditEvent = () => {
 
   let stored_event = JSON.parse(window.localStorage.getItem("cache_edit"));
+  console.log("storesd =>",stored_event)
   let cover_id = window.localStorage.getItem("cache_cover_id");
 
   console.log(stored_event);
@@ -67,8 +68,8 @@ const EditEvent = () => {
   const [id_event, setEventID] = useState(stored_event.Event.id);
   const [title, setTitle] = useState(stored_event ? stored_event.Event.title : '');
   const [category, setCategory] = useState(stored_event ? stored_event.Event.category : '');
-  const [initDate, setInitDate] = useState(stored_event ? stored_event.Event.date : '');
-  const [endDate, setEndDate] = useState(stored_event ? stored_event.Event.date : '');
+  const [initDate, setInitDate] = useState(stored_event ? stored_event.Event.init_date : '');
+  const [endDate, setEndDate] = useState(stored_event ? stored_event.Event.end_date : '');
   const [description, setDescription] = useState(stored_event ? stored_event.Event.description : '');
   const [capacity, setCapacity] = useState(stored_event ? stored_event.Event.capacity : '');
   const [vacancies, setVacancies] = useState(stored_event.Event.capacity);
@@ -338,7 +339,8 @@ const EditEvent = () => {
       "faqs": formData.faqs,
       "authorizers": formData.mails,
       "images": images
-    };
+      };
+  
    
    return event;  
   }
