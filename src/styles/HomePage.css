@@ -1,0 +1,165 @@
+/* Estilos de la página de inicio */
+
+/* Colores */
+:root {
+  --primary-color: #1286f7;
+  --secondary-color: #191414;
+  --tertiary-color: #282828;
+  --background-color: #121212;
+  --white-color: #ffffff;
+  --grey-color: #b3b3b3;
+}
+
+/* Tipografía */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+/* Variables de tipografía */
+:root {
+  --font-family: 'Poppins', sans-serif;
+  --font-size: 16px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --line-height: 1.5;
+}
+
+/* Estilos globales */
+.homepage {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  color: var(--white-color);
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  background-color: var(--tertiary-color);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  height: 4rem;
+  box-sizing: border-box;
+}
+
+.header__logo {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.header__menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  margin-right: 1rem;
+}
+
+.header__menu li {
+  margin-left: 2rem;
+}
+
+.header__menu li a {
+  color: var(--white-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+}
+
+.header__menu li a:hover {
+  color: var(--primary-color);
+}
+
+.header__btn {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.header__btn:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
+
+/* Hero section */
+.hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('../images/pildoras.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-section__content {
+  max-width: 800px;
+  padding: 2rem;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 1rem;
+}
+
+.hero-section__title {
+  font-size: 3.5rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 1rem
+
+;
+}
+
+/* Footer */
+.footer {
+  background-color: var(--color-black);
+  color: var(--color-gray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  padding: 1rem;
+}
+
+.footer__logo {
+  color: var(--color-white);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.footer__links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer__links a {
+  color: var(--color-gray);
+  font-size: 1.2rem;
+  margin: 0 1rem;
+  transition: color 0.3s ease;
+}
+
+.footer__links a:hover {
+  color: var(--color-white);
+}

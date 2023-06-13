@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/HomePage.scss';
+import '../styles/HomePage.css';
 import { Link } from 'react-router-dom';
 import { useSpring, animated } from 'react-spring';
 import LoginButton from '../components/LoginButton'
