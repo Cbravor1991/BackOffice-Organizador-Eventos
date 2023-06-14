@@ -21,7 +21,7 @@ import { api } from '../api/axios';
 import Navbar from '../components/NavBar';
 import swal from 'sweetalert2';
 import { Button, Grid } from '@mui/material';
-import { Height } from '@material-ui/icons';
+import { Height } from '@mui/icons-material'';
 import Tooltip from '@mui/material/Tooltip';
 
 
