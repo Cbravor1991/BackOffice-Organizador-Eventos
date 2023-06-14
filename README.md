@@ -5,5 +5,5 @@ npm start
 
 # Deployado en Vercel
 
-https://web-organizacion.vercel.app/home
+https://web-organization-ticketappfiuba.vercel.app/home
 
