@@ -53,7 +53,7 @@ const CreateEventForm = () => {
   const [title, setTitle] = useState(stored_event ? stored_event.title : '');
   const [category, setCategory] = useState(stored_event ? stored_event.category : '');
   const [initDate, setInitDate] = useState(stored_event ? stored_event.Event?.init_date : '');
-  const [endDate, setEndDate] = useState(stored_event ? stored_event.Event.date : '');
+  const [endDate, setEndDate] = useState(stored_event ? stored_event.Event?.end_date : '');
   const [description, setDescription] = useState(stored_event ? stored_event.description : '');
   const [capacity, setCapacity] = useState(stored_event ? stored_event.capacity : '');
   const [direction, setDirection] = useState(stored_event ? stored_event.ubication.direction : '');
