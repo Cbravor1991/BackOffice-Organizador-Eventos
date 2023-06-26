@@ -20,6 +20,7 @@ import swal from 'sweetalert2';
 
 const Preview = () => {
   let event = JSON.parse(window.localStorage.getItem("cache_event"));
+  event['direction'] = event.ubication.direction;
   let cover = window.localStorage.getItem("cache_cover");
   console.log(cover);
   const stringDate = new Date(event.init_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric' });
